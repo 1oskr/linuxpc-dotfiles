@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# Archivos temporales de editores
+*.swp
+*.swo
+*~
+*.tmp
+
+# Información privada
+.env
+*.secret
+secrets/
