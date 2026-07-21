@@ -1,0 +1,10 @@
+# Mantener finales de línea Unix/Linux en archivos de texto
+* text=auto eol=lf
+
+# Archivos binarios
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.pdf binary
