@@ -39,7 +39,7 @@
 - [ ] Documentar procedimiento seguro de rollback permanente.
 - [ ] Probar rollback permanente en un entorno controlado.
 - [ ] Revisar estrategia de snapshots para Bazzite.
-- [ ] Crear respaldo de `/etc`.
+- [x] Crear respaldo de `/etc`.
 - [ ] Definir estrategia de backup del HDD.
 - [ ] Crear respaldo externo de datos importantes.
 - [ ] Probar recuperación de dotfiles en una carpeta temporal.
