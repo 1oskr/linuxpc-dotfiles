@@ -1,0 +1,78 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json",
+
+  "logo": {
+    "type": "small",
+    "padding": {
+      "right": 3
+    }
+  },
+
+  "display": {
+    "separator": " 󰇙 ",
+    "color": {
+      "keys": "#89B4FA",
+      "separator": "#CBA6F7",
+      "title": "#F5C2E7"
+    }
+  },
+
+  "modules": [
+    "title",
+    "separator",
+
+    {
+      "type": "custom",
+      "format": "╭──────────── Sistema ────────────╮"
+    },
+
+    {
+      "type": "os",
+      "keyColor": "#89B4FA",
+      "outputColor": "#CDD6F4"
+    },
+    {
+      "type": "kernel",
+      "keyColor": "#CBA6F7",
+      "outputColor": "#CDD6F4"
+    },
+    {
+      "type": "uptime",
+      "keyColor": "#F5C2E7",
+      "outputColor": "#CDD6F4"
+    },
+    {
+      "type": "packages",
+      "keyColor": "#A6E3A1",
+      "outputColor": "#CDD6F4"
+    },
+    {
+      "type": "shell",
+      "keyColor": "#F9E2AF",
+      "outputColor": "#CDD6F4"
+    },
+    {
+      "type": "wm",
+      "keyColor": "#94E2D5",
+      "outputColor": "#CDD6F4"
+    },
+
+    {
+      "type": "custom",
+      "format": "├─────────── Hardware ────────────┤"
+    },
+
+    "cpu",
+    "gpu",
+    "memory",
+    "disk",
+
+    {
+      "type": "custom",
+      "format": "╰────────────────────────────────╯"
+    },
+
+    "break",
+    "colors"
+  ]
+}

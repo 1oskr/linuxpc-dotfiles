@@ -1,0 +1,13 @@
+configuration {
+    modi: "drun,window,run,ssh";
+    show-icons: true;
+
+    display-drun: "Aplicaciones";
+    display-window: "Ventanas";
+    display-run: "Comandos";
+    display-ssh: "SSH";
+
+    drun-display-format: "{name}";
+}
+
+@theme "theme"

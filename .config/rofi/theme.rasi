@@ -1,0 +1,71 @@
+* {
+    background: #1e1e2eee;
+    
+    background-alt: #313244;
+    foreground: #cdd6f4;
+    selected: #89b4fa;
+    border: #89b4fa;
+
+    font: "JetBrainsMono Nerd Font 11";
+}
+
+ window {
+    width: 700px;
+    border: 2px;
+    border-color: #89b4fa;
+    border-radius: 20px;
+    background-color: #1e1e2e;
+    padding: 20px;
+}
+
+mainbox {
+    spacing: 14px;
+    background-color: transparent;
+}
+
+inputbar {
+    padding: 14px;
+    border-radius: 12px;
+    background-color: #313244;
+    text-color: #cdd6f4;
+}
+
+prompt {
+    enabled: false;
+}
+
+entry {
+    placeholder: "Buscar...";
+    text-color: @foreground;
+}
+
+listview {
+    lines: 7;
+    columns: 1;
+    spacing: 6px;
+    scrollbar: false;
+    background-color: transparent;
+}
+
+element {
+    padding: 8px;
+    spacing: 10px;
+    border-radius: 8px;
+}
+
+element selected {
+    background-color: #2b2f42;
+    text-color: #cdd6f4;
+    border: 2px;
+    border-color: #89b4fa;
+}
+
+
+element-icon {
+    size: 32px;
+}
+
+element-text {
+    vertical-align: 0.5;
+    text-color: inherit;
+}

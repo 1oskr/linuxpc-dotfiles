@@ -28,10 +28,20 @@ hl.animation({
     bezier = "smooth",
 })
 
+
 hl.animation({
     leaf = "workspaces",
     enabled = true,
-    speed = 4,
-    bezier = "smooth",
-    style = "slidefade 20%",
+    speed = 6,
+    --bezier = "default",
+    bezier = "smooth",--"easeout",
+    style = "slide 20%", --20%
+})
+
+hl.animation({
+    leaf = "borderangle",
+    enabled = true,
+    speed = 40,
+    bezier = "linear",
+    style = "loop",
 })
