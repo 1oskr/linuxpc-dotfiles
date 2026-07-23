@@ -505,3 +505,4 @@ Configuración validada:
 - Actualización automática mediante `grub-btrfsd`.
 - Servicios activos después de reiniciar.
 - Snapshot de prueba eliminado correctamente.
+- Snapshot automático `timeline` validado correctamente a las 05:00 mediante `snapper-timeline.timer`.
