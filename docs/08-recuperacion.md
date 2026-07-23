@@ -229,3 +229,27 @@ Advertencia:
 - el respaldo puede contener configuraciones sensibles;
 - no debe subirse a GitHub;
 - los sockets temporales de GnuPG fueron omitidos por `tar`, lo cual es normal.
+
+## Prueba de recuperación de dotfiles
+
+Se realizó una clonación limpia del repositorio en una carpeta temporal:
+
+```text
+/tmp/linuxpc-dotfiles-test
+```
+
+Comandos usados:
+
+```bash
+rm -rf /tmp/linuxpc-dotfiles-test
+git clone git@github.com:1oskr/linuxpc-dotfiles.git /tmp/linuxpc-dotfiles-test
+git -C /tmp/linuxpc-dotfiles-test status
+git -C /tmp/linuxpc-dotfiles-test log -1 --oneline
+```
+
+Resultado:
+
+- clonación completada correctamente;
+- rama `main` sincronizada con `origin/main`;
+- árbol de trabajo limpio;
+- último commit verificado: `6cfc2d9`.

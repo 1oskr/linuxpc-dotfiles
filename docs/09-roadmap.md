@@ -42,7 +42,7 @@
 - [x] Crear respaldo de `/etc`.
 - [ ] Definir estrategia de backup del HDD.
 - [ ] Crear respaldo externo de datos importantes.
-- [ ] Probar recuperación de dotfiles en una carpeta temporal.
+- [x] Probar recuperación de dotfiles en una carpeta temporal.
 
 
 ## Fase 2 — organización del HDD
