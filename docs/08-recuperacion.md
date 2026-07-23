@@ -203,3 +203,29 @@ sudo mount -a
 - No usar `ntfsfix` como sustituto de `chkdsk`.
 - No reparar Btrfs sin diagnóstico previo.
 - No desmontar particiones con archivos abiertos.
+
+## Respaldo manual de `/etc`
+
+Respaldo creado:
+
+```text
+/mnt/hdd/Backups/etc/etc-2026-07-23-0600.tar.gz
+```
+
+Verificaciones realizadas:
+
+- listado interno con `tar -tzf`;
+- checksum SHA-256;
+- resultado: respaldo íntegro.
+
+Checksum:
+
+```text
+a6ec126acc44d5e886f8652d4b13069c7f9399c4a482ef6fed9612d9ec70ad23
+```
+
+Advertencia:
+
+- el respaldo puede contener configuraciones sensibles;
+- no debe subirse a GitHub;
+- los sockets temporales de GnuPG fueron omitidos por `tar`, lo cual es normal.
