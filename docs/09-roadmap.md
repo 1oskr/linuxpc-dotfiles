@@ -31,14 +31,19 @@
 
 ### Pendiente
 
-- Configurar snapshots de Arch.
-- Revisar estrategia de snapshots para Bazzite.
-- Probar restauración de Arch desde snapshot.
-- Crear respaldo de `/etc`.
-- Documentar recuperación de Btrfs.
-- Definir estrategia de backup del HDD.
-- Crear respaldo externo de datos importantes.
-- Probar recuperación de dotfiles en una carpeta temporal.
+- [x] Configurar snapshots de Arch con Snapper.
+- [x] Integrar snapshots automáticos con pacman mediante snap-pac.
+- [x] Integrar snapshots en GRUB mediante grub-btrfs.
+- [x] Probar arranque temporal de Arch desde snapshot con OverlayFS.
+- [x] Documentar snapshots y recuperación temporal de Btrfs.
+- [ ] Documentar procedimiento seguro de rollback permanente.
+- [ ] Probar rollback permanente en un entorno controlado.
+- [ ] Revisar estrategia de snapshots para Bazzite.
+- [ ] Crear respaldo de `/etc`.
+- [ ] Definir estrategia de backup del HDD.
+- [ ] Crear respaldo externo de datos importantes.
+- [ ] Probar recuperación de dotfiles en una carpeta temporal.
+
 
 ## Fase 2 — organización del HDD
 
@@ -157,4 +162,4 @@ Recuperación
 
 ## Próximo bloque recomendado
 
-Configurar snapshots y recuperación de Arch Linux antes de continuar con cambios estéticos o reorganización masiva del HDD.
+Completar respaldos y recuperación: respaldo de /etc, prueba de restauración de dotfiles y estrategia de backup del HDD.
