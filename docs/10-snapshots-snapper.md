@@ -506,3 +506,237 @@ Configuración validada:
 - Servicios activos después de reiniciar.
 - Snapshot de prueba eliminado correctamente.
 - Snapshot automático `timeline` validado correctamente a las 05:00 mediante `snapper-timeline.timer`.
+
+
+---
+
+## Arranque temporal de snapshots con OverlayFS
+
+Los snapshots de Snapper son de solo lectura. Para poder iniciarlos desde GRUB como un entorno temporal escribible, se configuró el hook:
+
+```text
+grub-btrfs-overlayfs
+```
+
+Los cambios realizados dentro de un snapshot arrancado mediante OverlayFS se almacenan temporalmente en RAM y se pierden al reiniciar.
+
+---
+
+## Configuración de `mkinitcpio`
+
+El initramfs original utilizaba el hook `systemd`:
+
+```ini
+HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block filesystems fsck)
+```
+
+Para usar `grub-btrfs-overlayfs`, se cambió a BusyBox con `udev`:
+
+```ini
+HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block filesystems fsck grub-btrfs-overlayfs)
+```
+
+Archivo modificado:
+
+```text
+/etc/mkinitcpio.conf
+```
+
+Respaldo creado:
+
+```text
+/etc/mkinitcpio.conf.backup-antes-snapshots
+```
+
+Regenerar el initramfs:
+
+```bash
+sudo mkinitcpio -P
+```
+
+Durante la generación debe aparecer:
+
+```text
+Running build hook: [grub-btrfs-overlayfs]
+Initcpio image generation successful
+```
+
+La advertencia siguiente no impide generar el initramfs:
+
+```text
+consolefont: no font found in configuration
+```
+
+---
+
+## Corrección de los parámetros de GRUB
+
+Se detectó un salto de línea accidental dentro de:
+
+```ini
+GRUB_CMDLINE_LINUX_DEFAULT
+```
+
+Configuración incorrecta:
+
+```ini
+GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet nvidia_drm.modeset=1
+"
+```
+
+Esto provocaba que `grub-btrfs` generara `rootflags` en otra línea y el kernel no recibiera correctamente:
+
+```text
+subvol=@snapshots/NUMERO/snapshot
+```
+
+Configuración corregida:
+
+```ini
+GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet nvidia_drm.modeset=1"
+```
+
+Archivo:
+
+```text
+/etc/default/grub
+```
+
+Después de corregirlo:
+
+```bash
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+Verificación:
+
+```bash
+sudo sed -n '14,22l' /boot/grub/grub-btrfs.cfg
+```
+
+El comando `linux` debe contener en la misma línea lógica:
+
+```text
+rootflags=rw,noatime,compress=zstd:3,ssd,discard=async,space_cache=v2,subvol="@snapshots/NUMERO/snapshot"
+```
+
+---
+
+## Prueba real de arranque
+
+Se creó el snapshot:
+
+```text
+13 │ Snapshot con grub-btrfs-overlayfs
+```
+
+Ruta:
+
+```text
+@snapshots/13/snapshot
+```
+
+Se inició desde:
+
+```text
+Arch Linux snapshots
+→ Snapshot con grub-btrfs-overlayfs
+→ vmlinuz-linux & initramfs-linux.img
+```
+
+El snapshot arrancó correctamente en TTY.
+
+Después de iniciar sesión se verificó OverlayFS:
+
+```bash
+findmnt -no SOURCE,OPTIONS /
+```
+
+Salida observada:
+
+```text
+rootfs rw,relatime,lowerdir=...,upperdir=...,workdir=...,uuid=on
+```
+
+Esto confirma que el snapshot fue montado como raíz de solo lectura con una capa temporal escribible.
+
+La sesión gráfica se inició manualmente con:
+
+```bash
+start-hyprland
+```
+
+Hyprland cargó correctamente.
+
+---
+
+## Comportamiento esperado al arrancar un snapshot
+
+El sistema no inicia Hyprland automáticamente porque la sesión gráfica normal también requiere:
+
+1. iniciar sesión en TTY;
+2. ejecutar:
+
+```bash
+start-hyprland
+```
+
+El fallo siguiente puede aparecer al usar OverlayFS:
+
+```text
+systemd-remount-fs.service
+```
+
+Esto no impidió iniciar el snapshot ni ejecutar Hyprland.
+
+---
+
+## Volver al sistema normal
+
+Desde el snapshot:
+
+```bash
+reboot
+```
+
+En GRUB seleccionar la entrada normal de Arch Linux.
+
+Verificar la raíz:
+
+```bash
+findmnt -no SOURCE,OPTIONS /
+```
+
+Salida esperada:
+
+```text
+/dev/nvme0n1p8[/@]
+```
+
+Verificar servicios:
+
+```bash
+systemctl is-active snapper-timeline.timer snapper-cleanup.timer grub-btrfsd.service
+```
+
+Salida esperada:
+
+```text
+active
+active
+active
+```
+
+---
+
+## Estado validado de recuperación
+
+- El submenú de snapshots aparece en GRUB.
+- GRUB carga kernel e initramfs desde el snapshot.
+- `rootflags` apunta correctamente al subvolumen del snapshot.
+- OverlayFS permite iniciar snapshots de solo lectura.
+- El snapshot 13 inició correctamente.
+- El acceso por TTY funcionó.
+- Hyprland inició mediante `start-hyprland`.
+- El reinicio devolvió correctamente al subvolumen normal `@`.
+- No se realizó ningún rollback permanente.
