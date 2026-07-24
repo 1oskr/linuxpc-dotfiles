@@ -11,3 +11,9 @@
 .env
 *.secret
 secrets/
+
+
+# Copias de respaldo y logs
+*.bak
+*.backup
+*.log
