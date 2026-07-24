@@ -302,3 +302,131 @@ pgrep -af hyprpaper
 - Verificar `git status` antes de hacer commit.
 - No guardar claves SSH, tokens ni contraseñas en el repositorio.
 - Mantener copias de seguridad antes de cambios importantes.
+
+## Acceso remoto
+
+### SSH
+
+Permite administrar Arch desde otro equipo mediante terminal.
+
+Servicio:
+
+```bash
+sudo systemctl enable --now sshd
+```
+
+Conexión desde otro equipo:
+
+```bash
+ssh oscar@192.168.1.81
+```
+
+### Visual Studio Code Remote SSH
+
+Se utiliza para editar archivos de Arch desde Visual Studio Code en el Mac.
+
+Host configurado:
+
+```text
+arch
+```
+
+Uso recomendado:
+
+- programación;
+- edición de configuraciones;
+- mantenimiento del repositorio;
+- revisión de archivos sin usar escritorio remoto.
+
+### Sunshine
+
+Sunshine transmite el escritorio mediante codificación por hardware de la GPU NVIDIA.
+
+Paquete:
+
+```text
+sunshine-bin
+```
+
+Servicio de usuario:
+
+```bash
+systemctl --user enable --now app-dev.lizardbyte.app.Sunshine
+```
+
+Estado:
+
+```bash
+systemctl --user status app-dev.lizardbyte.app.Sunshine
+```
+
+Interfaz web local:
+
+```text
+https://localhost:47990
+```
+
+Puerto de administración:
+
+```text
+47990
+```
+
+Monitor transmitido:
+
+```text
+HDMI-A-1
+```
+
+Corresponde al monitor central principal.
+
+Codificación:
+
+```text
+NVIDIA NVENC
+```
+
+La configuración NVENC se mantiene con sus valores predeterminados orientados a baja latencia.
+
+### Moonlight
+
+Moonlight se utiliza como cliente en el Mac.
+
+Configuración actual:
+
+```text
+Resolución: 1920×1080
+FPS: 60
+Bitrate: aproximadamente 80 Mbps
+Códec: automático
+Decodificador: automático
+V-Sync: desactivado
+HDR: desactivado
+```
+
+Atajo para finalizar una transmisión desde macOS:
+
+```text
+Control + Option + Shift + Q
+```
+
+### RustDesk
+
+RustDesk permanece instalado como método de respaldo.
+
+Limitación conocida:
+
+```text
+El mapeo del cursor puede ser incorrecto con Hyprland, Wayland y varios monitores.
+```
+
+Por este motivo, Sunshine y Moonlight son la solución principal para escritorio remoto.
+
+### Flujo recomendado
+
+```text
+SSH                  -> administración y terminal
+VS Code Remote SSH   -> edición y programación
+Sunshine + Moonlight -> escritorio remoto
+RustDesk             -> respaldo
+```
