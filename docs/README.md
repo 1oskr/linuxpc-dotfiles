@@ -14,6 +14,8 @@ Registro técnico del diseño, instalación, configuración, mantenimiento y rec
 
 ## Documentos
 
+[Contexto general del proyecto](PROJECT_CONTEXT.md)
+
 1. [Arquitectura del equipo](01-arquitectura.md)
 2. [Particiones y sistemas de archivos](02-particiones.md)
 3. [Arranque y GRUB](03-grub.md)
@@ -23,6 +25,7 @@ Registro técnico del diseño, instalación, configuración, mantenimiento y rec
 7. [Dotfiles y Git](07-dotfiles-git.md)
 8. [Recuperación del sistema](08-recuperacion.md)
 9. [Roadmap](09-roadmap.md)
+10. [Snapshots con Snapper](10-snapshots-snapper.md)
 
 ## Principios
 
