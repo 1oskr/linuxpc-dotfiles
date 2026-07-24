@@ -183,3 +183,12 @@ hl.bind(
     hl.dsp.exec_cmd("playerctl stop"),
     { description = "Detener reproducción" }
 )
+
+
+
+-- Alternar ventana entre mosaico y flotante
+hl.bind(
+    "SUPER + V",
+    hl.dsp.window.float({ action = "toggle" }),
+    { description = "Alternar ventana flotante" }
+)
