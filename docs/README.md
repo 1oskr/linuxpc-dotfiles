@@ -24,7 +24,7 @@ Registro técnico del diseño, instalación, configuración, mantenimiento y rec
 6. [Bazzite](06-bazzite.md)
 7. [Dotfiles y Git](07-dotfiles-git.md)
 8. [Recuperación del sistema](08-recuperacion.md)
-9. [Roadmap](09-roadmap.md)
+9. [Roadmap maestro ejecutable](09-roadmap.md)
 10. [Snapshots con Snapper](10-snapshots-snapper.md)
 
 ## Principios
