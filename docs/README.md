@@ -26,6 +26,7 @@ Registro técnico del diseño, instalación, configuración, mantenimiento y rec
 8. [Recuperación del sistema](08-recuperacion.md)
 9. [Roadmap maestro ejecutable](09-roadmap.md)
 10. [Snapshots con Snapper](10-snapshots-snapper.md)
+11. [Mapa de datos y objetivos de recuperación](11-mapa-datos-recuperacion.md)
 
 ## Principios
 
