@@ -148,7 +148,7 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P0-01 — Mapa de datos y objetivos de recuperación
 
-- **Estado:** No iniciado
+- **Estado:** En preparación
 - **Objetivo:** determinar qué información existe, cuál es irremplazable y qué nivel de pérdida o interrupción es aceptable.
 - **Prioridad:** P0
 - **Prerequisitos:** acceso al estado actual de Arch Linux, `/home` y el HDD compartido.
