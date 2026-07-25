@@ -160,7 +160,7 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P0-02 — Copia independiente de datos críticos
 
-- **Estado:** En preparación
+- **Estado:** Completado
 - **Objetivo:** asegurar que los datos críticos sobrevivan a la pérdida completa del equipo.
 - **Prioridad:** P0
 - **Prerequisitos:** destino de respaldo independiente disponible.
