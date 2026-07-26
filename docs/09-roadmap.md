@@ -172,7 +172,7 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P0-03 — Prueba integral de restauración
 
-- **Estado:** No iniciado
+- **Estado:** Completado
 - **Objetivo:** demostrar que los respaldos permiten recuperar información utilizable.
 - **Prioridad:** P0
 - **Prerequisitos:** medio de prueba y copias creadas por P0-02.
