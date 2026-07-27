@@ -40,17 +40,30 @@ go() {
 
 
 
-#copiar salidas de comandos:
+# Copiar automáticamente la salida del último comando
 
 autoload -Uz add-zsh-hook
 
 COPY_OUTPUT_STATE="$HOME/.cache/copysalida-enabled"
+COPY_OUTPUT_LAST_COMMAND=""
+
+_remember_last_command() {
+    COPY_OUTPUT_LAST_COMMAND="$1"
+}
 
 _copy_last_output() {
     [[ -f "$COPY_OUTPUT_STATE" ]] || return
     [[ -n "$KITTY_WINDOW_ID" ]] || return
 
-    kitten @ get-text --extent=last_cmd_output 2>/dev/null | wl-copy
+    # No sobrescribir el portapapeles cuando el comando lo administra directamente.
+    case "$COPY_OUTPUT_LAST_COMMAND" in
+        *cliphist-rofi*|*cliphist*|*wl-copy*|*wl-paste*|copysalida*)
+            return
+            ;;
+    esac
+
+    kitten @ get-text --extent=last_cmd_output 2>/dev/null |
+        wl-copy
 }
 
 copysalida() {
@@ -77,5 +90,20 @@ copysalida() {
     esac
 }
 
+add-zsh-hook -d preexec _remember_last_command 2>/dev/null
 add-zsh-hook -d precmd _copy_last_output 2>/dev/null
+
+add-zsh-hook preexec _remember_last_command
 add-zsh-hook precmd _copy_last_output
+
+
+
+ytm() {
+    youtube-music-desktop-app >/tmp/youtube-music.log 2>&1 &!
+}
+
+
+libreoffice() {
+    command libreoffice "$@" >/dev/null 2>&1 &
+    disown
+}

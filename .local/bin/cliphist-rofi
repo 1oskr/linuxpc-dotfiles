@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+selection="$(
+  cliphist list |
+    rofi -dmenu \
+      -display-columns 2 \
+      -p "Portapapeles"
+)"
+
+[ -n "$selection" ] || exit 0
+
+printf '%s' "$selection" |
+  cliphist decode |
+  wl-copy
+  

@@ -198,7 +198,25 @@ Ejemplo:
 
 ## 11. Pestañas
 
-Yazi incluye pestañas, pero conviene consultar `~` dentro de Yazi para ver las teclas exactas cargadas por esta versión y cualquier cambio personalizado.
+| Tecla | Acción |
+|---|---|
+| `t t` | Crear una pestaña nueva en la ruta actual |
+| `1`–`9` | Cambiar a una pestaña concreta |
+| `[` | Ir a la pestaña anterior |
+| `]` | Ir a la pestaña siguiente |
+| `{` | Mover la pestaña actual hacia la izquierda |
+| `}` | Mover la pestaña actual hacia la derecha |
+| `Ctrl+c` | Cerrar la pestaña actual |
+
+### Ejemplo de uso
+
+```text
+g d    Ir a Dotfiles
+t t    Crear otra pestaña
+g m    Ir al HDD
+1      Volver a la primera pestaña
+2      Ir a la segunda pestaña
+```
 
 ## 12. Flujo diario recomendado
 

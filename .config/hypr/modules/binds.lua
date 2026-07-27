@@ -192,3 +192,10 @@ hl.bind(
     hl.dsp.window.float({ action = "toggle" }),
     { description = "Alternar ventana flotante" }
 )
+
+-- Historial del portapapeles
+hl.bind(
+    "SUPER + SHIFT + V",
+    hl.dsp.exec_cmd("~/.local/bin/cliphist-rofi"),
+    { description = "Abrir historial del portapapeles" }
+)
