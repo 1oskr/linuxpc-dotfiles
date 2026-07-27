@@ -50,8 +50,8 @@ hl.bind(
 -- Abrir explorador
 hl.bind(
     "SUPER + E",
-    hl.dsp.exec_cmd("nemo"),
-    { description = "Abrir Nemo" }
+    hl.dsp.exec_cmd("kitty -e yazi"),
+    { description = "Abrir Yazi" }
 )
 
 -- Workspaces: 
