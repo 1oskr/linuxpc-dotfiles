@@ -184,7 +184,7 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P0-04 — Rollback permanente de Arch
 
-- **Estado:** No iniciado
+- **Estado:** Completado
 - **Objetivo:** cerrar la principal brecha pendiente de la recuperación de Arch Linux.
 - **Prioridad:** P0
 - **Prerequisitos:** respaldo verificado, snapshots válidos y una ventana de mantenimiento.
