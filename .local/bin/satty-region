@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+geometry="$(slurp)" || exit 0
+
+grim -g "$geometry" - |
+	satty \
+		--filename - \
+		--copy-command wl-copy \
+		--disable-notifications

@@ -199,3 +199,11 @@ hl.bind(
     hl.dsp.exec_cmd("~/.local/bin/cliphist-rofi"),
     { description = "Abrir historial del portapapeles" }
 )
+
+
+-- Captura de región con anotaciones
+hl.bind(
+    "SUPER + SHIFT + X",
+    hl.dsp.exec_cmd("~/.local/bin/satty-region"),
+    { description = "Capturar y anotar región" }
+)
