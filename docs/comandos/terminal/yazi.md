@@ -29,6 +29,7 @@ Guía verificada con la documentación oficial de Yazi 26.5.6 y adaptada a la co
 | `g d` | `/home/oscar/linuxpc-dotfiles` |
 | `g w` | `/home/oscar/Pictures/Wallpapers` |
 | `g m` | `/mnt/hdd` |
+| `g c` | `/home/oscar/linuxpc-dotfiles/docs/comandos` |
 | `g p` | `~/Projects` — actualmente no existe |
 
 ## 3. Abrir archivos
@@ -47,6 +48,7 @@ Aplicaciones configuradas:
 | Imágenes | `imv` |
 | PDF | `zathura` |
 | Videos | `vlc` |
+| Texto y código | `code --reuse-window` |
 
 ## 4. Selección
 
@@ -111,17 +113,101 @@ Las combinaciones se presionan una tecla después de la otra.
 | `;` | Ejecutar un comando de shell sin bloquear Yazi |
 | `:` | Ejecutar un comando y esperar a que termine |
 
-## 10. Pestañas
+## 10. Cambiar permisos
+
+Atajo personalizado:
+
+```text
+c m
+```
+
+Abre el plugin `chmod` para modificar los permisos del archivo o carpeta seleccionada.
+
+### Permisos comunes
+
+| Código | Uso habitual |
+|---|---|
+| `644` | Archivo normal: el propietario puede leer y escribir; el grupo y los demás solo pueden leer |
+| `755` | Script ejecutable o carpeta accesible: el propietario tiene control completo y los demás pueden leer y ejecutar |
+| `600` | Archivo privado: solo el propietario puede leer y escribir |
+| `700` | Script o carpeta privada: solo el propietario tiene acceso completo |
+
+### Significado de cada dígito
+
+Los permisos se escriben con tres dígitos:
+
+```text
+propietario grupo otros
+```
+
+Cada dígito se calcula sumando:
+
+| Valor | Permiso |
+|---|---|
+| `4` | Lectura |
+| `2` | Escritura |
+| `1` | Ejecución |
+
+Ejemplos:
+
+```text
+6 = 4 + 2       lectura y escritura
+7 = 4 + 2 + 1   lectura, escritura y ejecución
+5 = 4 + 1       lectura y ejecución
+```
+
+Interpretación:
+
+```text
+644 = propietario: lectura y escritura
+      grupo: lectura
+      otros: lectura
+
+755 = propietario: lectura, escritura y ejecución
+      grupo: lectura y ejecución
+      otros: lectura y ejecución
+
+600 = propietario: lectura y escritura
+      grupo: sin permisos
+      otros: sin permisos
+
+700 = propietario: lectura, escritura y ejecución
+      grupo: sin permisos
+      otros: sin permisos
+```
+
+### Verificar permisos
+
+```bash
+stat -c '%A %a %n' archivo
+```
+
+Ejemplo:
+
+```text
+-rw------- 600 archivo
+```
+
+### Recomendaciones
+
+- Usa `644` para documentos normales.
+- Usa `755` para scripts ejecutables y carpetas accesibles.
+- Usa `600` para archivos privados.
+- Usa `700` para scripts o carpetas privadas.
+- Evita `777`, salvo que entiendas claramente sus implicaciones.
+
+## 11. Pestañas
 
 Yazi incluye pestañas, pero conviene consultar `~` dentro de Yazi para ver las teclas exactas cargadas por esta versión y cualquier cambio personalizado.
 
-## 11. Flujo diario recomendado
+## 12. Flujo diario recomendado
 
 ```text
 g h       Home
 g d       Dotfiles
 g w       Wallpapers
 g m       HDD
+g c       Manual de comandos
 /         Buscar en la carpeta
 f         Filtrar
 Space     Seleccionar
@@ -130,30 +216,29 @@ p         Pegar
 r         Renombrar
 d         Papelera
 D         Eliminar permanentemente
+c m       Cambiar permisos
 .         Mostrar ocultos
 Tab       Información
 O         Abrir con…
 q         Salir
 ```
 
-## 12. Problema actual con archivos Markdown
+## 13. Apertura de archivos Markdown
 
-Al abrir un `.md`, Yazi ejecutó:
-
-```text
-${EDITOR:-vi} archivo.md
-```
-
-El proceso terminó con código `127`, que normalmente significa que el comando no existe. En este sistema, Yazi intentó usar `vi`, pero `vi` no está instalado o no está disponible en `PATH`.
-
-La solución recomendada para este entorno es configurar los archivos de texto y Markdown para abrirse en VS Code mediante un `opener` específico, o definir:
+Los archivos `.md`, `.txt`, `.lua`, `.toml`, `.conf`, `.json`, `.jsonc`, `.yaml`, `.yml`, `.tex`, `.bib`, `.py`, `.sh` y `.zsh` están configurados para abrirse en VS Code mediante:
 
 ```bash
-export EDITOR=code
-export VISUAL=code
+code --reuse-window
 ```
 
-Para usar VS Code desde Yazi sin bloquearlo, es preferible un opener con `code --reuse-window`.
+Esto evita el error anterior causado por el intento de usar `vi`, que no estaba disponible en el sistema.
+
+## 14. Plugins instalados
+
+| Plugin | Función |
+|---|---|
+| `git.yazi` | Mostrar estados de Git dentro de Yazi |
+| `chmod.yazi` | Cambiar permisos mediante `c m` |
 
 ## Fuentes oficiales
 
