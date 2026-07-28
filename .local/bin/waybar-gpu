@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+IFS=',' read -r usage temperature memory_used memory_total power_draw < <(
+  nvidia-smi \
+    --query-gpu=utilization.gpu,temperature.gpu,memory.used,memory.total,power.draw \
+    --format=csv,noheader,nounits
+)
+
+usage=${usage// /}
+temperature=${temperature// /}
+memory_used=${memory_used// /}
+memory_total=${memory_total// /}
+power_draw=${power_draw// /}
+
+printf '{"text":"󰢮 %s%% %s°C","tooltip":"VRAM: %s/%s MiB\\nConsumo: %s W"}\n' \
+  "$usage" "$temperature" "$memory_used" "$memory_total" "$power_draw"

@@ -1,0 +1,62 @@
+{
+  "id": "waybar-hdmi",
+  "output": "HDMI-A-1",
+  "layer": "overlay",
+  "position": "top",
+  "height": 34,
+  "exclusive": false,
+  "passthrough": false,
+  "modules-left": [
+    "custom/launcher",
+    "hyprland/window"
+  ],
+  "modules-center": [
+    "hyprland/workspaces"
+  ],
+  "modules-right": [
+    "network",
+    "pulseaudio",
+    "cpu",
+    "custom/gpu",
+    "memory",
+    "clock"
+  ],
+  "custom/launcher": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "~/.local/bin/powermenu"
+  },
+  "hyprland/workspaces": {
+    "format": "{name}"
+  },
+  "hyprland/window": {
+    "format": "{title}",
+    "icon": true,
+    "icon-size": 16,
+    "max-length": 60
+  },
+  "network": {
+    "format-wifi": "󰤨 {signalStrength}%",
+    "format-ethernet": "󰈀",
+    "format-disconnected": "󰤮"
+  },
+  "pulseaudio": {
+    "format": "󰕾 {volume}%"
+  },
+  "cpu": {
+    "format": " {usage}%"
+  },
+"custom/gpu": {
+  "exec": "~/.local/bin/waybar-gpu",
+  "interval": 2,
+  "return-type": "json",
+  "tooltip": true,
+  "on-click": "nvidia-settings"
+},
+  "memory": {
+    "format": " {}%"
+  },
+  "clock": {
+    "format": "󰥔 {:%a %d %b  %H:%M}"
+  }
+}

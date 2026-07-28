@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+option=$(
+    printf 'Cerrar sesión\nReiniciar\nApagar' |
+        rofi -dmenu -i -p 'Sistema'
+)
+
+case "$option" in
+    "Cerrar sesión")
+        hyprctl dispatch exit
+        ;;
+    "Reiniciar")
+        confirm=$(printf 'No\nSí' | rofi -dmenu -i -p '¿Reiniciar?')
+        [[ "$confirm" == "Sí" ]] && systemctl reboot
+        ;;
+    "Apagar")
+        confirm=$(printf 'No\nSí' | rofi -dmenu -i -p '¿Apagar?')
+        [[ "$confirm" == "Sí" ]] && systemctl poweroff
+        ;;
+esac

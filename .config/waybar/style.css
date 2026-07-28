@@ -1,80 +1,115 @@
 * {
     font-family: "JetBrainsMono Nerd Font";
-    font-size: 12px;
+    font-size: 13px;
+    font-weight: 800;
     border: none;
     border-radius: 0;
     min-height: 0;
+    color: #ffffff;
 }
 
 window#waybar {
-    /*background: #050505;*/
-    background: rgba(5, 5, 5, 0.25);
-    color: #e6e6e6;
-    border-bottom: 1px solid #3a3a3a;
+    background: rgb(0, 0, 0);
+    border-bottom: 1px solid rgb(0, 0, 0);
 }
 
+/* Espacios de trabajo */
+
 #workspaces {
-    margin: 3px 4px;
-    background: #111111;
-    border: 1px solid #333333;
-    border-radius: 6px;
+    margin: 0 6px;
+    background: transparent;
 }
 
 #workspaces button {
-    padding: 0 8px;
-    margin: 2px;
-    color: #aaaaaa;
-    border-radius: 4px;
+    min-width: 25px;
+    padding: 0 7px;
+    margin: 3px 1px;
+
+    color: rgba(255, 255, 255, 0.60);
+    background: transparent;
+    border-radius: 6px;
+}
+
+#workspaces button:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.10);
 }
 
 #workspaces button.active {
-    background: #d7d75f;
-    color: #050505;
+    color: #ffffff;
+    background: #000000;
 }
 
 #workspaces button.urgent {
-    background: #ff5f5f;
-    color: #050505;
+    color: #000000;
+    background: #ffffff;
 }
 
+/* Aplicación activa */
+
 #window {
-    margin: 3px 4px;
-    padding: 0 10px;
-    background: #111111;
-    border: 1px solid #333333;
-    border-radius: 6px;
-    color: #d7d7d7;
+    margin: 0 8px;
+    padding: 0 18px;
+
+    color: #ffffff;
+    background: transparent;
 }
+
+/* Información derecha */
 
 #network,
 #pulseaudio,
 #cpu,
+#custom-gpu,
 #memory,
 #clock {
-    margin: 3px 2px;
+    margin: 0 2px;
     padding: 0 9px;
-    background: rgba(17, 17, 17, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 4px;
-}
 
-#network {
-    color: #5fd7ff;
-}
-
-#pulseaudio {
-    color: #ffaf5f;
-}
-
-#cpu {
-    color: #87d787;
-}
-
-#memory {
-    color: #d787ff;
+    color: #ffffff;
+    background: transparent;
 }
 
 #clock {
-    color: #ffd75f;
-    margin-right: 5px;
+    margin-right: 8px;
+}
+
+#network.disconnected,
+#pulseaudio.muted {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+tooltip {
+    background: #080808;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 7px;
+}
+
+tooltip label {
+    padding: 4px;
+    color: #ffffff;
+}
+
+
+#custom-launcher {
+    min-width: 28px;
+    margin-left: 8px;
+    padding: 0 6px;
+
+    font-size: 17px;
+    color: #ffffff;
+    background: transparent;
+}
+
+#custom-launcher:hover {
+    background: rgba(255, 255, 255, 0.10);
+    border-radius: 6px;
+}
+
+#custom-power {
+    min-width: 22px;
+    padding: 0 7px;
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 14px;
+    font-weight: 700;
 }

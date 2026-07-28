@@ -45,3 +45,19 @@ hl.animation({
     bezier = "linear",
     style = "loop",
 })
+
+hl.animation({
+    leaf = "layersIn",
+    enabled = true,
+    speed = 3,
+    bezier = "smooth",
+    style = "slide top",
+})
+
+hl.animation({
+    leaf = "layersOut",
+    enabled = true,
+    speed = 3,
+    bezier = "smooth",
+    style = "slide top",
+})

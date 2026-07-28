@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+
+exec 9>/tmp/waybar-hover.lock
+flock -n 9 || exit 0
+
+declare -A configs=(
+    ["HDMI-A-1"]="$HOME/.config/waybar/hdmi.jsonc"
+    ["DP-1"]="$HOME/.config/waybar/dp1.jsonc"
+    ["DP-2"]="$HOME/.config/waybar/dp2.jsonc"
+)
+
+visible_monitor=""
+waybar_pid=""
+outside_since=0
+
+now_ms() {
+    date +%s%3N
+}
+
+show_bar() {
+    local monitor="$1"
+
+    waybar \
+        -c "${configs[$monitor]}" \
+        -s "$HOME/.config/waybar/style.css" \
+        >/tmp/waybar-"$monitor".log 2>&1 &
+
+    waybar_pid=$!
+    visible_monitor="$monitor"
+}
+
+hide_bar() {
+    if [[ -n "$waybar_pid" ]] && kill -0 "$waybar_pid" 2>/dev/null; then
+        kill -TERM "$waybar_pid"
+        wait "$waybar_pid" 2>/dev/null
+    fi
+
+    waybar_pid=""
+    visible_monitor=""
+}
+
+cleanup() {
+    hide_bar
+}
+
+trap cleanup EXIT INT TERM
+
+pkill waybar 2>/dev/null
+
+while sleep 0.06; do
+    cursor=$(hyprctl cursorpos -j 2>/dev/null) || continue
+    monitors=$(hyprctl monitors -j 2>/dev/null) || continue
+
+    x=$(jq -r '.x' <<<"$cursor")
+    y=$(jq -r '.y' <<<"$cursor")
+
+    monitor_data=$(
+        jq -r --argjson x "$x" --argjson y "$y" '
+            .[] |
+            select(
+                $x >= .x and
+                $x < (.x + .width) and
+                $y >= .y and
+                $y < (.y + .height)
+            ) |
+            "\(.name) \(.y)"
+        ' <<<"$monitors" |
+        head -n 1
+    )
+
+    [[ -n "$monitor_data" ]] || continue
+
+    read -r monitor monitor_y <<<"$monitor_data"
+    local_y=$((y - monitor_y))
+
+    if (( local_y <= 3 )); then
+        outside_since=0
+
+        if [[ "$visible_monitor" != "$monitor" ]]; then
+            [[ -n "$visible_monitor" ]] && hide_bar
+            show_bar "$monitor"
+        fi
+
+        continue
+    fi
+
+    [[ -n "$visible_monitor" ]] || continue
+
+    if [[ "$monitor" == "$visible_monitor" ]] && (( local_y <= 70 )); then
+        outside_since=0
+        continue
+    fi
+
+    now=$(now_ms)
+
+    if (( outside_since == 0 )); then
+        outside_since=$now
+    elif (( now - outside_since >= 350 )); then
+        hide_bar
+        outside_since=0
+    fi
+done
