@@ -98,10 +98,43 @@ Configuración específica del equipo:
 ## Componentes del escritorio
 
 ### Waybar
-
 ```text
-~/.config/waybar/config.jsonc
+~/.config/waybar/hdmi.jsonc
+~/.config/waybar/dp1.jsonc
+~/.config/waybar/dp2.jsonc
 ~/.config/waybar/style.css
+~/.local/bin/waybar-hover
+~/.local/bin/waybar-gpu
+~/.local/bin/powermenu
+
+Waybar utiliza una instancia dinámica gestionada por `waybar-hover`.
+
+Comportamiento comprobado:
+
+- aparece al tocar el borde superior;
+- se muestra solo en el monitor donde está el cursor;
+- funciona en HDMI-A-1, DP-1 y DP-2;
+- funciona sobre ventanas en pantalla completa;
+- se destruye al ocultarse para permitir animaciones de entrada y salida;
+- el autostart inicia una sola instancia de `waybar-hover`;
+- `waybar-multi` ya no se utiliza.
+
+Funciones principales:
+
+- workspaces y aplicación activa;
+- red, audio, CPU, memoria y fecha;
+- uso y temperatura de la GPU NVIDIA;
+- tooltip con VRAM y consumo eléctrico;
+- logo de Arch para abrir el menú de energía.
+
+Diagnóstico:
+
+```bash
+pgrep -af 'waybar|waybar-hover'
+tail -n 80 /tmp/waybar-hover.log
+tail -n 80 /tmp/waybar-HDMI-A-1.log
+tail -n 80 /tmp/waybar-DP-1.log
+tail -n 80 /tmp/waybar-DP-2.log
 ```
 
 ### Kitty
