@@ -8,4 +8,4 @@ Referencia personal de comandos y atajos utilizados en LinuxPC.
 - [Git](git.md)
 - [Arch Linux](arch.md)
 - [Hyprland](hyprland.md)
-- [LaTeX](latex.md)
+- [LaTeX](desarrollo/latex.md)
