@@ -207,3 +207,9 @@ hl.bind(
     hl.dsp.exec_cmd("~/.local/bin/satty-region"),
     { description = "Capturar y anotar región" }
 )
+
+-- Selector de wallpapers
+hl.bind(
+    "SUPER + ALT + W",
+    hl.dsp.exec_cmd("~/.local/bin/wallpaper-selector")
+)

@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+WALLPAPER_DIR="$HOME/Pictures/Wallpapers/Waywallen"
+HYPRPAPER_CONFIG="$HOME/.config/hypr/hyprpaper.conf"
+MONITOR="HDMI-A-1"
+
+selected="$(
+    find "$WALLPAPER_DIR" -maxdepth 1 -type f \
+        \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) \
+        ! -name 'catalogo-wallpapers.jpg' \
+        -printf '%f\n' |
+    sort |
+    rofi -dmenu -i -p "Wallpaper"
+)"
+
+[[ -z "$selected" ]] && exit 0
+
+wallpaper="$WALLPAPER_DIR/$selected"
+temporary="$(mktemp)"
+
+awk -v monitor="$MONITOR" -v wallpaper="$wallpaper" '
+    $0 ~ /^[[:space:]]*wallpaper[[:space:]]*\{/ {
+        inside = 1
+        matches = 0
+    }
+
+    inside && $0 ~ "^[[:space:]]*monitor[[:space:]]*=[[:space:]]*" monitor "[[:space:]]*$" {
+        matches = 1
+    }
+
+    inside && matches && $0 ~ /^[[:space:]]*path[[:space:]]*=/ {
+        sub(/path[[:space:]]*=.*$/, "path = " wallpaper)
+    }
+
+    /^[[:space:]]*\}[[:space:]]*$/ {
+        inside = 0
+        matches = 0
+    }
+
+    { print }
+' "$HYPRPAPER_CONFIG" > "$temporary"
+
+mv "$temporary" "$HYPRPAPER_CONFIG"
+
+hyprctl hyprpaper wallpaper "$MONITOR, $wallpaper, cover"
