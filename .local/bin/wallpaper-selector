@@ -4,7 +4,33 @@ set -euo pipefail
 
 WALLPAPER_DIR="$HOME/Pictures/Wallpapers/Waywallen"
 HYPRPAPER_CONFIG="$HOME/.config/hypr/hyprpaper.conf"
-MONITOR="HDMI-A-1"
+
+destination="$(
+    printf '%s\n' \
+        "Central" \
+        "Izquierdo" \
+        "Derecho" \
+        "Todos los monitores" |
+    rofi -dmenu -i -p "Destino"
+)" || exit 0
+
+case "$destination" in
+    "Central")
+        monitors=("HDMI-A-1")
+        ;;
+    "Izquierdo")
+        monitors=("DP-1")
+        ;;
+    "Derecho")
+        monitors=("DP-2")
+        ;;
+    "Todos los monitores")
+        monitors=("HDMI-A-1" "DP-1" "DP-2")
+        ;;
+    *)
+        exit 0
+        ;;
+esac
 
 selected="$(
     find "$WALLPAPER_DIR" -maxdepth 1 -type f \
@@ -13,24 +39,43 @@ selected="$(
         -printf '%f\n' |
     sort |
     rofi -dmenu -i -p "Wallpaper"
-)"
+)" || exit 0
 
 [[ -z "$selected" ]] && exit 0
 
 wallpaper="$WALLPAPER_DIR/$selected"
+monitor_list="$(IFS=,; printf '%s' "${monitors[*]}")"
 temporary="$(mktemp)"
 
-awk -v monitor="$MONITOR" -v wallpaper="$wallpaper" '
-    $0 ~ /^[[:space:]]*wallpaper[[:space:]]*\{/ {
+trap 'rm -f "$temporary"' EXIT
+
+awk \
+    -v monitors="$monitor_list" \
+    -v wallpaper="$wallpaper" '
+    BEGIN {
+        count = split(monitors, list, ",")
+
+        for (i = 1; i <= count; i++) {
+            target[list[i]] = 1
+        }
+    }
+
+    /^[[:space:]]*wallpaper[[:space:]]*\{/ {
         inside = 1
         matches = 0
     }
 
-    inside && $0 ~ "^[[:space:]]*monitor[[:space:]]*=[[:space:]]*" monitor "[[:space:]]*$" {
-        matches = 1
+    inside && /^[[:space:]]*monitor[[:space:]]*=/ {
+        current = $0
+        sub(/^[[:space:]]*monitor[[:space:]]*=[[:space:]]*/, "", current)
+        sub(/[[:space:]]*$/, "", current)
+
+        if (current in target) {
+            matches = 1
+        }
     }
 
-    inside && matches && $0 ~ /^[[:space:]]*path[[:space:]]*=/ {
+    inside && matches && /^[[:space:]]*path[[:space:]]*=/ {
         sub(/path[[:space:]]*=.*$/, "path = " wallpaper)
     }
 
@@ -43,5 +88,8 @@ awk -v monitor="$MONITOR" -v wallpaper="$wallpaper" '
 ' "$HYPRPAPER_CONFIG" > "$temporary"
 
 mv "$temporary" "$HYPRPAPER_CONFIG"
+trap - EXIT
 
-hyprctl hyprpaper wallpaper "$MONITOR, $wallpaper, cover"
+for monitor in "${monitors[@]}"; do
+    hyprctl hyprpaper wallpaper "$monitor, $wallpaper, cover"
+done
