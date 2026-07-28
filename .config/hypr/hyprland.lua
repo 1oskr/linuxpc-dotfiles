@@ -8,9 +8,7 @@ require("modules/monitors")
 require("modules/autostart")
 require("modules/binds")
 require("modules/animations")
-
-
--- require("modules/rules")
+require("modules/rules")
 -- require("modules/workspaces")
 
 
