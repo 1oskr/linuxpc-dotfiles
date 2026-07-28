@@ -1,5 +1,4 @@
 hl.on("hyprland.start", function()
-	hl.exec_cmd("~/.local/bin/waybar-multi")
 	hl.exec_cmd("sleep 2; ~/.local/bin/waybar-hover >/tmp/waybar-hover.log 2>&1 &")
 	hl.exec_cmd("lxpolkit")
 	hl.exec_cmd("hyprsunset")
