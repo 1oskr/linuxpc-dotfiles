@@ -1,0 +1,4 @@
+interface:
+  display_name: "Recovery Auditor"
+  short_description: "Audit LinuxPC recovery readiness safely"
+  default_prompt: "Use $recovery-auditor to audit LinuxPC recovery coverage, restore paths, and verification gaps safely."

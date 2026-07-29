@@ -1,0 +1,4 @@
+interface:
+  display_name: "Arch Diagnose"
+  short_description: "Diagnose LinuxPC Arch problems from live evidence"
+  default_prompt: "Use $arch-diagnose to inspect LinuxPC Arch symptoms, evidence, hypotheses, and likely cause before fixing."

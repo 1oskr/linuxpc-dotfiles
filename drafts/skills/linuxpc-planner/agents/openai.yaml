@@ -1,0 +1,4 @@
+interface:
+  display_name: "LinuxPC Planner"
+  short_description: "Plan the next highest-impact LinuxPC work unit"
+  default_prompt: "Use $linuxpc-planner to inspect LinuxPC priorities, blockers, and the next best bounded work unit."

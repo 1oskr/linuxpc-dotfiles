@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maintain LinuxPC"
+  short_description: "Maintain, diagnose, and improve LinuxPC safely"
+  default_prompt: "Use $maintain-linuxpc to maintain, diagnose, or improve LinuxPC with minimal verified changes."

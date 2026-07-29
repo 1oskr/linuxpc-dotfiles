@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hyprland Designer"
+  short_description: "Improve one LinuxPC Hyprland UX change safely"
+  default_prompt: "Use $hyprland-designer to make one verified Hyprland or desktop UX improvement in LinuxPC."

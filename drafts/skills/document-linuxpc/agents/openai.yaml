@@ -1,0 +1,4 @@
+interface:
+  display_name: "Document LinuxPC"
+  short_description: "Update LinuxPC docs from verified state only"
+  default_prompt: "Use $document-linuxpc to update LinuxPC documentation from verified repository or system state only."

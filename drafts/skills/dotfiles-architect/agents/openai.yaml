@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dotfiles Architect"
+  short_description: "Review LinuxPC dotfiles architecture and boundaries"
+  default_prompt: "Use $dotfiles-architect to review LinuxPC dotfiles structure, boundaries, and reproducibility risks before refactoring."

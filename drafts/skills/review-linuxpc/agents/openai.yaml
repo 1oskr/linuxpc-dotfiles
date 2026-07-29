@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review LinuxPC"
+  short_description: "Review LinuxPC local changes before commit"
+  default_prompt: "Use $review-linuxpc to review current LinuxPC local changes and decide whether they are ready to commit."
