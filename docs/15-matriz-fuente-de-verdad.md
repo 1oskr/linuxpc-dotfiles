@@ -32,6 +32,10 @@ Ningún dato procedente únicamente de conversaciones se considera autorizado
 hasta consolidarse en una fuente auditable del repositorio, del sistema, de un
 respaldo o de un almacén de secretos.
 
+La clasificación de qué contenido pertenece a cada ubicación se define en
+[Límites de configuración](16-limites-configuracion.md). Este documento conserva
+la autoridad de las fuentes y no duplica esas reglas de pertenencia.
+
 ## Matriz
 
 | Dominio | Dato o responsabilidad | Categoría | Fuente primaria | Fuente secundaria | Método de verificación | Responsable | Evento de actualización |
@@ -63,7 +67,7 @@ inventarios. Las brechas conocidas quedan derivadas de esta manera:
 
 | Brecha | Proyecto responsable |
 |---|---|
-| Separar configuración común, específica de LinuxPC, personal, sensible y temporal | P1-02 — Límites de configuración |
+| Separar configuración común, específica de LinuxPC, personal, sensible y temporal | [P1-02 — Límites de configuración](16-limites-configuracion.md), completado |
 | Inventariar paquetes, aplicaciones, servicios, escritorio y dependencias externas de Arch | P1-03 — Inventario declarativo de Arch |
 | Inventariar configuración relevante fuera de los dotfiles, incluido el hostname, y contrastar las entradas UEFI observadas | P1-04 — Inventario de configuración del sistema |
 | Consolidar decisiones e incidencias hoy distribuidas entre documentos e historial Git | P1-18 — Registro de decisiones e incidencias |

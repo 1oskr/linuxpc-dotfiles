@@ -210,14 +210,14 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P1-02 — Límites de configuración
 
-- **Estado:** No iniciado
+- **Estado:** Completado
 - **Objetivo:** separar configuración común, específica de LinuxPC, personal, sensible y temporal.
 - **Prioridad:** P1
 - **Prerequisitos:** matriz de fuente de verdad disponible.
 - **Dependencias:** P1-01.
 - **Duración estimada:** 1–2 sesiones.
 - **Criterio de finalización:** cada familia de configuración tiene alcance y propietario definidos.
-- **Documentación relacionada:** [Contexto general](PROJECT_CONTEXT.md), [Arch Linux](05-arch-linux.md) y [Dotfiles y Git](07-dotfiles-git.md).
+- **Documentación relacionada:** [Límites de configuración](16-limites-configuracion.md), [Matriz de fuente de verdad](15-matriz-fuente-de-verdad.md), [Contexto general](PROJECT_CONTEXT.md), [Arch Linux](05-arch-linux.md) y [Dotfiles y Git](07-dotfiles-git.md).
 - **Riesgos:** introducir una abstracción demasiado compleja para una sola máquina.
 
 ## P1-03 — Inventario declarativo de Arch

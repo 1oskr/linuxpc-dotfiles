@@ -34,6 +34,9 @@ main
 La relación entre el estado previsto del repositorio y el estado efectivo de los
 sistemas se define en la
 [matriz de fuente de verdad](15-matriz-fuente-de-verdad.md).
+La clasificación canónica de contenido común, específico, personal, sensible y
+generado se define en
+[Límites de configuración](16-limites-configuracion.md).
 
 ## Verificación del estado
 
@@ -126,6 +129,10 @@ Incluye:
 ```
 
 ## Archivos que no deben subirse
+
+Las reglas completas de inclusión y exclusión están en
+[Límites de configuración](16-limites-configuracion.md). Esta sección resume las
+precauciones operativas para Git.
 
 No almacenar en Git:
 
