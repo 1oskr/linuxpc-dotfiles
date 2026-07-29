@@ -176,16 +176,35 @@ Configuración:
 ~/.config/matuwall/config.json
 ```
 
+La configuración activa se enlaza al repositorio mediante el directorio:
+
+```text
+~/.config/matuwall -> ~/linuxpc-dotfiles/.config/matuwall
+```
+
+`config.json` permanece como un archivo regular dentro del repositorio. No debe
+reemplazarse por otro enlace al mismo destino, porque se produciría un bucle de
+enlaces y Matuwall no podría cargar la configuración.
+
 Directorio de wallpapers:
 
 ```text
 ~/Pictures/Wallpapers/Waywallen
 ```
 
-Matuwall se ejecuta mediante un daemon:
+Matuwall se ejecuta mediante un daemon iniciado con la sesión de Hyprland. El
+autostart está declarado en `~/.config/hypr/modules/autostart.lua`, dentro del
+evento `hyprland.start`, mediante:
 
 ```bash
-matuwall --daemon
+hl.exec_cmd("matuwall --daemon")
+```
+
+Estado del daemon y del canal IPC:
+
+```bash
+matuwall --status
+pgrep -af 'matuwall --daemon'
 ```
 
 Flujo comprobado:
