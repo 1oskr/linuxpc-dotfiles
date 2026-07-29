@@ -222,14 +222,14 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P1-03 — Inventario declarativo de Arch
 
-- **Estado:** No iniciado
+- **Estado:** Completado
 - **Objetivo:** registrar todo lo necesario para explicar el estado operativo de Arch Linux.
 - **Prioridad:** P1
 - **Prerequisitos:** acceso al sistema Arch activo.
 - **Dependencias:** P1-01.
 - **Duración estimada:** 2–3 sesiones.
 - **Criterio de finalización:** paquetes, servicios, aplicaciones, componentes del escritorio y dependencias externas están inventariados y clasificados.
-- **Documentación relacionada:** [Arch Linux](05-arch-linux.md), [Dotfiles y Git](07-dotfiles-git.md) y [Snapshots](10-snapshots-snapper.md).
+- **Documentación relacionada:** [Inventario declarativo de Arch Linux](17-inventario-arch.md), [Arch Linux](05-arch-linux.md), [Dotfiles y Git](07-dotfiles-git.md) y [Snapshots](10-snapshots-snapper.md).
 - **Riesgos:** registrar paquetes instalados sin distinguir una necesidad explícita de una dependencia incidental.
 
 ## P1-04 — Inventario de configuración del sistema

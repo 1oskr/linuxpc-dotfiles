@@ -4,6 +4,10 @@
 
 Arch Linux es el sistema operativo principal del equipo.
 
+La selección prevista de paquetes, aplicaciones y dependencias se define en el
+[inventario declarativo de Arch Linux](17-inventario-arch.md). El sistema activo
+continúa autorizando qué está instalado en el momento de la consulta.
+
 Se utiliza para:
 
 - estudio;

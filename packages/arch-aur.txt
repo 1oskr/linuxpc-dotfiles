@@ -1,0 +1,7 @@
+matuwall
+rustdesk-bin
+snappy-switcher
+sunshine-bin
+visual-studio-code-bin
+yay
+ytmdesktop-bin

@@ -43,7 +43,7 @@ la autoridad de las fuentes y no duplica esas reglas de pertenencia.
 | Arch Linux | Estado efectivo del sistema principal | sistema | Interfaces y archivos activos de Arch | [Arch Linux](05-arch-linux.md) | Consultar la interfaz o el archivo específico y contrastarlo con la documentación | Oscar | Cambio relevante del sistema |
 | Configuración versionada | Estado previsto de dotfiles y scripts | repositorio | Archivos rastreados en la rama aceptada del repositorio | Copia remota en GitHub | `git status`, `git diff` y comprobación de los enlaces activos | Oscar | Cambio de configuración confirmado |
 | Documentación | Arquitectura, procedimientos y conocimiento consolidado | repositorio | Documento vigente del dominio | Historial Git | Revisar enlaces, coherencia cruzada y evidencia citada | Oscar | Cambio de comportamiento, arquitectura o procedimiento |
-| Paquetes | Paquetes instalados y selección explícita de Arch | sistema | Base de datos local de `pacman` | Referencias parciales en los documentos de Arch y snapshots | `pacman -Q` y `pacman -Qqe` | Oscar | Instalación, eliminación o reclasificación de paquetes |
+| Paquetes | Paquetes instalados y selección declarativa de Arch | sistema | Base de datos local de `pacman` | [Inventario declarativo de Arch](17-inventario-arch.md) y listas bajo `packages/` | `pacman -Q` y comparación con las listas declarativas | Oscar | Instalación, eliminación o reclasificación de paquetes |
 | Servicios declarados | Unidades, habilitación y configuración persistente | sistema | Unidades y configuración efectiva de systemd | Dotfiles y documentación relacionada | `systemctl cat`, `systemctl is-enabled` e inspección del archivo aplicable | Oscar | Alta, baja o cambio de una unidad |
 | Servicios activos | Estado operativo puntual de servicios y procesos | estado efímero | Estado de systemd y procesos activos | Registros del servicio | `systemctl is-active`, `systemctl --failed` y `pgrep` | Oscar | Inicio de sesión, reinicio o diagnóstico |
 | Discos y Btrfs | Particiones, UUID, sistemas de archivos, montajes y subvolúmenes | sistema | Metadatos reales del almacenamiento y configuración de montaje efectiva | [Particiones](02-particiones.md), [HDD compartido](04-hdd-compartido.md), [Snapshots](10-snapshots-snapper.md) y [Rollback](14-rollback-permanente.md) | `lsblk`, `findmnt` y herramientas de consulta de Btrfs | Oscar | Cambio de partición, montaje o subvolumen |
@@ -68,7 +68,7 @@ inventarios. Las brechas conocidas quedan derivadas de esta manera:
 | Brecha | Proyecto responsable |
 |---|---|
 | Separar configuración común, específica de LinuxPC, personal, sensible y temporal | [P1-02 — Límites de configuración](16-limites-configuracion.md), completado |
-| Inventariar paquetes, aplicaciones, servicios, escritorio y dependencias externas de Arch | P1-03 — Inventario declarativo de Arch |
+| Inventariar paquetes, aplicaciones, servicios, escritorio y dependencias externas de Arch | [P1-03 — Inventario declarativo de Arch](17-inventario-arch.md), completado |
 | Inventariar configuración relevante fuera de los dotfiles, incluido el hostname, y contrastar las entradas UEFI observadas | P1-04 — Inventario de configuración del sistema |
 | Consolidar decisiones e incidencias hoy distribuidas entre documentos e historial Git | P1-18 — Registro de decisiones e incidencias |
 | Definir la estrategia detallada de recuperación del despliegue, datos y configuración de Bazzite | P1-22 — Baseline de recuperación de Bazzite |
