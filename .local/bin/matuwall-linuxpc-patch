@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+BACKUP_DIR="$HOME/.local/share/linuxpc-backups/matuwall"
+BACKUP_FILE="$BACKUP_DIR/content.py.original"
+PATCH_MARKER="LinuxPC patch: linuxpc-wallpaper"
+
+find_target() {
+    python - <<'PY'
+import importlib.util
+
+spec = importlib.util.find_spec("matuwall.ui.content")
+if spec is None or spec.origin is None:
+    raise SystemExit("No se encontró matuwall.ui.content")
+
+print(spec.origin)
+PY
+}
+
+is_patched() {
+    grep -qE 'LinuxPC patch: linuxpc-wallpaper|linuxpc-wallpaper' "$TARGET"
+}
+
+apply_patch() {
+    if is_patched; then
+        echo "El parche ya está aplicado"
+        return
+    fi
+
+    mkdir -p "$BACKUP_DIR"
+    cp -- "$TARGET" "$BACKUP_FILE"
+
+    temporary="$(mktemp)"
+    trap 'rm -f "$temporary"' EXIT
+
+    TARGET="$TARGET" OUTPUT="$temporary" python - <<'PY'
+from pathlib import Path
+import os
+import re
+
+source = Path(os.environ["TARGET"])
+output = Path(os.environ["OUTPUT"])
+text = source.read_text(encoding="utf-8")
+
+pattern = re.compile(
+    r"    def _run_awww\(self, path: Path\) -> None:\n"
+    r".*?"
+    r"(?=    @staticmethod\n    def _report_apply_log)",
+    re.DOTALL,
+)
+
+replacement = '''    def _run_awww(self, path: Path) -> None:
+        # LinuxPC patch: linuxpc-wallpaper
+        if not self.config:
+            return
+
+        command = [
+            str(Path.home() / ".local/bin/linuxpc-wallpaper"),
+            str(path),
+        ]
+
+        if shutil.which(command[0]) is None:
+            self._report_apply_issue("linuxpc-wallpaper not found")
+            self._show_toast("linuxpc-wallpaper not found")
+            return
+
+        try:
+            env = os.environ.copy()
+            env.pop("LD_PRELOAD", None)
+            env.pop("GDK_BACKEND", None)
+            subprocess.Popen(command, env=env)
+            self._report_apply_command(command)
+        except FileNotFoundError:
+            self._report_apply_issue("linuxpc-wallpaper not found")
+            self._show_toast("linuxpc-wallpaper not found")
+
+'''
+
+patched, changes = pattern.subn(replacement, text, count=1)
+
+if changes != 1:
+    raise SystemExit("No se encontró exactamente una función _run_awww")
+
+compile(patched, str(source), "exec")
+output.write_text(patched, encoding="utf-8")
+PY
+
+    sudo install -m 0644 "$temporary" "$TARGET"
+
+    trap - EXIT
+    rm -f "$temporary"
+
+    echo "Parche aplicado"
+    echo "Respaldo: $BACKUP_FILE"
+}
+
+restore_patch() {
+    if [[ ! -f "$BACKUP_FILE" ]]; then
+        echo "No existe el respaldo: $BACKUP_FILE" >&2
+        exit 1
+    fi
+
+    python -m py_compile "$BACKUP_FILE"
+    sudo install -m 0644 "$BACKUP_FILE" "$TARGET"
+
+    echo "Archivo original restaurado"
+}
+
+show_status() {
+    echo "Archivo: $TARGET"
+
+    if is_patched; then
+        echo "Estado: parche aplicado"
+    else
+        echo "Estado: sin parche"
+    fi
+
+    if [[ -f "$BACKUP_FILE" ]]; then
+        echo "Respaldo: disponible"
+    else
+        echo "Respaldo: no disponible"
+    fi
+}
+
+usage() {
+    printf 'Uso: %s {apply|restore|status}\n' "$(basename "$0")"
+}
+
+TARGET="$(find_target)"
+
+case "${1:-}" in
+    apply)
+        apply_patch
+        ;;
+    restore)
+        restore_patch
+        ;;
+    status)
+        show_status
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+esac

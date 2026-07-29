@@ -2,8 +2,19 @@
 
 set -euo pipefail
 
-WALLPAPER_DIR="$HOME/Pictures/Wallpapers/Waywallen"
 HYPRPAPER_CONFIG="$HOME/.config/hypr/hyprpaper.conf"
+
+if [[ $# -ne 1 ]]; then
+    printf 'Uso: %s /ruta/al/wallpaper\n' "$(basename "$0")" >&2
+    exit 1
+fi
+
+wallpaper="$(realpath -- "$1")"
+
+if [[ ! -f "$wallpaper" ]]; then
+    printf 'Wallpaper no encontrado: %s\n' "$wallpaper" >&2
+    exit 1
+fi
 
 destination="$(
     printf '%s\n' \
@@ -32,23 +43,6 @@ case "$destination" in
         ;;
 esac
 
-selected="$(
-    find "$WALLPAPER_DIR" -maxdepth 1 -type f \
-        \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) \
-        -print0 |
-    sort -z |
-    while IFS= read -r -d '' image; do
-        printf '%s\0icon\x1f%s\n' "$(basename "$image")" "$image"
-    done |
-    rofi \
-        -dmenu \
-        -show-icons \
-        -theme-str 'entry { enabled: false; }'
-)" || exit 0
-
-[[ -z "$selected" ]] && exit 0
-
-wallpaper="$WALLPAPER_DIR/$selected"
 monitor_list="$(IFS=,; printf '%s' "${monitors[*]}")"
 temporary="$(mktemp)"
 
@@ -92,6 +86,7 @@ awk \
     { print }
 ' "$HYPRPAPER_CONFIG" > "$temporary"
 
+chmod --reference="$HYPRPAPER_CONFIG" "$temporary"
 mv "$temporary" "$HYPRPAPER_CONFIG"
 trap - EXIT
 

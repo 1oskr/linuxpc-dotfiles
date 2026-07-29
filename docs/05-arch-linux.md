@@ -150,11 +150,109 @@ tail -n 80 /tmp/waybar-DP-2.log
 ~/.config/rofi/theme.rasi
 ```
 
-### Hyprpaper
+### Wallpapers
+
+Motor de fondos:
+
+```text
+Hyprpaper
+```
+
+Configuración persistente:
 
 ```text
 ~/.config/hypr/hyprpaper.conf
 ```
+
+Selector gráfico principal:
+
+```text
+Matuwall
+```
+
+Configuración:
+
+```text
+~/.config/matuwall/config.json
+```
+
+Directorio de wallpapers:
+
+```text
+~/Pictures/Wallpapers/Waywallen
+```
+
+Matuwall se ejecuta mediante un daemon:
+
+```bash
+matuwall --daemon
+```
+
+Flujo comprobado:
+
+```text
+Matuwall
+→ linuxpc-wallpaper
+→ selección de monitor mediante Rofi
+→ actualización de hyprpaper.conf
+→ aplicación inmediata mediante hyprctl hyprpaper
+```
+
+Backend personalizado:
+
+```text
+~/.local/bin/linuxpc-wallpaper
+```
+
+El script permite aplicar el wallpaper al monitor central, izquierdo, derecho o a todos los monitores.
+
+Monitores configurados:
+
+```text
+Central:   HDMI-A-1
+Izquierdo: DP-1
+Derecho:   DP-2
+```
+
+Selector anterior conservado como alternativa:
+
+```text
+~/.local/bin/wallpaper-selector
+```
+
+Matuwall utiliza temporalmente un parche local en:
+
+```text
+/usr/lib/python3.14/site-packages/matuwall/ui/content.py
+```
+
+Respaldo del archivo original:
+
+```text
+~/.local/share/linuxpc-backups/matuwall/content.py.original
+```
+
+Configuración requerida en Matuwall:
+
+```json
+"wall_mode_only": true
+```
+
+Script de mantenimiento del parche:
+
+```text
+~/.local/bin/matuwall-linuxpc-patch
+```
+
+Comandos disponibles:
+
+```bash
+matuwall-linuxpc-patch status
+matuwall-linuxpc-patch apply
+matuwall-linuxpc-patch restore
+```
+
+> Una actualización de Matuwall puede sobrescribir el parche. Después de actualizar, ejecuta `matuwall-linuxpc-patch status` y, si corresponde, `matuwall-linuxpc-patch apply`.
 
 ### Hyprsunset
 
