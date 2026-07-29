@@ -272,8 +272,9 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P1-07 — Baseline de servicios esenciales
 
-- **Estado:** No iniciado
+- **Estado:** Completado
 - **Objetivo:** definir el estado operativo esperado de red, audio, Bluetooth, almacenamiento, energía y hardware.
+- **Resultado:** NetworkManager, PipeWire/WirePlumber, Bluetooth, monitores y servicios esenciales verificados; servicios redundantes de Redshift e Hyprpaper deshabilitados; cero unidades fallidas de sistema y usuario.
 - **Prioridad:** P1
 - **Prerequisitos:** inventario declarativo de Arch disponible.
 - **Dependencias:** P1-03 y P1-04.
