@@ -34,6 +34,7 @@ Registro técnico del diseño, instalación, configuración, mantenimiento y rec
 16. [Límites de configuración](16-limites-configuracion.md)
 17. [Inventario declarativo de Arch Linux](17-inventario-arch.md)
 18. [Inventario de configuración del sistema](18-inventario-configuracion-sistema.md)
+19. [Contrato de reconstrucción de Arch Linux](19-contrato-reconstruccion-arch.md)
 
 ## Principios
 

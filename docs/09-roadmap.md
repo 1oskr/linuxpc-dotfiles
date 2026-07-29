@@ -246,14 +246,14 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P1-05 — Contrato de reconstrucción de Arch
 
-- **Estado:** No iniciado
+- **Estado:** Completado
 - **Objetivo:** definir qué significa que Arch Linux sea reproducible.
 - **Prioridad:** P1
 - **Prerequisitos:** inventarios completos y restauración de respaldos probada.
 - **Dependencias:** P0-03, P1-02, P1-03 y P1-04.
 - **Duración estimada:** 1–2 sesiones.
 - **Criterio de finalización:** existe una lista finita de capacidades y verificaciones que debe superar una reconstrucción para considerarse operativa.
-- **Documentación relacionada:** [Contexto general](PROJECT_CONTEXT.md), [Arch Linux](05-arch-linux.md), [Dotfiles y Git](07-dotfiles-git.md) y [Recuperación](08-recuperacion.md).
+- **Documentación relacionada:** [Contexto general](PROJECT_CONTEXT.md), [Arch Linux](05-arch-linux.md), [Dotfiles y Git](07-dotfiles-git.md), [Recuperación](08-recuperacion.md) y [Contrato de reconstrucción de Arch Linux](19-contrato-reconstruccion-arch.md).
 - **Riesgos:** exigir una réplica exacta del sistema en lugar de reproducibilidad funcional.
 
 ## P1-06 — Recuperación del arranque multisistema
