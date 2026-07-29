@@ -8,6 +8,9 @@ Mantener tres sistemas operativos en un único equipo, cada uno con una función
 - **Bazzite:** videojuegos.
 - **Windows 11:** compatibilidad.
 
+La autoridad del estado previsto y del estado efectivo de cada dominio se
+define en la [matriz de fuente de verdad](15-matriz-fuente-de-verdad.md).
+
 ## Hardware de almacenamiento
 
 ### SSD NVMe

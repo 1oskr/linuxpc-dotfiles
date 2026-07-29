@@ -4,6 +4,9 @@
 
 Identificar los conjuntos de datos de LinuxPC, su propietario, criticidad, ubicación y objetivos de recuperación.
 
+La autoridad de los datos activos, sus respaldos y el material sensible se
+define en la [matriz de fuente de verdad](15-matriz-fuente-de-verdad.md).
+
 ## Definiciones
 
 - **RPO:** pérdida máxima de cambios aceptable.
@@ -14,9 +17,9 @@ Identificar los conjuntos de datos de LinuxPC, su propietario, criticidad, ubica
 
 | Conjunto | Propietario | Criticidad | Ubicación principal | Copia externa declarada | RPO | RTO |
 |---|---|---:|---|---|---|---|
-| Carrera y Trabajo | Oscar | Crítica | `/mnt/hdd/Carrera y Trabajo` | Google Drive, pendiente de verificación | Semanal durante el semestre y después de cambios importantes | 24 horas |
-| cosasmias_windows | Oscar | Alta | `/mnt/hdd/cosasmias_windows` | Google Drive, pendiente de verificación | Después de cada modificación intencional | 3 días |
-| roms ps2 | Oscar | Baja | `/mnt/hdd/roms ps2` | Google Drive, pendiente de verificación | Copia manual cuando cambie | Sin compromiso estricto |
+| Carrera y Trabajo | Oscar | Crítica | `/mnt/hdd/Carrera y Trabajo` | Google Drive; copia presente según [P0-02](12-copia-independiente.md) | Semanal durante el semestre y después de cambios importantes | 24 horas |
+| cosasmias_windows | Oscar | Alta | `/mnt/hdd/cosasmias_windows` | Google Drive; copia presente según [P0-02](12-copia-independiente.md) | Después de cada modificación intencional | 3 días |
+| roms ps2 | Oscar | Baja | `/mnt/hdd/roms ps2` | Google Drive; copia presente según [P0-02](12-copia-independiente.md) | Copia manual cuando cambie | Sin compromiso estricto |
 
 ### Estado local registrado
 
@@ -85,13 +88,13 @@ Los snapshots, el HDD interno y las copias ubicadas dentro del mismo equipo no s
 
 ## Riesgos y limitaciones
 
-- Las carpetas subidas a Google Drive todavía deben verificarse mediante una descarga o restauración de muestra.
+- La restauración desde Google Drive se verificó sobre una muestra representativa; no se probó individualmente cada archivo respaldado.
 - Las modificaciones realizadas antes de la subida hacen que los conteos locales no necesariamente coincidan con versiones anteriores.
 - Google Drive actualmente se utiliza mediante subida manual, no como sincronización automática.
 - Las claves SSH y otras credenciales requieren un procedimiento seguro separado.
 - El respaldo de `/etc` y los snapshots no sobreviven a la pérdida completa del equipo.
-- No debe eliminarse información local hasta completar la verificación correspondiente en `P0-02` y `P0-03`.
+- Antes de eliminar información local debe comprobarse que la copia vigente satisface el RPO correspondiente.
 
 ## Resultado de P0-01
 
-Todos los conjuntos conocidos tienen propietario, criticidad, ubicación y objetivo de recuperación definidos. Las copias independientes y sus pruebas de restauración se completarán en los proyectos siguientes.
+Todos los conjuntos conocidos tienen propietario, criticidad, ubicación y objetivo de recuperación definidos. Las copias independientes y la prueba de restauración representativa se completaron posteriormente en `P0-02` y `P0-03`.

@@ -31,19 +31,19 @@ Rama principal:
 main
 ```
 
-## Estado actual
+La relación entre el estado previsto del repositorio y el estado efectivo de los
+sistemas se define en la
+[matriz de fuente de verdad](15-matriz-fuente-de-verdad.md).
 
-Último commit documentado:
+## Verificación del estado
 
-```text
-0a2009e Agregar configuración de Zsh y script de apagado
+```bash
+git status --short --branch
+git log -1 --oneline
 ```
 
-El repositorio local está sincronizado con:
-
-```text
-origin/main
-```
+El resultado debe evaluarse en el momento de la consulta. No se mantiene un
+identificador de último commit fijo en este documento.
 
 ## Estructura principal
 

@@ -30,6 +30,7 @@ Registro técnico del diseño, instalación, configuración, mantenimiento y rec
 12. [Copia independiente de datos críticos](12-copia-independiente.md)
 13. [Prueba integral de restauración](13-prueba-restauracion.md)
 14. [Rollback permanente de Arch Linux](14-rollback-permanente.md)
+15. [Matriz de fuente de verdad](15-matriz-fuente-de-verdad.md)
 
 ## Principios
 

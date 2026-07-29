@@ -198,14 +198,14 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P1-01 — Matriz de fuente de verdad
 
-- **Estado:** No iniciado
+- **Estado:** Completado
 - **Objetivo:** establecer dónde reside el estado autorizado de cada componente de LinuxPC.
 - **Prioridad:** P1
 - **Prerequisitos:** mapa de datos y objetivos de recuperación terminado.
 - **Dependencias:** P0-01.
 - **Duración estimada:** 1 sesión.
 - **Criterio de finalización:** cada componente tiene una fuente de verdad y una categoría definida: repositorio, sistema, respaldo, secreto o estado efímero.
-- **Documentación relacionada:** [Contexto general](PROJECT_CONTEXT.md), [Dotfiles y Git](07-dotfiles-git.md) y este roadmap.
+- **Documentación relacionada:** [Matriz de fuente de verdad](15-matriz-fuente-de-verdad.md), [Contexto general](PROJECT_CONTEXT.md), [Dotfiles y Git](07-dotfiles-git.md) y este roadmap.
 - **Riesgos:** declarar el repositorio como fuente de verdad para elementos que todavía no representa.
 
 ## P1-02 — Límites de configuración
