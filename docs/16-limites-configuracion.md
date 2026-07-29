@@ -272,7 +272,7 @@ Estas divergencias quedan registradas sin determinar qué copia debe prevalecer:
 | Proyecto | Responsabilidad derivada |
 |---|---|
 | [P1-03 — Inventario declarativo de Arch](17-inventario-arch.md), completado | Inventariar paquetes, aplicaciones y dependencias requeridas por la configuración. |
-| P1-04 — Inventario de configuración del sistema | Registrar configuración efectiva, habilitación y estado relevante fuera del repositorio. |
+| [P1-04 — Inventario de configuración del sistema](18-inventario-configuracion-sistema.md), completado | Registrar configuración efectiva, habilitación y estado relevante fuera del repositorio. |
 | P1-08 — Seguridad y acceso desde macOS | Revisar acceso remoto, exposición e identificadores relacionados. |
 | P1-09 — Ciclo de vida de la sesión Hyprland | Delimitar sesión, autostart y servicios de usuario. |
 | P1-10 — Perfil físico de LinuxPC | Separar hardware, monitores, GPU y rutas físicas de la configuración común. |

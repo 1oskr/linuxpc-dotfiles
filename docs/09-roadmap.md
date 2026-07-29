@@ -234,14 +234,14 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P1-04 — Inventario de configuración del sistema
 
-- **Estado:** No iniciado
+- **Estado:** Completado
 - **Objetivo:** identificar el estado relevante que actualmente vive fuera de los dotfiles.
 - **Prioridad:** P1
 - **Prerequisitos:** acceso administrativo de lectura al sistema Arch.
 - **Dependencias:** P1-01.
 - **Duración estimada:** 2 sesiones.
 - **Criterio de finalización:** las configuraciones relevantes de arranque, montajes, snapshots, red, servicios y sesión tienen propietario y criticidad definidos.
-- **Documentación relacionada:** [Arranque y GRUB](03-grub.md), [HDD compartido](04-hdd-compartido.md), [Arch Linux](05-arch-linux.md), [Recuperación](08-recuperacion.md) y [Snapshots](10-snapshots-snapper.md).
+- **Documentación relacionada:** [Inventario de configuración del sistema](18-inventario-configuracion-sistema.md), [Arranque y GRUB](03-grub.md), [HDD compartido](04-hdd-compartido.md), [Arch Linux](05-arch-linux.md), [Recuperación](08-recuperacion.md) y [Snapshots](10-snapshots-snapper.md).
 - **Riesgos:** capturar secretos o confundir archivos generados con configuración mantenible.
 
 ## P1-05 — Contrato de reconstrucción de Arch

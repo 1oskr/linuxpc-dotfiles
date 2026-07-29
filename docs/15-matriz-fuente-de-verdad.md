@@ -41,6 +41,7 @@ la autoridad de las fuentes y no duplica esas reglas de pertenencia.
 | Dominio | Dato o responsabilidad | Categoría | Fuente primaria | Fuente secundaria | Método de verificación | Responsable | Evento de actualización |
 |---|---|---|---|---|---|---|---|
 | Arch Linux | Estado efectivo del sistema principal | sistema | Interfaces y archivos activos de Arch | [Arch Linux](05-arch-linux.md) | Consultar la interfaz o el archivo específico y contrastarlo con la documentación | Oscar | Cambio relevante del sistema |
+| Configuración del sistema Arch | Arranque, montajes, servicios, identidad y configuración fuera de dotfiles | sistema | Interfaces y archivos efectivos del sistema | [Inventario de configuración del sistema](18-inventario-configuracion-sistema.md) | Verificaciones específicas de hostname, `findmnt`, systemd, GRUB y Snapper | Oscar | Cambio relevante de plataforma o configuración |
 | Configuración versionada | Estado previsto de dotfiles y scripts | repositorio | Archivos rastreados en la rama aceptada del repositorio | Copia remota en GitHub | `git status`, `git diff` y comprobación de los enlaces activos | Oscar | Cambio de configuración confirmado |
 | Documentación | Arquitectura, procedimientos y conocimiento consolidado | repositorio | Documento vigente del dominio | Historial Git | Revisar enlaces, coherencia cruzada y evidencia citada | Oscar | Cambio de comportamiento, arquitectura o procedimiento |
 | Paquetes | Paquetes instalados y selección declarativa de Arch | sistema | Base de datos local de `pacman` | [Inventario declarativo de Arch](17-inventario-arch.md) y listas bajo `packages/` | `pacman -Q` y comparación con las listas declarativas | Oscar | Instalación, eliminación o reclasificación de paquetes |
@@ -69,7 +70,7 @@ inventarios. Las brechas conocidas quedan derivadas de esta manera:
 |---|---|
 | Separar configuración común, específica de LinuxPC, personal, sensible y temporal | [P1-02 — Límites de configuración](16-limites-configuracion.md), completado |
 | Inventariar paquetes, aplicaciones, servicios, escritorio y dependencias externas de Arch | [P1-03 — Inventario declarativo de Arch](17-inventario-arch.md), completado |
-| Inventariar configuración relevante fuera de los dotfiles, incluido el hostname, y contrastar las entradas UEFI observadas | P1-04 — Inventario de configuración del sistema |
+| Inventariar configuración relevante fuera de los dotfiles, incluido el hostname, y contrastar las entradas UEFI observadas | [P1-04 — Inventario de configuración del sistema](18-inventario-configuracion-sistema.md), completado |
 | Consolidar decisiones e incidencias hoy distribuidas entre documentos e historial Git | P1-18 — Registro de decisiones e incidencias |
 | Definir la estrategia detallada de recuperación del despliegue, datos y configuración de Bazzite | P1-22 — Baseline de recuperación de Bazzite |
 
@@ -83,6 +84,6 @@ inventario no autoriza a completar datos mediante suposiciones o conversaciones.
 - La matriz no reproduce secretos ni identifica sus valores.
 - La matriz no confirma como actuales valores que solo consten en documentación
   histórica.
-- La matriz no resuelve las diferencias pendientes de hostname, entradas UEFI
-  o estructura completa de almacenamiento; solo asigna su verificación al
-  sistema y su seguimiento al proyecto correspondiente.
+- La matriz no resuelve las entradas UEFI pendientes ni decisiones posteriores
+  sobre la estructura de almacenamiento; solo asigna su verificación al sistema
+  y su seguimiento al proyecto correspondiente.

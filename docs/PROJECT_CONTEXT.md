@@ -104,6 +104,11 @@ El repositorio constituye la representación documental y la fuente de verdad t�
 
 La autoridad concreta del repositorio, del estado efectivo de los sistemas, de los respaldos, de los secretos y del estado temporal se define en la [matriz de fuente de verdad](15-matriz-fuente-de-verdad.md).
 
+El estado de Arch que permanece fuera de los dotfiles se resume en el
+[inventario de configuración del sistema](18-inventario-configuracion-sistema.md);
+la representación procesable futura deberá mantenerse separada del estado
+efectivo generado por el sistema.
+
 Su organización debe reflejar la arquitectura lógica del sistema y responder a relaciones funcionales estables, sin depender de preferencias circunstanciales. Cada elemento debe tener una responsabilidad claramente definida y ocupar una posición coherente con su función, de forma que sea posible identificar su alcance y sus vínculos con el resto del proyecto.
 
 La estructura debe favorecer la navegación, el mantenimiento, la reutilización y la evolución progresiva de sus contenidos. La incorporación de nuevos componentes debe preservar la coherencia general del repositorio, respetar los límites existentes y evitar duplicaciones, responsabilidades superpuestas o estructuras ambiguas.

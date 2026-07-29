@@ -33,6 +33,7 @@ Registro técnico del diseño, instalación, configuración, mantenimiento y rec
 15. [Matriz de fuente de verdad](15-matriz-fuente-de-verdad.md)
 16. [Límites de configuración](16-limites-configuracion.md)
 17. [Inventario declarativo de Arch Linux](17-inventario-arch.md)
+18. [Inventario de configuración del sistema](18-inventario-configuracion-sistema.md)
 
 ## Principios
 

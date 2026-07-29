@@ -27,7 +27,7 @@ oscar
 ## Nombre del equipo
 
 ```text
-arklinuk
+arch
 ```
 
 ## Sistema de archivos
@@ -59,6 +59,9 @@ Puntos de montaje:
 @     -> /
 @home -> /home
 ```
+
+El esquema completo de subvolúmenes y montajes persistentes está en el
+[inventario de configuración del sistema](18-inventario-configuracion-sistema.md).
 
 ## Escritorio
 

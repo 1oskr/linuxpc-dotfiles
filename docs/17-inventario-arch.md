@@ -192,7 +192,8 @@ activo:
 | `rustdesk-bin` | Canal remoto alternativo | Opcional |
 | `snapper`, `snap-pac`, `grub-btrfs` | Snapshots e integración de recuperación | Sí |
 
-P1-04 debe verificar unidades, habilitación, enlaces y configuración efectiva.
+La verificación de unidades, habilitación, enlaces y configuración efectiva
+queda registrada en el inventario completado de P1-04.
 
 ## Dependencias externas
 
@@ -249,7 +250,7 @@ paquetes quedan fuera de P1-03.
 
 | Proyecto | Responsabilidad |
 |---|---|
-| P1-04 — Inventario de configuración del sistema | Verificar unidades, enlaces, habilitación, archivos y configuración efectiva fuera del repositorio |
+| [P1-04 — Inventario de configuración del sistema](18-inventario-configuracion-sistema.md), completado | Verificar unidades, enlaces, habilitación, archivos y configuración efectiva fuera del repositorio |
 | P1-05 — Contrato de reconstrucción de Arch | Definir las capacidades y pruebas que consumen este inventario |
 | P1-07 — Baseline de servicios esenciales | Resolver servicios solapados y comportamiento esperado |
 | P1-08 — Seguridad y acceso desde macOS | Consolidar canales remotos, exposición y recuperación |
