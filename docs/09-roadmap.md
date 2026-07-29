@@ -191,7 +191,7 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 - **Dependencias:** P0-03.
 - **Duración estimada:** 2 sesiones.
 - **Criterio de finalización:** se completa una prueba controlada de rollback permanente y se confirma el regreso a un estado operativo normal.
-- **Documentación relacionada:** [Recuperación](08-recuperacion.md) y [Snapshots](10-snapshots-snapper.md).
+- **Documentación relacionada:** [Recuperación](08-recuperacion.md), [Snapshots](10-snapshots-snapper.md) y [Rollback permanente](14-rollback-permanente.md).
 - **Riesgos:** afectar `/home`, GRUB, snapshots posteriores o la coherencia entre la raíz y los datos de usuario.
 
 # Épica: Gobierno y reproducibilidad

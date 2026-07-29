@@ -739,4 +739,10 @@ active
 - El acceso por TTY funcionó.
 - Hyprland inició mediante `start-hyprland`.
 - El reinicio devolvió correctamente al subvolumen normal `@`.
-- No se realizó ningún rollback permanente.
+- La prueba descrita en esta sección corresponde al arranque temporal de un
+  snapshot mediante OverlayFS.
+- El rollback permanente se ejecutó y validó posteriormente como parte de
+  `P0-04`; su registro canónico se encuentra en
+  [Rollback permanente de Arch Linux](14-rollback-permanente.md).
+- `/home` permaneció fuera del rollback porque utiliza el subvolumen
+  independiente `@home`.

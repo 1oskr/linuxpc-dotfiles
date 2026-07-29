@@ -13,9 +13,10 @@ Validar una restauración permanente y controlada de la raíz de Arch Linux medi
 Arch utiliza Btrfs con estos subvolúmenes:
 
 ```text
-@          → /
-@home      → /home
-@snapshots → /.snapshots
+@               → /            (ID 328)
+@antes-p0-04    → raíz anterior (ID 256)
+@home           → /home        (ID 257)
+@snapshots      → /.snapshots  (ID 260)
 ```
 
 El arranque utiliza explícitamente:
@@ -228,16 +229,37 @@ Después de validar el sistema recuperado se creó:
 82 │ Después de P0-04 rollback permanente
 ```
 
+## Verificación administrativa final
+
+La inspección final confirmó:
+
+- la raíz activa es el subvolumen `@`, ID `328`, y es escribible;
+- `@antes-p0-04` continúa como subvolumen de nivel superior, ID `256`, y
+  conserva la raíz anterior;
+- `@home` continúa separado, ID `257`;
+- `@snapshots` continúa separado, ID `260`, y es escribible;
+- Snapper mantiene la configuración `root` sobre `SUBVOLUME=/`;
+- los snapshots automáticos por tiempo y la limpieza continúan activos;
+- permanecen disponibles los snapshots `64`, anterior al rollback, y `82`,
+  posterior al rollback;
+- `/boot/grub/grub.cfg` contiene el bloque `41_snapshots-btrfs` y el submenú
+  `Arch Linux snapshots`.
+
+Estas comprobaciones completan la verificación administrativa de `P0-04`. El
+rollback permanente ya fue ejecutado y validado, por lo que no corresponde
+repetir la prueba.
+
 ## Estado actual
 
 ```text
-@               → raíz restaurada y operativa
-@antes-p0-04    → raíz anterior conservada temporalmente
-@home           → datos personales intactos
-@snapshots      → snapshots operativos
+@               → raíz restaurada, escribible y operativa (ID 328)
+@antes-p0-04    → raíz anterior conservada temporalmente (ID 256)
+@home           → datos personales intactos (ID 257)
+@snapshots      → snapshots escribibles y operativos (ID 260)
 ```
 
-No debe eliminarse `@antes-p0-04` hasta completar un periodo razonable de uso y confirmar que no se necesita volver al estado anterior.
+`@antes-p0-04` continúa conservado como vía de recuperación. Su eliminación no
+forma parte de `P0-04` y permanece pendiente de una decisión posterior.
 
 ## Resultado
 

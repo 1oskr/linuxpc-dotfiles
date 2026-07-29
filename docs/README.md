@@ -27,6 +27,9 @@ Registro técnico del diseño, instalación, configuración, mantenimiento y rec
 9. [Roadmap maestro ejecutable](09-roadmap.md)
 10. [Snapshots con Snapper](10-snapshots-snapper.md)
 11. [Mapa de datos y objetivos de recuperación](11-mapa-datos-recuperacion.md)
+12. [Copia independiente de datos críticos](12-copia-independiente.md)
+13. [Prueba integral de restauración](13-prueba-restauracion.md)
+14. [Rollback permanente de Arch Linux](14-rollback-permanente.md)
 
 ## Principios
 

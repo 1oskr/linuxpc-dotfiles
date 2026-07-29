@@ -12,6 +12,9 @@ Registrar los procedimientos mínimos para diagnosticar y recuperar:
 
 ## Recuperación de GRUB desde Arch ISO
 
+Este procedimiento repara el gestor de arranque desde un medio externo. No
+realiza un rollback de la raíz de Arch.
+
 ### 1. Identificar particiones
 
 ```bash
@@ -62,6 +65,22 @@ exit
 umount -R /mnt
 reboot
 ```
+
+## Recuperación de la raíz de Arch
+
+Los mecanismos de recuperación de la raíz tienen alcances diferentes:
+
+- el arranque temporal de un snapshot mediante OverlayFS permite comprobar un
+  estado anterior sin convertirlo en la raíz permanente y está documentado en
+  [Snapshots con Snapper](10-snapshots-snapper.md);
+- el rollback permanente sustituye de forma controlada el subvolumen `@` y
+  está documentado en
+  [Rollback permanente de Arch Linux](14-rollback-permanente.md);
+- la recuperación desde Arch ISO se utiliza cuando el sistema normal o GRUB no
+  permiten acceder de forma segura a la instalación.
+
+El subvolumen `@home` es independiente. Un rollback de `@` no restaura ni
+revierte `/home`.
 
 ## Diagnóstico de arranque
 
