@@ -9,7 +9,10 @@ Configuraciones reproducibles de mi entorno Arch Linux y Hyprland.
 - `.config/kitty`: terminal Kitty.
 - `.config/rofi`: lanzador de aplicaciones.
 - `.local/bin`: scripts personales.
-- `docs`: documentación del proyecto.
+- `.agents/skills`: Skills de Codex específicas de LinuxPC.
+- `AGENTS.md`: reglas operativas para agentes dentro del repositorio.
+- `LINUXPC_INSTRUCTIONS.md`: instrucciones principales y jerarquía del proyecto.
+- `docs`: documentación técnica del proyecto.
 
 ## Objetivos
 

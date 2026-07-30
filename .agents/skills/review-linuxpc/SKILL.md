@@ -22,14 +22,15 @@ Do not use this skill to plan the next project or to implement fixes unless expl
 
 Read before reviewing.
 
-1. `AGENTS.md`
-2. `docs/PROJECT_CONTEXT.md`
-3. `docs/15-matriz-fuente-de-verdad.md`
-4. `docs/16-limites-configuracion.md`
-5. `git status --short --branch`
-6. `git diff --check`
-7. `git diff --stat` and `git diff`
-8. Relevant docs and files touched by the diff.
+1. `LINUXPC_INSTRUCTIONS.md` if it exists.
+2. `AGENTS.md`
+3. `docs/PROJECT_CONTEXT.md`
+4. `docs/15-matriz-fuente-de-verdad.md`
+5. `docs/16-limites-configuracion.md`
+6. `git status --short --branch`
+7. `git diff --check`
+8. `git diff --stat` and `git diff`
+9. Relevant docs and files touched by the diff.
 
 ## Required Workflow
 
