@@ -470,3 +470,12 @@ El repositorio conserva la fuente de verdad técnica. Los chats se utilizan para
 Codex debe respetar el alcance solicitado. Si la tarea es de inspección, auditoría o planificación, no debe modificar archivos ni el sistema.
 
 Codex debe considerar únicamente como Skills del proyecto las ubicadas en `.agents/skills/`, salvo que el usuario indique otra ubicación explícitamente.
+
+## Herramientas de IA
+
+- ChatGPT: dirige el proyecto, prioriza tareas y valida decisiones.
+- Codex: inspecciona y modifica el repositorio bajo instrucciones explícitas.
+- Gemini: realiza investigación, auditorías y segundas revisiones.
+- El repositorio GitHub es la fuente de verdad documental y de configuración versionada.
+- El estado efectivo del sistema debe verificarse directamente.
+- Ningún resultado de una IA se considera aplicado hasta verificarlo.

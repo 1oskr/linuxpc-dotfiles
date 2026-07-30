@@ -464,126 +464,63 @@ pgrep -af hyprpaper
 
 ### SSH
 
-Permite administrar Arch desde otro equipo mediante terminal.
+SSH es el único canal remoto mantenido para administrar Arch desde macOS.
 
-Servicio:
+Estado verificado:
+
+- `sshd.service` habilitado y activo;
+- IP fija de Arch: `192.168.1.50`;
+- autenticación exclusivamente mediante clave pública;
+- autenticación por contraseña desactivada;
+- acceso desde macOS mediante `ssh arch`.
+
+Configuración del Mac:
+
+```sshconfig
+Host arch
+    HostName 192.168.1.50
+    User oscar
+    IdentityFile ~/.ssh/id_ed25519
+    PreferredAuthentications publickey
+    PasswordAuthentication no
+```
+Uso:
 
 ```bash
-sudo systemctl enable --now sshd
+ssh arch
 ```
 
-Conexión desde otro equipo:
+Configuración local de seguridad en Arch:
 
-```bash
-ssh oscar@192.168.1.81
+```text
+/etc/ssh/sshd_config.d/99-local.conf
+```
+
+Contenido:
+
+```text
+PasswordAuthentication no
+KbdInteractiveAuthentication no
 ```
 
 ### Visual Studio Code Remote SSH
 
-Se utiliza para editar archivos de Arch desde Visual Studio Code en el Mac.
-
-Host configurado:
+Se utiliza para editar archivos de Arch desde Visual Studio Code en macOS mediante el host:
 
 ```text
 arch
 ```
 
-Uso recomendado:
+### Servicios eliminados
 
-- programación;
-- edición de configuraciones;
-- mantenimiento del repositorio;
-- revisión de archivos sin usar escritorio remoto.
-
-### Sunshine
-
-Sunshine transmite el escritorio mediante codificación por hardware de la GPU NVIDIA.
-
-Paquete:
+Se desinstalaron de Arch:
 
 ```text
+rustdesk-bin
 sunshine-bin
+sunshine-bin-debug
 ```
 
-Servicio de usuario:
+Moonlight no estaba instalado en Arch.
 
-```bash
-systemctl --user enable --now app-dev.lizardbyte.app.Sunshine
-```
-
-Estado:
-
-```bash
-systemctl --user status app-dev.lizardbyte.app.Sunshine
-```
-
-Interfaz web local:
-
-```text
-https://localhost:47990
-```
-
-Puerto de administración:
-
-```text
-47990
-```
-
-Monitor transmitido:
-
-```text
-HDMI-A-1
-```
-
-Corresponde al monitor central principal.
-
-Codificación:
-
-```text
-NVIDIA NVENC
-```
-
-La configuración NVENC se mantiene con sus valores predeterminados orientados a baja latencia.
-
-### Moonlight
-
-Moonlight se utiliza como cliente en el Mac.
-
-Configuración actual:
-
-```text
-Resolución: 1920×1080
-FPS: 60
-Bitrate: aproximadamente 80 Mbps
-Códec: automático
-Decodificador: automático
-V-Sync: desactivado
-HDR: desactivado
-```
-
-Atajo para finalizar una transmisión desde macOS:
-
-```text
-Control + Option + Shift + Q
-```
-
-### RustDesk
-
-RustDesk permanece instalado como método de respaldo.
-
-Limitación conocida:
-
-```text
-El mapeo del cursor puede ser incorrecto con Hyprland, Wayland y varios monitores.
-```
-
-Por este motivo, Sunshine y Moonlight son la solución principal para escritorio remoto.
-
-### Flujo recomendado
-
-```text
-SSH                  -> administración y terminal
-VS Code Remote SSH   -> edición y programación
-Sunshine + Moonlight -> escritorio remoto
-RustDesk             -> respaldo
-```
+SSH queda como único canal remoto mantenido.

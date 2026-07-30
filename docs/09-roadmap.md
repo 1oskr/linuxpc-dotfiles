@@ -285,15 +285,16 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P1-08 — Seguridad y acceso desde macOS
 
-- **Estado:** No iniciado
-- **Objetivo:** consolidar macOS como segundo entorno de administración, edición y trabajo remoto.
+- **Estado:** Completado
+- **Objetivo:** consolidar macOS como segundo entorno de administración, edición y trabajo remoto mediante un único canal remoto mantenido y endurecido.
+- **Resultado:** SSH quedó como único canal remoto mantenido; `sshd.service` está habilitado y activo en Arch; el equipo usa IP fija `192.168.1.50`; desde macOS funciona `ssh arch`; la autenticación por contraseña e interactiva está desactivada y solo se acepta clave pública; `rustdesk-bin`, `sunshine-bin` y `sunshine-bin-debug` fueron retirados del sistema y Moonlight no forma parte del baseline de Arch.
 - **Prioridad:** P1
-- **Prerequisitos:** inventario de SSH, Sunshine, Moonlight, RustDesk y control remoto de Kitty.
+- **Prerequisitos:** inventario de SSH, verificación del acceso desde macOS y revisión de los canales remotos alternativos presentes en Arch.
 - **Dependencias:** P1-03 y P1-07.
 - **Duración estimada:** 2 sesiones.
-- **Criterio de finalización:** cada canal remoto tiene propósito, límites, nivel de exposición y alternativa de recuperación definidos.
+- **Criterio de finalización:** el acceso remoto desde macOS queda documentado y verificado con SSH como único canal mantenido, con política de autenticación endurecida, dirección y alias SSH configurados, y sin servicios gráficos remotos no mantenidos dentro del baseline de Arch.
 - **Documentación relacionada:** [Contexto general](PROJECT_CONTEXT.md) y [Arch Linux](05-arch-linux.md).
-- **Riesgos:** servicios expuestos innecesariamente, credenciales no controladas o dependencia de un único canal remoto.
+- **Riesgos:** dependencia operativa de un único canal remoto, pérdida de la clave pública autorizada o cambios de red que rompan la resolución esperada de `ssh arch`. Permanece sin identificar la regla del router `WAN TCP 45333 → 192.168.1.90:4567`; no fue modificada porque no interviene en el acceso SSH actual.
 
 # Épica: Infraestructura del escritorio
 
