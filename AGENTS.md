@@ -13,8 +13,10 @@ Durante cualquier tarea deben aplicarse, en este orden:
 1. instrucciones explícitas del usuario;
 2. `LINUXPC_INSTRUCTIONS.md`;
 3. el `AGENTS.md` más específico aplicable;
-4. `docs/PROJECT_CONTEXT.md`;
-5. la documentación técnica pertinente del repositorio.
+4. la Skill aplicable dentro de `.agents/skills/`;
+5. `docs/PROJECT_CONTEXT.md`;
+6. documentación técnica y configuración vigente del repositorio;
+7. convenciones generales de las herramientas.
 
 Antes de actuar, el agente debe consultar `LINUXPC_INSTRUCTIONS.md` y respetar sus límites de alcance, seguridad, verificación y control de cambios.
 

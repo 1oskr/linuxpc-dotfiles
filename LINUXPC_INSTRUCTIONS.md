@@ -40,7 +40,7 @@ Cuando una tarea sea adecuada para Work:
 
 Cuando una tarea se ejecute mediante Codex:
 
-- Codex debe leer primero `LINUXPC_INSTRUCTIONS.md`, `AGENTS.md` y la documentación relevante del repositorio.
+- Codex debe leer primero `AGENTS.md`, `LINUXPC_INSTRUCTIONS.md` y la documentación relevante del repositorio.
 - Antes de planificar o modificar archivos, debe identificar si existe una Skill aplicable.
 - Si existe una Skill relevante, debe leer su `SKILL.md` completo y seguirlo.
 - Las Skills deben usarse para flujos repetibles; no deben reemplazar las instrucciones generales del proyecto.
@@ -459,7 +459,6 @@ Codex no debe realizar sin autorización explícita:
 
 Antes de trabajar, Codex debe revisar:
 
-- `LINUXPC_INSTRUCTIONS.md`;
 - `AGENTS.md`;
 - `docs/PROJECT_CONTEXT.md`;
 - la documentación relacionada con la tarea;
