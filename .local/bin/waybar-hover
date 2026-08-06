@@ -12,6 +12,8 @@ declare -A configs=(
 visible_monitor=""
 waybar_pid=""
 outside_since=0
+consecutive_hyprctl_failures=0
+max_consecutive_hyprctl_failures=20
 
 now_ms() {
     date +%s%3N
@@ -43,13 +45,25 @@ cleanup() {
     hide_bar
 }
 
-trap cleanup EXIT INT TERM
+trap cleanup EXIT
+trap 'exit 0' INT TERM
 
 pkill waybar 2>/dev/null
 
 while sleep 0.06; do
-    cursor=$(hyprctl cursorpos -j 2>/dev/null) || continue
-    monitors=$(hyprctl monitors -j 2>/dev/null) || continue
+    if ! cursor=$(hyprctl cursorpos -j 2>/dev/null); then
+        ((consecutive_hyprctl_failures += 1))
+        ((consecutive_hyprctl_failures >= max_consecutive_hyprctl_failures)) && exit 0
+        continue
+    fi
+
+    if ! monitors=$(hyprctl monitors -j 2>/dev/null); then
+        ((consecutive_hyprctl_failures += 1))
+        ((consecutive_hyprctl_failures >= max_consecutive_hyprctl_failures)) && exit 0
+        continue
+    fi
+
+    consecutive_hyprctl_failures=0
 
     x=$(jq -r '.x' <<<"$cursor")
     y=$(jq -r '.y' <<<"$cursor")

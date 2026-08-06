@@ -1,0 +1,14 @@
+[Unit]
+Description=Waybar Hover
+After=graphical-session.target
+PartOf=graphical-session.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/waybar-hover
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=default.target

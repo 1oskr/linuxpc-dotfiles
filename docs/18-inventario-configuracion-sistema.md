@@ -123,11 +123,12 @@ documentada.
 | `snapper-timeline.timer` y `snapper-cleanup.timer` | Sistema | Snapper | P1-07 |
 | Unidades NVIDIA de suspensión | Sistema | Integración del paquete NVIDIA | P1-10 |
 | `snappy-switcher.service` | Usuario | Override versionado en `.config/systemd` | P1-09 |
+| `waybar-hover.service` | Usuario | Unidad versionada en `.config/systemd/user` | P1-09 |
 | `wireplumber.service` y sockets PipeWire | Usuario | Proporcionados por paquetes | P1-07 |
 | `hyprpaper.service` | Usuario | Autostart de Hyprland y unidad de usuario | P1-09 |
 | `redshift.service` | Usuario | Alternativa instalada, pendiente de decisión | P1-07/P1-09 |
 | Sunshine | Usuario | Paquete AUR y servicio generado | P1-08 |
-| Hyprsunset, Matuwall, Waybar Hover y `lxpolkit` | Sesión Hyprland | `.config/hypr/modules/autostart.lua` | P1-09 |
+| Hyprsunset, Matuwall y `lxpolkit` | Sesión Hyprland | `.config/hypr/modules/autostart.lua` | P1-09 |
 
 ### Configuración externa al repositorio
 
