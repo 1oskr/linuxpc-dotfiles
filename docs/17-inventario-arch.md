@@ -118,8 +118,8 @@ configuración o script versionado utiliza directamente sus comandos:
 | `bash` | Intérprete de los scripts de `.local/bin/` |
 | `coreutils` | `realpath`, `mktemp`, `cp`, `mv`, `install`, `sort`, `head`, `date`, `sleep` y otras utilidades de scripts |
 | `findutils` | Selección acotada de wallpapers mediante `find` |
-| `gawk` | Edición controlada de `hyprpaper.conf` mediante `awk` |
-| `grep` | Verificación del parche local de Matuwall |
+| `gawk` | Edición controlada de `hyprpaper.conf` y de preferencias de cursor mediante `awk` |
+| `grep` | Verificación del parche local de Matuwall y de la estructura esperada por `cursor-selector` |
 | `grim`, `slurp` | Captura de región utilizada por `satty-region` |
 | `jq` | Interpretación del estado JSON de Hyprland en `waybar-hover` |
 | `playerctl` | Atajos multimedia de Hyprland |
@@ -147,9 +147,10 @@ modifica la razón registrada actualmente por Pacman.
 | `qt5-wayland`, `qt6-wayland`, `xdg-desktop-portal-hyprland` | Pacman | Entorno gráfico | Compatibilidad Wayland y portal del escritorio | Requerido | Aplicaciones gráficas y Hyprland | `pacman -Q` |
 | `orchis-theme`, `papirus-icon-theme`, `ttf-meslo-nerd` | Pacman | Entorno gráfico | Recursos referenciados por GTK, Kitty y el escritorio | Requerido | Dotfiles gráficos | `pacman -Q` e inspección de rutas |
 | `ttf-jetbrains-mono-nerd`, `mesa-utils` | Pacman | Entorno gráfico | Fuente alternativa y diagnóstico gráfico | Opcional aceptado | Escritorio | `pacman -Q` |
-| `hyprland`, `hyprpaper`, `hyprshot`, `hyprsunset`, `waybar`, `rofi`, `lxsession` | Pacman | Hyprland y sesión | Compositor, fondos, captura, barra, lanzador y agente PolicyKit usado | Requerido | `.config/hypr/` y `.config/waybar/` | `pacman -Q` y `command -v` |
+| `hyprland`, `hyprcursor`, `hyprpaper`, `hyprshot`, `hyprsunset`, `waybar`, `rofi`, `lxsession` | Pacman | Hyprland y sesión | Compositor, Hyprcursor, fondos, captura, barra, lanzador y agente PolicyKit usado | Requerido | `.config/hypr/`, `.config/waybar/` y `cursor-selector` | `pacman -Q` y `command -v` |
 | `cliphist`, `wl-clipboard`, `grim`, `slurp`, `satty`, `jq` | Pacman | Hyprland y sesión | Portapapeles, capturas y scripts activos | Requerido | Dotfiles y `.local/bin/` | `pacman -Q` y prueba funcional |
 | `matuwall`, `snappy-switcher` | AUR/Yay | Hyprland y sesión | Selector de wallpapers y selector de ventanas configurados | Requerido | Autostart, binds y systemd de usuario | `pacman -Q`, `command -v` |
+| `volantes-cursors-git`, `bibata-cursor-theme-bin` | AUR/Yay | Temas de cursor | Temas XCursor Volantes y Bibata ofrecidos por `cursor-selector` | Requerido | `/usr/share/icons` y `cursor-selector` | `pacman -Q` e inspección de rutas |
 | `kitty`, `zsh`, `starship`, `eza`, `bat`, `btop`, `fastfetch`, `yazi` | Pacman | Terminal y shell | Flujo principal declarado en dotfiles | Requerido | `.zshrc` y `.config/` | `pacman -Q` y `command -v` |
 | `chafa`, `fd`, `fzf`, `less`, `nano`, `neovim`, `ripgrep`, `tree`, `zoxide` | Pacman | Terminal y shell | Navegación, búsqueda, edición y utilidades auxiliares | Opcional aceptado | Terminal y Yazi | `pacman -Q` y `command -v` |
 | `base-devel`, `git` | Pacman | Desarrollo | Construcción AUR y control de versiones | Requerido | Repositorio y Yay | `pacman -Q` |
@@ -201,6 +202,7 @@ queda registrada en el inventario completado de P1-04.
 |---|---|---|---|---|
 | Codex standalone | Oscar | Instalación bajo `~/.codex/packages/standalone/current` y enlace en `~/.local/bin/codex` | `readlink ~/.local/bin/codex` y `codex --version` | Reinstalar Codex; el procedimiento declarativo permanece pendiente |
 | Parche local de Matuwall | Oscar | Destino del módulo Python descubierto por `.local/bin/matuwall-linuxpc-patch`; respaldo bajo `~/.local/share/linuxpc-backups/matuwall` | `matuwall-linuxpc-patch status` | `matuwall-linuxpc-patch restore`; automatización pendiente en P2-01 |
+| Temas Oreo XCursor y temas Hyprcursor convertidos | Oscar | `~/.local/share/icons`; cada tema Hyprcursor contiene `manifest.hl` | Inspección de las rutas y del manifest usados por `cursor-selector` | Pendiente: no hay fuentes ni procedimiento de reconstrucción verificados; su disponibilidad no está completamente reproducida |
 
 No se detectaron aplicaciones de usuario administradas por Pipx, npm, Cargo o
 RubyGems. Los scripts de `.local/bin/` pertenecen al repositorio y no constituyen
@@ -217,7 +219,7 @@ adopte una decisión:
 | Dunst frente a Mako | Ambos están instalados explícitamente sin autoridad declarada | P1-07 |
 | Redshift frente a Hyprsunset | Ambos están presentes; Hyprsunset aparece en el autostart versionado | P1-07 y P1-09 |
 | Agentes PolicyKit | `lxpolkit` es llamado por Hyprland; existe otro agente explícito | P1-07 y P1-09 |
-| Temas de cursor | Existen dos alternativas AUR explícitas | P2-04 |
+| Temas de cursor | Volantes y Bibata tienen paquetes AUR comprobados; Oreo y los temas Hyprcursor convertidos son recursos locales sin fuente ni reconstrucción verificadas | P2-04 |
 | `yay-debug` | Símbolos de depuración explícitos sin justificación | Excluido; revisar solo si aparece una necesidad de diagnóstico |
 | Huérfanos | Cinco paquetes de depuración y cinco herramientas o bibliotecas sin dependientes | P1-15; no promover ni eliminar automáticamente |
 | Brightnessctl, Geoclue, ImageMagick, imv, inotify-tools, nwg-look y wf-recorder | Explícitos sin propósito canónico suficiente | P1-07, P1-10 o P1-15 según su función |

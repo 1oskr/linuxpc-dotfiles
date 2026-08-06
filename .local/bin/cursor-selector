@@ -1,0 +1,202 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+HYPRLAND_CONFIG="$HOME/.config/hypr/hyprland.lua"
+GTK3_SETTINGS="$HOME/.config/gtk-3.0/settings.ini"
+GTK4_SETTINGS="$HOME/.config/gtk-4.0/settings.ini"
+
+require_command() {
+    command -v "$1" >/dev/null 2>&1 || {
+        printf 'Falta el comando requerido: %s\n' "$1" >&2
+        exit 1
+    }
+}
+
+find_xcursor_theme() {
+    local theme="$1"
+    local base
+
+    for base in "$HOME/.icons" "$HOME/.local/share/icons" /usr/local/share/icons /usr/share/icons; do
+        if [[ -d "$base/$theme" ]]; then
+            printf '%s\n' "$base/$theme"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+find_hyprcursor_manifest() {
+    local theme="$1"
+    local base
+
+    for base in "$HOME/.local/share/icons" "$HOME/.icons" /usr/local/share/icons /usr/share/icons; do
+        if [[ -f "$base/$theme/manifest.hl" ]]; then
+            printf '%s\n' "$base/$theme/manifest.hl"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+validate_pattern() {
+    local file="$1"
+    local pattern="$2"
+
+    [[ -f "$file" ]] || {
+        printf 'No existe el archivo de configuración: %s\n' "$file" >&2
+        exit 1
+    }
+
+    [[ "$(grep -Ec "$pattern" "$file")" -eq 1 ]] || {
+        printf 'La configuración esperada debe aparecer una sola vez en %s\n' "$file" >&2
+        exit 1
+    }
+}
+
+update_gtk_setting() {
+    local file="$1"
+    local setting="$2"
+    local value="$3"
+    local temporary
+
+    temporary="$(mktemp "${file}.XXXXXX")"
+    awk -v setting="$setting" -v value="$value" '
+        $0 ~ "^" setting "[[:space:]]*=" {
+            print setting "=" value
+            next
+        }
+        { print }
+    ' "$file" > "$temporary"
+    chmod --reference="$file" "$temporary"
+    mv "$temporary" "$file"
+}
+
+update_hyprland_settings() {
+    local temporary
+
+    temporary="$(mktemp "${HYPRLAND_CONFIG}.XXXXXX")"
+    awk \
+        -v xcursor_theme="$xcursor_theme" \
+        -v hyprcursor_theme="$hyprcursor_theme" \
+        -v cursor_size="$cursor_size" '
+        /^hl\.env\("XCURSOR_THEME", "[^"]*"\)$/ {
+            print "hl.env(\"XCURSOR_THEME\", \"" xcursor_theme "\")"
+            next
+        }
+        /^hl\.env\("XCURSOR_SIZE", "[^"]*"\)$/ {
+            print "hl.env(\"XCURSOR_SIZE\", \"" cursor_size "\")"
+            next
+        }
+        /^hl\.env\("HYPRCURSOR_THEME", "[^"]*"\)$/ {
+            print "hl.env(\"HYPRCURSOR_THEME\", \"" hyprcursor_theme "\")"
+            next
+        }
+        /^hl\.env\("HYPRCURSOR_SIZE", "[^"]*"\)$/ {
+            print "hl.env(\"HYPRCURSOR_SIZE\", \"" cursor_size "\")"
+            next
+        }
+        { print }
+    ' "$HYPRLAND_CONFIG" > "$temporary"
+    chmod --reference="$HYPRLAND_CONFIG" "$temporary"
+    mv "$temporary" "$HYPRLAND_CONFIG"
+}
+
+for command in rofi hyprctl awk grep mktemp mv chmod; do
+    require_command "$command"
+done
+
+selected="$(
+    printf '%s\n' \
+        'Volantes' \
+        'Volantes Light' \
+        'Bibata Modern Ice' \
+        'Oreo Pink' \
+        'Oreo Red' \
+        'Oreo Spark Blue' \
+        'Oreo Teal' |
+        rofi -dmenu -i -p 'Cursor'
+)" || exit 0
+
+[[ -n "$selected" ]] || exit 0
+
+case "$selected" in
+    'Volantes')
+        xcursor_theme='volantes_cursors'
+        hyprcursor_theme='volantes-hyprcursor'
+        cursor_size='24'
+        ;;
+    'Volantes Light')
+        xcursor_theme='volantes_light_cursors'
+        hyprcursor_theme='volantes-light-hyprcursor'
+        cursor_size='24'
+        ;;
+    'Bibata Modern Ice')
+        xcursor_theme='Bibata-Modern-Ice'
+        hyprcursor_theme='bibata-modern-ice-hyprcursor'
+        cursor_size='24'
+        ;;
+    'Oreo Pink')
+        xcursor_theme='oreo_pink_cursors'
+        hyprcursor_theme='oreo-pink-hyprcursor'
+        cursor_size='32'
+        ;;
+    'Oreo Red')
+        xcursor_theme='oreo_red_cursors'
+        hyprcursor_theme='oreo-red-hyprcursor'
+        cursor_size='32'
+        ;;
+    'Oreo Spark Blue')
+        xcursor_theme='oreo_spark_blue_cursors'
+        hyprcursor_theme='oreo-spark-blue-hyprcursor'
+        cursor_size='32'
+        ;;
+    'Oreo Teal')
+        xcursor_theme='oreo_teal_cursors'
+        hyprcursor_theme='oreo-teal-hyprcursor'
+        cursor_size='32'
+        ;;
+    *)
+        exit 0
+        ;;
+esac
+
+find_xcursor_theme "$xcursor_theme" >/dev/null || {
+    printf 'No se encontró el tema XCursor: %s\n' "$xcursor_theme" >&2
+    exit 1
+}
+
+find_hyprcursor_manifest "$hyprcursor_theme" >/dev/null || {
+    printf 'No se encontró el manifest Hyprcursor: %s\n' "$hyprcursor_theme" >&2
+    exit 1
+}
+
+validate_pattern "$HYPRLAND_CONFIG" '^hl.env\("XCURSOR_THEME", "[^"]*"\)$'
+validate_pattern "$HYPRLAND_CONFIG" '^hl.env\("XCURSOR_SIZE", "[^"]*"\)$'
+validate_pattern "$HYPRLAND_CONFIG" '^hl.env\("HYPRCURSOR_THEME", "[^"]*"\)$'
+validate_pattern "$HYPRLAND_CONFIG" '^hl.env\("HYPRCURSOR_SIZE", "[^"]*"\)$'
+validate_pattern "$GTK3_SETTINGS" '^gtk-cursor-theme-name[[:space:]]*='
+validate_pattern "$GTK3_SETTINGS" '^gtk-cursor-theme-size[[:space:]]*='
+validate_pattern "$GTK4_SETTINGS" '^gtk-cursor-theme-name[[:space:]]*='
+validate_pattern "$GTK4_SETTINGS" '^gtk-cursor-theme-size[[:space:]]*='
+
+hyprctl setcursor "$hyprcursor_theme" "$cursor_size"
+
+update_hyprland_settings
+update_gtk_setting "$GTK3_SETTINGS" 'gtk-cursor-theme-name' "$xcursor_theme"
+update_gtk_setting "$GTK3_SETTINGS" 'gtk-cursor-theme-size' "$cursor_size"
+update_gtk_setting "$GTK4_SETTINGS" 'gtk-cursor-theme-name' "$xcursor_theme"
+update_gtk_setting "$GTK4_SETTINGS" 'gtk-cursor-theme-size' "$cursor_size"
+
+if command -v gsettings >/dev/null 2>&1 && gsettings list-schemas | grep -qx 'org.gnome.desktop.interface'; then
+    gsettings set org.gnome.desktop.interface cursor-theme "$xcursor_theme" || \
+        printf 'No se pudo actualizar GSettings para el tema de cursor.\n' >&2
+    gsettings set org.gnome.desktop.interface cursor-size "$cursor_size" || \
+        printf 'No se pudo actualizar GSettings para el tamaño de cursor.\n' >&2
+fi
+
+if command -v notify-send >/dev/null 2>&1; then
+    notify-send 'Cursor actualizado' "$selected · ${cursor_size}px"
+fi

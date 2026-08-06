@@ -157,6 +157,45 @@ tail -n 80 /tmp/waybar-DP-2.log
 ~/.config/rofi/theme.rasi
 ```
 
+### Cursores
+
+Selector implementado y probado visualmente:
+
+```text
+~/.local/bin/cursor-selector -> ~/linuxpc-dotfiles/.local/bin/cursor-selector
+```
+
+Uso:
+
+```bash
+cursor-selector
+```
+
+El selector presenta las opciones con Rofi, valida el tema XCursor y el
+`manifest.hl` de Hyprcursor elegidos, aplica el cambio inmediato mediante
+`hyprctl setcursor` y persiste las variables XCursor e Hyprcursor en
+`~/.config/hypr/hyprland.lua`. También actualiza los ajustes GTK 3, GTK 4 y
+GSettings activos; si `notify-send` está disponible, muestra una notificación.
+
+| Opción | Tamaño |
+|---|---|
+| Volantes | 24 |
+| Volantes Light | 24 |
+| Bibata Modern Ice | 24 |
+| Oreo Pink | 32 |
+| Oreo Red | 32 |
+| Oreo Spark Blue | 32 |
+| Oreo Teal | 32 |
+
+Estado comprobado: Oreo Teal, tamaño 32, sincronizado en Hyprland, GTK activos
+y GSettings. Los `settings.ini` activos de GTK no están enlazados al
+repositorio y los versionados conservan otro estado visual; esta divergencia
+no se resuelve aquí y permanece diferida según los
+[límites de configuración](16-limites-configuracion.md).
+
+Las dependencias y los límites de reconstrucción de los temas se registran en
+el [inventario declarativo de Arch Linux](17-inventario-arch.md).
+
 ### Wallpapers
 
 Motor de fondos:
