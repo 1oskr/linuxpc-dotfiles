@@ -1,6 +1,4 @@
 {
-  "id": "waybar-hdmi",
-  "output": "HDMI-A-1",
   "layer": "overlay",
   "position": "top",
   "height": 34,
@@ -46,13 +44,13 @@
   "cpu": {
     "format": " {usage}%"
   },
-"custom/gpu": {
-  "exec": "~/.local/bin/waybar-gpu",
-  "interval": 2,
-  "return-type": "json",
-  "tooltip": true,
-  "on-click": "nvidia-settings"
-},
+  "custom/gpu": {
+    "exec": "~/.local/bin/waybar-gpu",
+    "interval": 2,
+    "return-type": "json",
+    "tooltip": true,
+    "on-click": "nvidia-settings"
+  },
   "memory": {
     "format": " {}%"
   },

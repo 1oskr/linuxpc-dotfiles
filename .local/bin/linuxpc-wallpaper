@@ -16,6 +16,30 @@ if [[ ! -f "$wallpaper" ]]; then
     exit 1
 fi
 
+if ! monitors_json="$(hyprctl monitors -j 2>/dev/null)"; then
+    printf 'No se pudo consultar monitores de Hyprland.\n' >&2
+    exit 1
+fi
+
+if ! monitor_names="$(
+    jq -er '
+        if type != "array" then
+            error("la respuesta no es un arreglo")
+        elif length != 3 then
+            error("se requieren exactamente 3 monitores activos")
+        elif any(.[]; (.name | type) != "string" or (.x | type) != "number") then
+            error("faltan name o x válidos")
+        else
+            sort_by(.x) | .[] | .name
+        end
+    ' <<<"$monitors_json"
+)"; then
+    printf 'No se pudieron resolver los tres monitores activos de Hyprland.\n' >&2
+    exit 1
+fi
+
+mapfile -t monitors <<<"$monitor_names"
+
 destination="$(
     printf '%s\n' \
         "Central" \
@@ -27,16 +51,15 @@ destination="$(
 
 case "$destination" in
     "Central")
-        monitors=("HDMI-A-1")
+        monitors=("${monitors[1]}")
         ;;
     "Izquierdo")
-        monitors=("DP-1")
+        monitors=("${monitors[0]}")
         ;;
     "Derecho")
-        monitors=("DP-2")
+        monitors=("${monitors[2]}")
         ;;
     "Todos los monitores")
-        monitors=("HDMI-A-1" "DP-1" "DP-2")
         ;;
     *)
         exit 0

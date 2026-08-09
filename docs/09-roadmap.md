@@ -317,13 +317,14 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P1-10 — Perfil físico de LinuxPC
 
-- **Estado:** No iniciado
+- **Estado:** Completado
 - **Objetivo:** delimitar la configuración ligada a monitores, GPU, rutas y hardware específico.
 - **Prioridad:** P1
 - **Prerequisitos:** límites de configuración definidos.
 - **Dependencias:** P1-02 y P1-09.
 - **Duración estimada:** 1–2 sesiones.
 - **Criterio de finalización:** toda dependencia física conocida del equipo pertenece claramente al perfil de LinuxPC o queda clasificada como configuración común.
+- **Resultado:** la topología física está en `machines/linuxpc.lua`; Waybar separa la presentación común de los adaptadores por salida; los roles de wallpaper se obtienen de la geometría efectiva; Starship muestra el hostname dinámicamente; la integración NVIDIA fue verificada sin requerir cambios.
 - **Documentación relacionada:** [Arch Linux](05-arch-linux.md) y [Dotfiles y Git](07-dotfiles-git.md).
 - **Riesgos:** trasladar al perfil de máquina configuraciones que deberían ser comunes.
 

@@ -91,7 +91,6 @@ appearance.lua
 autostart.lua
 binds.lua
 input.lua
-monitors.lua
 rules.lua
 workspaces.lua
 ```
@@ -101,6 +100,17 @@ Configuración específica del equipo:
 ```text
 ~/.config/hypr/machines/linuxpc.lua
 ```
+
+`hyprland.lua` carga este perfil, que concentra la topología física de
+LinuxPC. `modules/monitors.lua` ya no existe.
+
+Topología comprobada después de `hyprctl reload`:
+
+| Salida | Monitor | Modo | Posición | Escala |
+|---|---|---|---|---:|
+| `DP-1` | Samsung LC24RG50 | 1920x1080@143.98 | `0x0` | 1 |
+| `HDMI-A-1` | Samsung LS27DG30X | 1920x1080@180 | `1920x0` | 1 |
+| `DP-2` | Samsung S24F350 | 1920x1080@60 | `3840x0` | 1 |
 
 ## Componentes del escritorio
 
@@ -133,14 +143,24 @@ Los enlaces creados en `*.target.wants/` por `enable` son estado generado y no
 se versionan.
 
 ### Waybar
+
 ```text
-~/.config/waybar/hdmi.jsonc
-~/.config/waybar/dp1.jsonc
-~/.config/waybar/dp2.jsonc
+~/.config/waybar/common.jsonc
+~/.config/waybar/outputs/HDMI-A-1.jsonc
+~/.config/waybar/outputs/DP-1.jsonc
+~/.config/waybar/outputs/DP-2.jsonc
 ~/.config/waybar/style.css
 ~/.local/bin/waybar-hover
 ~/.local/bin/waybar-gpu
 ~/.local/bin/powermenu
+```
+
+`common.jsonc` contiene la presentación compartida. Los tres archivos de
+`outputs/` son adaptadores específicos de LinuxPC: conservan el identificador
+de Waybar y la salida física (`waybar-hdmi`/`HDMI-A-1`, `waybar-dp1`/`DP-1` y
+`waybar-dp2`/`DP-2`). `waybar-hover` deriva el adaptador directamente como
+`~/.config/waybar/outputs/$monitor.jsonc`; no mantiene una tabla de salida a
+archivo.
 
 Waybar utiliza una instancia dinámica gestionada por `waybar-hover`.
 
@@ -161,6 +181,10 @@ Funciones principales:
 - uso y temperatura de la GPU NVIDIA;
 - tooltip con VRAM y consumo eléctrico;
 - logo de Arch para abrir el menú de energía.
+
+La integración de `waybar-gpu` conserva `nvidia-smi`. En el sistema real se
+verificó la RTX 3060 con `nvidia-open` y `nvidia-utils` 610.57.04; no fue
+necesario cambiar la configuración NVIDIA para P1-10.
 
 Diagnóstico:
 
@@ -233,7 +257,7 @@ Motor de fondos:
 Hyprpaper
 ```
 
-Configuración persistente:
+Selección activa personal/generada:
 
 ```text
 ~/.config/hypr/hyprpaper.conf
@@ -296,13 +320,12 @@ Backend personalizado:
 
 El script permite aplicar el wallpaper al monitor central, izquierdo, derecho o a todos los monitores.
 
-Monitores configurados:
-
-```text
-Central:   HDMI-A-1
-Izquierdo: DP-1
-Derecho:   DP-2
-```
+`linuxpc-wallpaper` y `wallpaper-selector` consultan `hyprctl monitors -j` y
+requieren exactamente tres monitores válidos. Ordenan sus posiciones `x`: el
+menor corresponde a Izquierdo, el intermedio a Central y el mayor a Derecho.
+La validación efectiva resolvió `DP-1`, `HDMI-A-1` y `DP-2`, respectivamente.
+`hyprpaper.conf` materializa la selección activa de imágenes y no es fuente
+canónica de la topología física.
 
 Selector anterior conservado como alternativa:
 
@@ -361,6 +384,11 @@ matuwall-linuxpc-patch restore
 ```text
 ~/.config/starship.toml
 ```
+
+El módulo `hostname` usa `format = "[@$hostname]($style) "`; conserva el
+estilo personal y obtiene el hostname del sistema en tiempo de ejecución. Con
+el hostname actual `arch`, el renderizado validado es `@arch`, sin codificarlo
+en la configuración.
 
 ### Btop
 

@@ -1,0 +1,5 @@
+{
+  "id": "waybar-dp2",
+  "output": "DP-2",
+  "include": "../common.jsonc"
+}

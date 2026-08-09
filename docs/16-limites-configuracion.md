@@ -185,15 +185,15 @@ Ambos documentos son complementarios:
 
 | Familia | Propietario | Alcance | Plataforma | Categoría principal | Excepciones o mezcla actual | Proyecto posterior |
 |---|---|---|---|---|---|---|
-| `.config/hypr/` | Oscar | Escritorio declarativo y perfil físico | Arch Linux y Hyprland | Configuración común y reproducible | El perfil `machines/linuxpc.lua` está vacío; monitores, autostart y `hyprpaper.conf` mezclan estado común, físico y generado | P1-09 y P1-10 |
-| `.config/waybar/` | Oscar | Barra del escritorio | Arch Linux y Hyprland | Configuración específica de LinuxPC | Los archivos por salida y la integración NVIDIA mezclan presentación común con hardware | P1-10 y P2-03 |
+| `.config/hypr/` | Oscar | Escritorio declarativo y perfil físico | Arch Linux y Hyprland | Configuración común y reproducible | `machines/linuxpc.lua` contiene exclusivamente la topología física; `hyprpaper.conf` es selección activa personal/generada, no topología canónica | P1-09; P1-10 completado |
+| `.config/waybar/` | Oscar | Barra del escritorio | Arch Linux y Hyprland | Configuración común y reproducible | `common.jsonc` concentra presentación común; `outputs/` contiene los adaptadores físicos de LinuxPC. La integración NVIDIA queda como consumo específico del equipo | P1-10 completado; P2-03 |
 | `.config/kitty/` | Oscar | Terminal gráfico | Arch Linux; portabilidad por verificar | Configuración personal no sensible | La relación entre copia activa y repositorio debe verificarse de forma repetible | P1-13 y P2-03 |
 | `.config/rofi/` | Oscar | Lanzador, menús y temas | Arch Linux y Wayland | Configuración personal no sensible | La copia activa diverge del repositorio y contiene recursos y respaldos locales | P1-13 y P2-03 |
-| `.config/matuwall/` | Oscar | Selector y preferencias de wallpapers | Arch Linux y LinuxPC | Configuración específica de LinuxPC | El directorio activo enlaza al repositorio y la aplicación genera un respaldo dentro de él | P1-10 y P2-01 |
+| `.config/matuwall/` | Oscar | Selector y preferencias de wallpapers | Arch Linux y LinuxPC | Configuración específica de LinuxPC | El directorio activo enlaza al repositorio y la aplicación genera un respaldo dentro de él; la selección activa pertenece a `hyprpaper.conf` como estado personal/generado | P2-01 |
 | `.config/systemd/` | Oscar | Overrides declarativos de servicios de usuario | Arch Linux | Configuración específica de LinuxPC | La habilitación y los enlaces efectivos pertenecen al sistema, no al repositorio | P1-04 y P1-09 |
-| `.local/bin/` | Oscar | Utilidades mantenibles del usuario | Principalmente Arch Linux y Wayland | Configuración personal no sensible | Varios scripts codifican monitores, GPU o integración exclusiva de LinuxPC; `powermenu` diverge de su copia activa | [P1-03](17-inventario-arch.md), completado; P1-10, P1-13 y P2-03 |
+| `.local/bin/` | Oscar | Utilidades mantenibles del usuario | Principalmente Arch Linux y Wayland | Configuración personal no sensible | Los scripts de wallpaper derivan roles desde la geometría efectiva y `waybar-hover` deriva el adaptador desde la salida; `waybar-gpu` es un consumidor específico de LinuxPC para NVIDIA. `powermenu` diverge de su copia activa | [P1-03](17-inventario-arch.md), completado; P1-10 completado, P1-13 y P2-03 |
 | `.zshrc` | Oscar | Shell interactivo | Arch Linux; partes potencialmente portables | Configuración personal no sensible | Mezcla inicialización portable con aplicaciones y mecanismos propios de Arch, Wayland y Kitty | P1-13 |
-| `.config/starship.toml` | Oscar | Prompt del shell | Sistemas con Starship | Configuración personal no sensible | Mezcla presentación personal con identidad de máquina | P1-10 y P1-13 |
+| `.config/starship.toml` | Oscar | Prompt del shell | Sistemas con Starship | Configuración personal no sensible | La presentación es personal; el módulo hostname obtiene la identidad efectiva en tiempo de ejecución | P1-10 completado y P1-13 |
 | `.config/btop/` | Oscar | Monitorización y temas | Sistemas con Btop | Configuración personal no sensible | La configuración activa genera respaldos locales y existe una referencia sin política completa | P1-13 y P2-03 |
 | `.config/fastfetch/` | Oscar | Presentación de información del sistema | Sistemas con Fastfetch | Configuración personal no sensible | La información mostrada puede depender del sistema efectivo | [P1-03](17-inventario-arch.md), completado; P1-13 |
 | `.config/satty/` | Oscar | Anotación de capturas | Arch Linux y Wayland | Configuración común y reproducible | Sus dependencias gráficas están registradas en el inventario de Arch | [P1-03](17-inventario-arch.md), completado |
@@ -254,12 +254,9 @@ pertenecen al sistema.
 
 Estas divergencias quedan registradas sin determinar qué copia debe prevalecer:
 
-- `machines/linuxpc.lua` todavía está vacío;
-- la topología física permanece dentro de configuración general;
-- `hyprpaper.conf` mezcla rutas personales, monitores y selección activa;
-- Starship mezcla presentación personal y nombre de máquina;
+- `hyprpaper.conf` conserva rutas personales y selección activa generada; sus
+  referencias de salida no son una fuente canónica de topología;
 - `.zshrc` mezcla configuración portable y dependencias de Arch y Wayland;
-- Waybar mezcla configuración común y hardware;
 - los enlaces GTK son absolutos;
 - los métodos de activación mediante enlaces y copias son inconsistentes;
 - las copias activas y el repositorio difieren en Rofi y `powermenu`;
@@ -274,7 +271,7 @@ Estas divergencias quedan registradas sin determinar qué copia debe prevalecer:
 | [P1-04 — Inventario de configuración del sistema](18-inventario-configuracion-sistema.md), completado | Registrar configuración efectiva, habilitación y estado relevante fuera del repositorio. |
 | P1-08 — Seguridad y acceso desde macOS | Revisar acceso remoto, exposición e identificadores relacionados. |
 | P1-09 — Ciclo de vida de la sesión Hyprland | Delimitar sesión, autostart y servicios de usuario. |
-| P1-10 — Perfil físico de LinuxPC | Separar hardware, monitores, GPU y rutas físicas de la configuración común. |
+| P1-10 — Perfil físico de LinuxPC, completado | Delimitar hardware, monitores, GPU y rutas físicas entre perfil de LinuxPC, configuración común y estado personal/generado. |
 | P1-13 — Flujo de terminal | Consolidar shell, prompt, terminal y utilidades personales. |
 | P1-22 — Baseline de recuperación de Bazzite | Definir qué límites y configuraciones son aplicables a Bazzite. |
 | P2-01 — Automatización de reconstrucción | Implementar despliegue, generación y creación controlada de enlaces. |

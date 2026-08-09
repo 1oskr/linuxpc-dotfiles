@@ -9,7 +9,7 @@ hl.config({
 
 require("modules/input")
 require("modules/appearance")
-require("modules/monitors")
+require("machines/linuxpc")
 require("modules/autostart")
 require("modules/binds")
 require("modules/animations")

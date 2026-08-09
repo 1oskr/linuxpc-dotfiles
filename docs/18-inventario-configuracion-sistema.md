@@ -103,6 +103,21 @@ La configuración mantenible se resume aquí; el procedimiento completo está en
 Las entradas generadas de GRUB pertenecen a la evidencia de auditoría, no a
 esta representación canónica.
 
+### Perfil físico y NVIDIA verificados en P1-10
+
+La topología efectiva de tres monitores fue validada después de recargar
+Hyprland: `DP-1` a `0x0`, `HDMI-A-1` a `1920x0` y `DP-2` a `3840x0`, todos con
+escala 1. Su representación prevista pertenece a
+`.config/hypr/machines/linuxpc.lua`; la descripción de la arquitectura de
+escritorio está en [Arch Linux](05-arch-linux.md).
+
+La GPU es una NVIDIA GeForce RTX 3060. En el sistema real se verificaron
+`nvidia-open` y `nvidia-utils` 610.57.04, `nvidia_drm.modeset=1`, los módulos y
+dispositivos NVIDIA, y una ejecución correcta de `nvidia-smi`. El error de
+comunicación observado desde el sandbox de Codex no representa un fallo del
+sistema. No se requirió cambio de paquetes ni de configuración NVIDIA para
+P1-10.
+
 ### Sudoers y privilegios
 
 La política principal de sudo pertenece al sistema. No se copian sus archivos al
@@ -121,7 +136,7 @@ documentada.
 | `rustdesk.service` | Sistema | Paquete AUR y documentación | P1-08 |
 | `grub-btrfsd.service` | Sistema | Snapper/GRUB | P1-07 |
 | `snapper-timeline.timer` y `snapper-cleanup.timer` | Sistema | Snapper | P1-07 |
-| Unidades NVIDIA de suspensión | Sistema | Integración del paquete NVIDIA | P1-10 |
+| Unidades NVIDIA de suspensión | Sistema | Integración del paquete NVIDIA | Verificado en P1-10 |
 | `hyprland-session.target` | Usuario | Target versionado en `.config/systemd/user`, iniciado y detenido por Hyprland | P1-09 |
 | `matuwall.service` | Usuario | Unidad versionada, habilitada para `hyprland-session.target` | P1-09 |
 | `snappy-switcher.service` | Usuario | Override versionado; habilitado para `graphical-session.target` | P1-09 |
@@ -218,8 +233,6 @@ deshabilitadas.
 - Las entradas Windows requieren validación en P1-06 antes de cualquier cambio.
 - Sunshine y RustDesk presentan un estado efectivo distinto del flujo remoto
   descrito; corresponde a P1-08.
-- El hardware NVIDIA, los monitores y el parámetro de kernel deben consolidarse
-  en el perfil físico de P1-10.
 - Las habilitaciones systemd, los montajes efectivos y el entorno de sesión no
   deben confundirse con archivos declarativos versionables.
 - La automatización de despliegue y generación de enlaces queda para P2-01.
@@ -250,5 +263,5 @@ El estado relevante fuera de los dotfiles está identificado, clasificado y
 asignado a una fuente primaria, un propietario y un proyecto responsable. Se
 confirmaron el hostname `arch`, el esquema Btrfs, los montajes persistentes,
 Snapper, GRUB, sudoers y las unidades relevantes. Las incertidumbres restantes
-son decisiones posteriores de P1-06, P1-07, P1-08, P1-09, P1-10 y P2-01; no
+son decisiones posteriores de P1-06, P1-07, P1-08, P1-09 y P2-01; no
 bloquean el inventario documental.

@@ -3,12 +3,6 @@
 exec 9>/tmp/waybar-hover.lock
 flock -n 9 || exit 0
 
-declare -A configs=(
-    ["HDMI-A-1"]="$HOME/.config/waybar/hdmi.jsonc"
-    ["DP-1"]="$HOME/.config/waybar/dp1.jsonc"
-    ["DP-2"]="$HOME/.config/waybar/dp2.jsonc"
-)
-
 visible_monitor=""
 waybar_pid=""
 outside_since=0
@@ -23,7 +17,7 @@ show_bar() {
     local monitor="$1"
 
     waybar \
-        -c "${configs[$monitor]}" \
+        -c "$HOME/.config/waybar/outputs/$monitor.jsonc" \
         -s "$HOME/.config/waybar/style.css" \
         >/tmp/waybar-"$monitor".log 2>&1 &
 

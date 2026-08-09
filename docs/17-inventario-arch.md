@@ -222,7 +222,7 @@ adopte una decisión:
 | Temas de cursor | Volantes y Bibata tienen paquetes AUR comprobados; Oreo y los temas Hyprcursor convertidos son recursos locales sin fuente ni reconstrucción verificadas | P2-04 |
 | `yay-debug` | Símbolos de depuración explícitos sin justificación | Excluido; revisar solo si aparece una necesidad de diagnóstico |
 | Huérfanos | Cinco paquetes de depuración y cinco herramientas o bibliotecas sin dependientes | P1-15; no promover ni eliminar automáticamente |
-| Brightnessctl, Geoclue, ImageMagick, imv, inotify-tools, nwg-look y wf-recorder | Explícitos sin propósito canónico suficiente | P1-07, P1-10 o P1-15 según su función |
+| Brightnessctl, Geoclue, ImageMagick, imv, inotify-tools, nwg-look y wf-recorder | Explícitos sin propósito canónico suficiente | P1-07 o P1-15 según su función |
 | `python-lz4` | Explícito sin consumidor directo documentado | P1-15 |
 | Waywallen Flatpak e integración AUR | El Flatpak se acepta como aplicación opcional; la necesidad de la integración AUR no está resuelta | P1-07 y P2-01 |
 

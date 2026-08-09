@@ -10,7 +10,7 @@ format = "[1oskrr]($style)"
 [hostname]
 ssh_only = false
 style = "bold #FF6B6B"
-format = "[@arklinuk]($style) "
+format = "[@$hostname]($style) "
 
 [directory]
 style = "bold #8a68f9"
