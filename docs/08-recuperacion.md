@@ -13,7 +13,26 @@ Registrar los procedimientos mínimos para diagnosticar y recuperar:
 ## Recuperación de GRUB desde Arch ISO
 
 Este procedimiento repara el gestor de arranque desde un medio externo. No
-realiza un rollback de la raíz de Arch.
+realiza un rollback de la raíz de Arch ni repara la EFI propia de Bazzite.
+
+### Alcance y evidencia de la prueba P1-06
+
+El 2026-08-08 se probó desde un USB Ventoy con
+`archlinux-2026.07.01-x86_64.iso`, iniciado correctamente en modo UEFI. La
+reparación actuó sobre la raíz Btrfs de Arch, `/dev/nvme0n1p8` (subvolumen
+`@`), y la EFI principal, `/dev/nvme0n1p1` (UUID `C8AA-8DB4`).
+
+Antes de realizar escrituras se verificó en solo lectura que ambas podían
+montarse. También se comprobó que `arch-chroot /mnt` y `efibootmgr` funcionaban
+dentro del chroot; que la EFI principal contenía
+`/EFI/GRUB/grubx64.efi` y `/EFI/Microsoft/Boot/bootmgfw.efi`; y que la EFI
+separada de Bazzite, `/dev/nvme0n1p5` (UUID `09A5-B5D0`), contenía
+`/EFI/fedora/grubx64.efi`.
+
+Antes de reparar se creó el respaldo local
+`/root/p1-06-grub-backup-20260808M`, que contiene `GRUB/grubx64.efi`,
+`grub.cfg`, `/etc/default/grub`, `/etc/grub.d/40_custom` y
+`efibootmgr-before.txt`.
 
 ### 1. Identificar particiones
 
@@ -25,7 +44,7 @@ Particiones relevantes:
 
 ```text
 /dev/nvme0n1p1 -> EFI principal
-/dev/nvme0n1p8 -> Arch Linux
+/dev/nvme0n1p8 -> raíz Btrfs de Arch, subvolumen @
 ```
 
 ### 2. Montar Arch
@@ -58,7 +77,28 @@ grub-install \
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
-### 6. Salir y desmontar
+El resultado de `grub-install` fue `Installation finished. No error reported.`
+El `grub.cfg` regenerado contenía Arch Linux, Windows Boot Manager en
+`/dev/nvme0n1p1`, Windows Boot Manager antiguo en `/dev/sda1`, Bazzite y Arch
+Linux snapshots.
+
+### 6. Verificar el resultado
+
+La EFI de Bazzite no se modificó. Se conservaron las entradas UEFI relevantes
+para GRUB, Windows principal, Fedora/Bazzite y Windows antiguo del HDD; el
+orden de arranque no cambió de forma relevante.
+
+Tras retirar el USB y reiniciar desde el SSD, se verificó el arranque correcto
+de Arch Linux, Bazzite y Windows.
+
+### Limitaciones de la prueba
+
+- No se probó la reparación de la EFI de Bazzite.
+- No se probó restaurar los archivos del respaldo local.
+- No se simuló una pérdida o corrupción de la EFI principal ni de las entradas
+  UEFI.
+
+### 7. Salir y desmontar
 
 ```bash
 exit

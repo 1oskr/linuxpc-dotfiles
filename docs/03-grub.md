@@ -101,7 +101,23 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 ## Reparación desde Arch ISO
 
-Montaje previo del sistema y entrada con `arch-chroot` requeridos.
+La recuperación del arranque multisistema se probó el 2026-08-08 desde un USB
+Ventoy con `archlinux-2026.07.01-x86_64.iso`, iniciado correctamente en modo
+UEFI.
+
+Antes de reparar, se comprobó en solo lectura que la raíz Btrfs de Arch
+(`/dev/nvme0n1p8`, subvolumen `@`) y la EFI principal
+(`/dev/nvme0n1p1`, UUID `C8AA-8DB4`) podían montarse; también funcionaron
+`arch-chroot /mnt` y `efibootmgr` dentro del chroot. Se verificó la presencia
+de `/EFI/GRUB/grubx64.efi` y `/EFI/Microsoft/Boot/bootmgfw.efi` en la EFI
+principal, y de `/EFI/fedora/grubx64.efi` en la EFI de Bazzite.
+
+Antes de la reparación se creó el respaldo local
+`/root/p1-06-grub-backup-20260808M`, con `GRUB/grubx64.efi`, `grub.cfg`,
+`/etc/default/grub`, `/etc/grub.d/40_custom` y `efibootmgr-before.txt`.
+
+Para reparar GRUB, montar previamente la raíz de Arch y la EFI principal en
+modo de escritura y entrar con `arch-chroot`.
 
 Comandos principales:
 
@@ -114,6 +130,19 @@ grub-install \
 
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
+
+`grub-install` finalizó con `Installation finished. No error reported.` El
+`grub.cfg` regenerado contiene Arch Linux, Windows Boot Manager en
+`/dev/nvme0n1p1`, Windows Boot Manager antiguo en `/dev/sda1`, Bazzite y Arch
+Linux snapshots.
+
+No se modificó la EFI de Bazzite. Se conservaron las entradas UEFI relevantes
+para GRUB, Windows principal, Fedora/Bazzite y Windows antiguo del HDD; el
+orden de arranque no cambió de forma relevante. Tras retirar el USB, se
+verificó el arranque desde el SSD de Arch Linux, Bazzite y Windows.
+
+La prueba no valida la reparación de la EFI propia de Bazzite ni una
+restauración desde el respaldo local; ambas quedaron fuera de su alcance.
 
 ## Comandos de diagnóstico
 

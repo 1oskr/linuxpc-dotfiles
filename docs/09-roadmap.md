@@ -258,8 +258,9 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P1-06 — Recuperación del arranque multisistema
 
-- **Estado:** No iniciado
+- **Estado:** Completado
 - **Objetivo:** validar que Arch Linux pueda recuperar el acceso a los sistemas instalados.
+- **Resultado:** desde Arch ISO en modo UEFI se reinstaló GRUB en la EFI principal y se regeneró `grub.cfg`; tras retirar el USB, Arch Linux, Bazzite y Windows arrancaron correctamente. La EFI de Bazzite no fue modificada.
 - **Prioridad:** P1
 - **Prerequisitos:** medio de recuperación disponible y respaldo verificado.
 - **Dependencias:** P0-03.
