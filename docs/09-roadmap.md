@@ -330,14 +330,22 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P1-11 — Modelo de workspaces y ventanas
 
-- **Estado:** No iniciado
+- **Estado:** Completado
 - **Objetivo:** definir el comportamiento funcional de navegación, colocación y reglas de aplicaciones.
+- **Resultado:** los workspaces permanecen globales y libres, sin reglas
+  especiales en `workspaces.lua`; `SUPER + 1..9` los enfoca y `SUPER + SHIFT +
+  1..9` mueve y sigue la ventana activa. La navegación y el movimiento
+  direccionales con `SUPER` y `SUPER + SHIFT`, respectivamente, se validaron
+  también entre monitores. Snappy Switcher se conserva como selector visual y
+  global complementario con `follow_monitor = true`, verificado igual a la copia
+  activa. No se añadieron reglas de colocación por aplicación ni atajos
+  redundantes para cruzar monitores.
 - **Prioridad:** P1
 - **Prerequisitos:** ciclo de sesión estable y flujos cotidianos identificados.
 - **Dependencias:** P1-09 y P1-10.
 - **Duración estimada:** 2 sesiones.
 - **Criterio de finalización:** workspaces, reglas y atajos responden a un modelo coherente y verificable.
-- **Documentación relacionada:** [Arch Linux](05-arch-linux.md). No existe todavía documentación específica para este modelo.
+- **Documentación relacionada:** [Arch Linux](05-arch-linux.md).
 - **Riesgos:** diseñar reglas alrededor de aplicaciones circunstanciales o crear demasiadas excepciones.
 
 ## P1-12 — Servicios esenciales del escritorio

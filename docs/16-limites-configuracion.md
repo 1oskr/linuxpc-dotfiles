@@ -185,7 +185,7 @@ Ambos documentos son complementarios:
 
 | Familia | Propietario | Alcance | Plataforma | Categoría principal | Excepciones o mezcla actual | Proyecto posterior |
 |---|---|---|---|---|---|---|
-| `.config/hypr/` | Oscar | Escritorio declarativo y perfil físico | Arch Linux y Hyprland | Configuración común y reproducible | `machines/linuxpc.lua` contiene exclusivamente la topología física; `hyprpaper.conf` es selección activa personal/generada, no topología canónica | P1-09; P1-10 completado |
+| `.config/hypr/` | Oscar | Escritorio declarativo y perfil físico | Arch Linux y Hyprland | Configuración común y reproducible | `machines/linuxpc.lua` contiene exclusivamente la topología física; `hyprpaper.conf` es selección activa personal/generada, no topología canónica | P1-09; P1-10 y P1-11 completados |
 | `.config/waybar/` | Oscar | Barra del escritorio | Arch Linux y Hyprland | Configuración común y reproducible | `common.jsonc` concentra presentación común; `outputs/` contiene los adaptadores físicos de LinuxPC. La integración NVIDIA queda como consumo específico del equipo | P1-10 completado; P2-03 |
 | `.config/kitty/` | Oscar | Terminal gráfico | Arch Linux; portabilidad por verificar | Configuración personal no sensible | La relación entre copia activa y repositorio debe verificarse de forma repetible | P1-13 y P2-03 |
 | `.config/rofi/` | Oscar | Lanzador, menús y temas | Arch Linux y Wayland | Configuración personal no sensible | La copia activa diverge del repositorio y contiene recursos y respaldos locales | P1-13 y P2-03 |
@@ -197,7 +197,7 @@ Ambos documentos son complementarios:
 | `.config/btop/` | Oscar | Monitorización y temas | Sistemas con Btop | Configuración personal no sensible | La configuración activa genera respaldos locales y existe una referencia sin política completa | P1-13 y P2-03 |
 | `.config/fastfetch/` | Oscar | Presentación de información del sistema | Sistemas con Fastfetch | Configuración personal no sensible | La información mostrada puede depender del sistema efectivo | [P1-03](17-inventario-arch.md), completado; P1-13 |
 | `.config/satty/` | Oscar | Anotación de capturas | Arch Linux y Wayland | Configuración común y reproducible | Sus dependencias gráficas están registradas en el inventario de Arch | [P1-03](17-inventario-arch.md), completado |
-| `.config/snappy-switcher/` | Oscar | Selector de ventanas | Arch Linux y Hyprland | Configuración personal no sensible | La copia activa diverge del repositorio y su override depende de systemd de usuario | P1-09 y P2-03 |
+| `.config/snappy-switcher/` | Oscar | Selector de ventanas | Arch Linux y Hyprland | Configuración personal no sensible | La copia activa fue verificada igual al repositorio en P1-11; su override depende de systemd de usuario | P1-09 y P1-11 completados; P2-03 |
 | `.config/gtk-3.0/` y `.config/gtk-4.0/` | Oscar | Preferencias y tema GTK | Arch Linux | Configuración personal no sensible | Los enlaces GTK 4 son absolutos y dependen de un tema instalado en el sistema | [P1-03](17-inventario-arch.md), completado; P1-04 y P2-01 |
 | `docs/` | Oscar | Conocimiento autorizado del proyecto | Todas | Documentación | Puede contener identificadores personales o del sistema solo cuando sean necesarios y aceptados conscientemente | P1-08 y P1-18 |
 | `drafts/` | Oscar | Trabajo no consolidado | Según cada borrador | Borradores y referencias | Falta definir el ciclo de consolidación o retiro de su contenido | P1-17 |

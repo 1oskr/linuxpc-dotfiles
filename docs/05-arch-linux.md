@@ -112,6 +112,32 @@ Topología comprobada después de `hyprctl reload`:
 | `HDMI-A-1` | Samsung LS27DG30X | 1920x1080@180 | `1920x0` | 1 |
 | `DP-2` | Samsung S24F350 | 1920x1080@60 | `3840x0` | 1 |
 
+### Modelo de workspaces y ventanas
+
+**Implementado y probado en P1-11:** los workspaces son globales y libres;
+no están asignados a monitores y `modules/workspaces.lua` no introduce reglas
+especiales. `SUPER + 1..9` enfoca directamente el workspace indicado. `SUPER +
+SHIFT + 1..9` mueve la ventana activa al workspace indicado y la sigue.
+
+La navegación direccional usa `SUPER + LEFT/RIGHT/UP/DOWN` para enfocar la
+ventana en esa dirección. `SUPER + SHIFT + LEFT/RIGHT/UP/DOWN` mueve o reordena
+la ventana activa direccionalmente. Ambas operaciones se verificaron también
+entre monitores cuando corresponde.
+
+`ALT + TAB` y `ALT + SHIFT + TAB` conservan Snappy Switcher como selector visual
+y global complementario. Su configuración versionada usa `follow_monitor =
+true`; después de actualizarla se comprobó con `cmp` que coincide con la copia
+activa.
+
+No se añadieron atajos `SUPER + CTRL + LEFT/RIGHT`: el movimiento direccional ya
+cruza monitores y esos atajos serían redundantes. Las reglas de aplicaciones no
+se ampliaron para este modelo; no hay colocación fija por aplicación ni por
+monitor.
+
+**Pruebas realizadas:** `hyprctl reload` correcto; navegación y movimiento
+direccional, incluido el cruce entre monitores; y Snappy Switcher con
+`follow_monitor = true`.
+
 ## Componentes del escritorio
 
 ### Ciclo de vida de la sesión Hyprland

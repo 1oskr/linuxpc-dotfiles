@@ -213,3 +213,53 @@ hl.bind(
     "SUPER + ALT + W",
     hl.dsp.exec_cmd("~/.local/bin/wallpaper-selector")
 )
+
+-- Foco direccional entre ventanas
+hl.bind(
+    "SUPER + LEFT",
+    hl.dsp.focus({ direction = "l" }),
+    { description = "Enfocar ventana izquierda" }
+)
+
+hl.bind(
+    "SUPER + RIGHT",
+    hl.dsp.focus({ direction = "r" }),
+    { description = "Enfocar ventana derecha" }
+)
+
+hl.bind(
+    "SUPER + UP",
+    hl.dsp.focus({ direction = "u" }),
+    { description = "Enfocar ventana arriba" }
+)
+
+hl.bind(
+    "SUPER + DOWN",
+    hl.dsp.focus({ direction = "d" }),
+    { description = "Enfocar ventana abajo" }
+)
+
+-- Mover ventana direccionalmente
+hl.bind(
+    "SUPER + SHIFT + LEFT",
+    hl.dsp.window.move({ direction = "l" }),
+    { description = "Mover ventana a la izquierda" }
+)
+
+hl.bind(
+    "SUPER + SHIFT + RIGHT",
+    hl.dsp.window.move({ direction = "r" }),
+    { description = "Mover ventana a la derecha" }
+)
+
+hl.bind(
+    "SUPER + SHIFT + UP",
+    hl.dsp.window.move({ direction = "u" }),
+    { description = "Mover ventana arriba" }
+)
+
+hl.bind(
+    "SUPER + SHIFT + DOWN",
+    hl.dsp.window.move({ direction = "d" }),
+    { description = "Mover ventana abajo" }
+)
