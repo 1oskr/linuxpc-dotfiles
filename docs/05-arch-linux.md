@@ -104,6 +104,34 @@ Configuración específica del equipo:
 
 ## Componentes del escritorio
 
+### Ciclo de vida de la sesión Hyprland
+
+En `hyprland.start`, Hyprland inicia `hyprland-session.target`; en
+`hyprland.shutdown` lo detiene de forma bloqueante antes de terminar.
+`graphical-session.target` representa el grupo systemd de la sesión gráfica.
+
+Matuwall es gestionado por `matuwall.service`, que pertenece a
+`hyprland-session.target` y se detiene limpiamente mediante `matuwall --quit`.
+`waybar-hover.service` y `snappy-switcher.service` pertenecen a
+`graphical-session.target`. `xdg-desktop-portal-hyprland.service` es una unidad
+proporcionada por el paquete y también pertenece a ese target; no se declara
+que este la inicie directamente.
+
+`lxpolkit`, `hyprsunset`, `hyprpaper` y los dos procesos `wl-paste` permanecen
+como procesos iniciados directamente por Hyprland. En la validación final de
+P1-09, todos terminaron al cerrar la sesión y no quedaron procesos residuales.
+
+Tras desplegar las unidades versionadas, su habilitación se reconstruye con:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable matuwall.service
+systemctl --user enable waybar-hover.service snappy-switcher.service
+```
+
+Los enlaces creados en `*.target.wants/` por `enable` son estado generado y no
+se versionan.
+
 ### Waybar
 ```text
 ~/.config/waybar/hdmi.jsonc
@@ -239,13 +267,9 @@ Directorio de wallpapers:
 ~/Pictures/Wallpapers/Waywallen
 ```
 
-Matuwall se ejecuta mediante un daemon iniciado con la sesión de Hyprland. El
-autostart está declarado en `~/.config/hypr/modules/autostart.lua`, dentro del
-evento `hyprland.start`, mediante:
-
-```bash
-hl.exec_cmd("matuwall --daemon")
-```
+Matuwall se ejecuta mediante `matuwall.service`, habilitado para
+`hyprland-session.target`; no se inicia directamente desde el autostart de
+Hyprland.
 
 Estado del daemon y del canal IPC:
 

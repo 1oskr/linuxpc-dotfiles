@@ -122,13 +122,16 @@ documentada.
 | `grub-btrfsd.service` | Sistema | Snapper/GRUB | P1-07 |
 | `snapper-timeline.timer` y `snapper-cleanup.timer` | Sistema | Snapper | P1-07 |
 | Unidades NVIDIA de suspensión | Sistema | Integración del paquete NVIDIA | P1-10 |
-| `snappy-switcher.service` | Usuario | Override versionado en `.config/systemd` | P1-09 |
-| `waybar-hover.service` | Usuario | Unidad versionada en `.config/systemd/user` | P1-09 |
+| `hyprland-session.target` | Usuario | Target versionado en `.config/systemd/user`, iniciado y detenido por Hyprland | P1-09 |
+| `matuwall.service` | Usuario | Unidad versionada, habilitada para `hyprland-session.target` | P1-09 |
+| `snappy-switcher.service` | Usuario | Override versionado; habilitado para `graphical-session.target` | P1-09 |
+| `waybar-hover.service` | Usuario | Unidad versionada; habilitada para `graphical-session.target` | P1-09 |
+| `xdg-desktop-portal-hyprland.service` | Usuario | Unidad estática proporcionada por el paquete, parte de `graphical-session.target` | P1-09 |
 | `wireplumber.service` y sockets PipeWire | Usuario | Proporcionados por paquetes | P1-07 |
-| `hyprpaper.service` | Usuario | Autostart de Hyprland y unidad de usuario | P1-09 |
-| `redshift.service` | Usuario | Alternativa instalada, pendiente de decisión | P1-07/P1-09 |
+| `hyprpaper.service` | Usuario | Unidad de paquete existente y deshabilitada; Hyprland lo inicia directamente | P1-09 |
+| `redshift.service` | Usuario | Unidad de paquete existente y deshabilitada | P1-07 |
 | Sunshine | Usuario | Paquete AUR y servicio generado | P1-08 |
-| Hyprsunset, Matuwall y `lxpolkit` | Sesión Hyprland | `.config/hypr/modules/autostart.lua` | P1-09 |
+| `lxpolkit`, Hyprsunset, Hyprpaper y los dos `wl-paste` | Sesión Hyprland | `.config/hypr/modules/autostart.lua` | P1-09 |
 
 ### Configuración externa al repositorio
 
@@ -190,13 +193,29 @@ no constituye configuración canónica:
 Estos datos sirven para diagnóstico y para contrastar la configuración
 declarada. Deben actualizarse o retirarse cuando cambie el sistema.
 
+### Actualización P1-09 — 9 de agosto de 2026
+
+La siguiente actualización no reemplaza la auditoría histórica del 29 de julio.
+Se verificó que Hyprland inicia y detiene `hyprland-session.target`, que a su
+vez queda ligado a `graphical-session.target`. Matuwall es una unidad de
+usuario habilitada para el target de Hyprland; Waybar Hover y Snappy Switcher
+están habilitados para el target gráfico. El portal Hyprland proporcionado por
+el paquete es parte de ese target.
+
+En una nueva sesión se comprobaron activos el target de Hyprland, el target
+gráfico, Matuwall, Waybar Hover, Snappy Switcher y el portal. Al cerrar la
+sesión todos quedaron inactivos; Matuwall eliminó su PID y socket IPC y no
+quedaron procesos de sesión residuales. Hyprsunset, Hyprpaper, lxpolkit y los
+dos `wl-paste` siguen siendo procesos directos de Hyprland y terminaron
+correctamente en esa validación. En la inspección posterior, las unidades de
+paquete `hyprpaper.service` y `redshift.service` existían pero estaban
+deshabilitadas.
+
 ## Discrepancias, riesgos y pendientes
 
 - Las referencias actuales al hostname deben usar `arch`; solo las referencias
   históricas pueden conservar `arklinuk` con contexto explícito.
 - Las entradas Windows requieren validación en P1-06 antes de cualquier cambio.
-- Redshift/Hyprsunset y la doble activación de Hyprpaper requieren una decisión
-  de ciclo de sesión en P1-07/P1-09.
 - Sunshine y RustDesk presentan un estado efectivo distinto del flujo remoto
   descrito; corresponde a P1-08.
 - El hardware NVIDIA, los monitores y el parámetro de kernel deben consolidarse

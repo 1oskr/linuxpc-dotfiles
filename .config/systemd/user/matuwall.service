@@ -1,0 +1,11 @@
+[Unit]
+Description=Matuwall daemon
+PartOf=hyprland-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/matuwall --daemon
+ExecStop=/usr/bin/matuwall --quit
+
+[Install]
+WantedBy=hyprland-session.target

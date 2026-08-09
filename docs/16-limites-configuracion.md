@@ -262,8 +262,7 @@ Estas divergencias quedan registradas sin determinar qué copia debe prevalecer:
 - Waybar mezcla configuración común y hardware;
 - los enlaces GTK son absolutos;
 - los métodos de activación mediante enlaces y copias son inconsistentes;
-- las copias activas y el repositorio difieren en Rofi, Waybar, Snappy Switcher
-  y `powermenu`;
+- las copias activas y el repositorio difieren en Rofi y `powermenu`;
 - existen respaldos generados dentro de directorios activos;
 - falta una política completa para `drafts/` y las referencias.
 

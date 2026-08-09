@@ -301,8 +301,12 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P1-09 — Ciclo de vida de la sesión Hyprland
 
-- **Estado:** No iniciado
+- **Estado:** Completado
 - **Objetivo:** hacer explícito qué inicia, mantiene y termina la sesión gráfica.
+- **Resultado:** inicio y cierre de sesión tienen responsables explícitos;
+  Matuwall, Waybar Hover y Snappy Switcher quedaron ligados a targets systemd,
+  los procesos directos de Hyprland tienen responsabilidad conocida y las
+  pruebas de inicio y logout no dejaron procesos residuales.
 - **Prioridad:** P1
 - **Prerequisitos:** baseline de servicios y dependencias del escritorio inventariadas.
 - **Dependencias:** P1-03 y P1-07.
