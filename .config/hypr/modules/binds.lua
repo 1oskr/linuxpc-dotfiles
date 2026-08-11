@@ -13,16 +13,12 @@ hl.bind(
 	{ description = "Cerrar ventana"}
 )
 
-
-
---abrir rofi
+-- Bloquear sesión
 hl.bind(
-	"SUPER + R",
-	hl.dsp.exec_cmd("rofi -show drun"),
-	{ description = "Abrir Rofi" }
+    "SUPER + L",
+    hl.dsp.exec_cmd("loginctl lock-session"),
+    { description = "Bloquear sesión" }
 )
-
-
 
 
 -- Captura de pantalla
@@ -195,7 +191,7 @@ hl.bind(
 
 -- Historial del portapapeles
 hl.bind(
-    "SUPER + SHIFT + V",
+    "SUPER + H",
     hl.dsp.exec_cmd("~/.local/bin/cliphist-rofi"),
     { description = "Abrir historial del portapapeles" }
 )

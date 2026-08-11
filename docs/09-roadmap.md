@@ -350,8 +350,20 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 ## P1-12 — Servicios esenciales del escritorio
 
-- **Estado:** No iniciado
+- **Estado:** Completado
 - **Objetivo:** completar bloqueo, notificaciones, portapapeles y control básico de la sesión.
+- **Resultado:** el historial de portapapeles abre con `SUPER + H`, no recibe
+  copias de `copysalida` por defecto y se limpia al iniciar y cerrar Hyprland.
+  Waybar integra selectores de Wi-Fi y Bluetooth; se validaron Wi-Fi, escaneo
+  Bluetooth y el encendido y apagado de Bluetooth. Mako es el único daemon de
+  notificaciones activo, con timeout por defecto de aproximadamente 5 s,
+  respeto de timeouts explícitos y estilo verificado; Dunst permanece instalado
+  pero no se usa. `SUPER + L` bloquea con `loginctl lock-session`; Hyprlock,
+  Hypridle y DPMS se validaron en los tres monitores. Hypridle bloquea a los
+  300 s y apaga DPMS a los 330 s, sin configurar suspensión automática. SSH
+  continúa como único canal remoto mantenido; el inicio por TTY con
+  `start-hyprland`, sin display manager, queda fuera del alcance obligatorio de
+  este proyecto.
 - **Prioridad:** P1
 - **Prerequisitos:** ciclo de vida del escritorio definido.
 - **Dependencias:** P1-09 y P1-11.

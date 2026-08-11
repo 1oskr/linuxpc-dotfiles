@@ -68,9 +68,10 @@ quedan clasificados una sola vez:
 ### Requeridos
 
 `base`, `base-devel`, `bat`, `btop`, `btrfs-progs`, `cliphist`,
-`efibootmgr`, `eza`, `fastfetch`, `git`, `grub`, `grub-btrfs`, `hyprland`,
-`hyprpaper`, `hyprshot`, `hyprsunset`, `kitty`, `linux`, `linux-firmware`,
-`lxsession`, `matuwall`, `networkmanager`, `nvidia-open`, `nvidia-settings`,
+`efibootmgr`, `eza`, `fastfetch`, `git`, `grub`, `grub-btrfs`, `hypridle`,
+`hyprland`, `hyprlock`, `hyprpaper`, `hyprshot`, `hyprsunset`, `kitty`,
+`linux`, `linux-firmware`, `lxsession`, `mako`, `matuwall`, `networkmanager`,
+`nvidia-open`, `nvidia-settings`,
 `nvidia-utils`, `openssh`, `orchis-theme`, `os-prober`,
 `papirus-icon-theme`, `pipewire`, `pipewire-pulse`, `qt5-wayland`,
 `qt6-wayland`, `rofi`, `satty`, `snap-pac`, `snapper`, `snappy-switcher`,
@@ -95,7 +96,7 @@ y `zsh`.
 ### Pendientes de decisión
 
 `apple_hyprcursor`, `brightnessctl`, `dunst`, `geoclue`, `imagemagick`,
-`imv`, `inotify-tools`, `mako`, `mpvpaper`, `nwg-look`,
+`imv`, `inotify-tools`, `mpvpaper`, `nwg-look`,
 `polkit-kde-agent`, `python-lz4`, `redshift`, `volantes-cursors-git`,
 `waypaper`, `waywallen-display` y `wf-recorder`.
 
@@ -147,8 +148,8 @@ modifica la razón registrada actualmente por Pacman.
 | `qt5-wayland`, `qt6-wayland`, `xdg-desktop-portal-hyprland` | Pacman | Entorno gráfico | Compatibilidad Wayland y portal del escritorio | Requerido | Aplicaciones gráficas y Hyprland | `pacman -Q` |
 | `orchis-theme`, `papirus-icon-theme`, `ttf-meslo-nerd` | Pacman | Entorno gráfico | Recursos referenciados por GTK, Kitty y el escritorio | Requerido | Dotfiles gráficos | `pacman -Q` e inspección de rutas |
 | `ttf-jetbrains-mono-nerd`, `mesa-utils` | Pacman | Entorno gráfico | Fuente alternativa y diagnóstico gráfico | Opcional aceptado | Escritorio | `pacman -Q` |
-| `hyprland`, `hyprcursor`, `hyprpaper`, `hyprshot`, `hyprsunset`, `waybar`, `rofi`, `lxsession` | Pacman | Hyprland y sesión | Compositor, Hyprcursor, fondos, captura, barra, lanzador y agente PolicyKit usado | Requerido | `.config/hypr/`, `.config/waybar/` y `cursor-selector` | `pacman -Q` y `command -v` |
-| `cliphist`, `wl-clipboard`, `grim`, `slurp`, `satty`, `jq` | Pacman | Hyprland y sesión | Portapapeles, capturas y scripts activos | Requerido | Dotfiles y `.local/bin/` | `pacman -Q` y prueba funcional |
+| `hyprland`, `hyprcursor`, `hypridle`, `hyprlock`, `hyprpaper`, `hyprshot`, `hyprsunset`, `waybar`, `rofi`, `lxsession`, `mako` | Pacman | Hyprland y sesión | Compositor, bloqueo e inactividad, fondos, captura, barra, lanzador, notificaciones y agente PolicyKit usado | Requerido | `.config/hypr/`, `.config/mako/`, `.config/waybar/` y `cursor-selector` | `pacman -Q`, `command -v` y prueba funcional |
+| `cliphist`, `wl-clipboard`, `grim`, `slurp`, `satty`, `jq` | Pacman | Hyprland y sesión | Portapapeles, capturas y scripts activos | Requerido | Dotfiles y `.local/bin/` | `pacman -Q`, `command -v` y prueba funcional |
 | `matuwall`, `snappy-switcher` | AUR/Yay | Hyprland y sesión | Selector de wallpapers y selector de ventanas configurados | Requerido | Autostart, binds y systemd de usuario | `pacman -Q`, `command -v` |
 | `volantes-cursors-git`, `bibata-cursor-theme-bin` | AUR/Yay | Temas de cursor | Temas XCursor Volantes y Bibata ofrecidos por `cursor-selector` | Requerido | `/usr/share/icons` y `cursor-selector` | `pacman -Q` e inspección de rutas |
 | `kitty`, `zsh`, `starship`, `eza`, `bat`, `btop`, `fastfetch`, `yazi` | Pacman | Terminal y shell | Flujo principal declarado en dotfiles | Requerido | `.zshrc` y `.config/` | `pacman -Q` y `command -v` |
@@ -164,7 +165,6 @@ modifica la razón registrada actualmente por Pacman.
 | `snapper`, `snap-pac` | Pacman | Recuperación | Snapshots y registro automático asociado a Pacman | Requerido | Recuperación | `pacman -Q` y prueba controlada |
 | `age`, `rclone`, `rsync` | Pacman | Recuperación | Cifrado y copia manual | Opcional aceptado | Recuperación | `pacman -Q` y prueba controlada |
 | `openssh` | Pacman | Acceso remoto | Administración y edición desde macOS | Requerido | SSH y Rofi | `pacman -Q openssh` y prueba controlada |
-| `sunshine-bin`, `rustdesk-bin` | AUR/Yay | Acceso remoto | Escritorio remoto principal y alternativa | Requerido / opcional aceptado | Acceso remoto | `pacman -Q` y prueba del canal |
 | `nvidia-open`, `nvidia-utils`, `nvidia-settings` | Pacman | Hardware NVIDIA | Controlador y comandos usados por Waybar | Requerido | LinuxPC y `waybar-gpu` | `pacman -Q`, `nvidia-smi` |
 | `flatpak` | Pacman | Aplicaciones opcionales | Gestor aceptado para aplicaciones externas | Opcional aceptado | Waywallen | `pacman -Q flatpak` |
 | `org.waywallen.waywallen` | Flatpak, alcance `system` | Flatpaks | Aplicación Waywallen aceptada; su integración AUR sigue pendiente | Opcional aceptado | Flujo de wallpapers | `flatpak info --system` |
@@ -189,8 +189,9 @@ activo:
 | `matuwall` | Selector y daemon de wallpapers | Sí |
 | `snappy-switcher` | Selector de ventanas | Sí |
 | `openssh` | Acceso administrativo remoto | Sí |
-| `sunshine-bin` | Escritorio remoto principal | Sí |
-| `rustdesk-bin` | Canal remoto alternativo | Opcional |
+| `hypridle`, `hyprlock` | Inactividad y bloqueo de la sesión Hyprland | Sí |
+| `mako` | Único daemon de notificaciones activo | Sí |
+| `dunst` | Instalado, pero no usado como daemon de notificaciones | No |
 | `snapper`, `snap-pac`, `grub-btrfs` | Snapshots e integración de recuperación | Sí |
 
 La verificación de unidades, habilitación, enlaces y configuración efectiva
@@ -216,7 +217,6 @@ adopte una decisión:
 | Decisión | Estado observado | Proyecto |
 |---|---|---|
 | Hyprpaper/Matuwall frente a Waypaper, mpvpaper y Waywallen | Hyprpaper y Matuwall forman el flujo documentado; las alternativas e integración se solapan | P1-07 y P1-09 |
-| Dunst frente a Mako | Ambos están instalados explícitamente sin autoridad declarada | P1-07 |
 | Redshift frente a Hyprsunset | Ambos están presentes; Hyprsunset aparece en el autostart versionado | P1-07 y P1-09 |
 | Agentes PolicyKit | `lxpolkit` es llamado por Hyprland; existe otro agente explícito | P1-07 y P1-09 |
 | Temas de cursor | Volantes y Bibata tienen paquetes AUR comprobados; Oreo y los temas Hyprcursor convertidos son recursos locales sin fuente ni reconstrucción verificadas | P2-04 |

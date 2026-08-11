@@ -1,13 +1,16 @@
 hl.on("hyprland.start", function()
+    os.execute("cliphist wipe")
     hl.exec_cmd("systemctl --user start hyprland-session.target")
 
 	hl.exec_cmd("lxpolkit")
 	hl.exec_cmd("hyprsunset")
+	hl.exec_cmd("hypridle")
 	hl.exec_cmd("hyprpaper")
 	hl.exec_cmd("wl-paste --type text --watch cliphist store")
 	hl.exec_cmd("wl-paste --type image --watch cliphist store")
 end)
 
 hl.on("hyprland.shutdown", function()
+    os.execute("cliphist wipe")
     os.execute("systemctl --user stop hyprland-session.target && sleep 0.1")
 end)

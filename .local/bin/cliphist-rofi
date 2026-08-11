@@ -3,6 +3,7 @@
 selection="$(
   cliphist list |
     rofi -dmenu \
+      -theme-str 'content-panel { children: [ listview ]; }' \
       -display-columns 2 \
       -p "Portapapeles"
 )"
@@ -12,4 +13,3 @@ selection="$(
 printf '%s' "$selection" |
   cliphist decode |
   wl-copy
-  

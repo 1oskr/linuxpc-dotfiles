@@ -1,0 +1,291 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+WIFI_DEVICE='wlp9s0'
+
+require_command() {
+    command -v "$1" >/dev/null 2>&1 || {
+        printf 'Falta el comando requerido: %s\n' "$1" >&2
+        exit 1
+    }
+}
+
+report_error() {
+    local message="$1"
+
+    printf 'Wi-Fi: %s\n' "$message" >&2
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send 'Wi-Fi' "$message" >/dev/null 2>&1 || true
+    fi
+}
+
+get_last_scan() {
+    local device_path="$1"
+    local output
+
+    if ! output="$(busctl get-property \
+        org.freedesktop.NetworkManager \
+        "$device_path" \
+        org.freedesktop.NetworkManager.Device.Wireless \
+        LastScan 2>&1)"; then
+        printf '%s\n' "$output"
+        return 1
+    fi
+
+    if [[ "$output" =~ ^x[[:space:]]+(-?[0-9]+)$ ]]; then
+        printf '%s\n' "${BASH_REMATCH[1]}"
+        return 0
+    fi
+
+    printf 'Valor de LastScan inesperado: %s\n' "$output"
+    return 1
+}
+
+# nmcli --escape yes protege los dos puntos y las barras invertidas. Esta
+# función recupera los campos sin confundir esos caracteres dentro de un SSID.
+parse_nmcli_line() {
+    local line="$1"
+    local value=''
+    local character
+    local escaped=0
+    local field=0
+    local index
+
+    NMCLI_FIELDS=()
+
+    for ((index = 0; index < ${#line}; index++)); do
+        character="${line:index:1}"
+
+        if ((escaped)); then
+            value+="$character"
+            escaped=0
+        elif [[ "$character" == '\\' ]]; then
+            escaped=1
+        elif [[ "$character" == ':' ]]; then
+            NMCLI_FIELDS[field++]="$value"
+            value=''
+        else
+            value+="$character"
+        fi
+    done
+
+    ((escaped)) && value+='\\'
+    NMCLI_FIELDS[field]="$value"
+}
+
+find_saved_profile() {
+    local target_ssid="$1"
+    local profiles
+    local line
+    local profile
+    local profile_type
+    local profile_ssid
+
+    if ! profiles="$(nmcli -t --escape yes -f NAME,TYPE connection show 2>&1)"; then
+        report_error "No se pudieron consultar los perfiles guardados: $profiles"
+        return 2
+    fi
+
+    while IFS= read -r line; do
+        [[ -n "$line" ]] || continue
+        parse_nmcli_line "$line"
+        profile="${NMCLI_FIELDS[0]:-}"
+        profile_type="${NMCLI_FIELDS[1]:-}"
+
+        [[ "$profile_type" == '802-11-wireless' ]] || continue
+
+        if ! profile_ssid="$(nmcli -g 802-11-wireless.ssid connection show "$profile" 2>&1)"; then
+            report_error "No se pudo consultar el perfil guardado $profile: $profile_ssid"
+            return 2
+        fi
+
+        if [[ "$profile_ssid" == "$target_ssid" ]]; then
+            printf '%s\n' "$profile"
+            return 0
+        fi
+    done <<<"$profiles"
+
+    return 1
+}
+
+connect_saved_profile() {
+    local profile="$1"
+    local output
+
+    if ! output="$(nmcli connection up id "$profile" 2>&1)"; then
+        report_error "No se pudo activar el perfil $profile: $output"
+        return 1
+    fi
+}
+
+connect_open_network() {
+    local ssid="$1"
+    local output
+
+    if ! output="$(nmcli device wifi connect "$ssid" ifname "$WIFI_DEVICE" 2>&1)"; then
+        report_error "No se pudo conectar a $ssid: $output"
+        return 1
+    fi
+}
+
+connect_new_protected_network() {
+    local ssid="$1"
+
+    require_command kitty
+    kitty --title 'Wi-Fi' --hold nmcli --ask device wifi connect "$ssid" ifname "$WIFI_DEVICE"
+}
+
+for command in nmcli rofi busctl sleep; do
+    require_command "$command"
+done
+
+if ! wifi_state="$(nmcli radio wifi 2>&1)"; then
+    report_error "No se pudo consultar el estado de Wi-Fi: $wifi_state"
+    exit 1
+fi
+
+if [[ "$wifi_state" != 'enabled' ]]; then
+    selected="$(printf '%s\n' 'Activar Wi-Fi' | rofi -dmenu -i -p 'Wi-Fi' -format i -theme-str 'entry { placeholder: "Buscar redes..."; }')" || exit 0
+    [[ "$selected" == '0' ]] || exit 0
+
+    if ! output="$(nmcli radio wifi on 2>&1)"; then
+        report_error "No se pudo activar Wi-Fi: $output"
+        exit 1
+    fi
+    exit 0
+fi
+
+if ! wifi_list="$(nmcli -t --escape yes -f IN-USE,SSID,SIGNAL,SECURITY device wifi list --rescan no 2>&1)"; then
+    report_error "No se pudieron consultar las redes visibles: $wifi_list"
+    exit 1
+fi
+
+declare -A seen_ssid=()
+declare -A signal_by_ssid=()
+declare -A security_by_ssid=()
+declare -A connected_ssid=()
+declare -a ssid_order=()
+
+while IFS= read -r line; do
+    [[ -n "$line" ]] || continue
+    parse_nmcli_line "$line"
+
+    in_use="${NMCLI_FIELDS[0]:-}"
+    ssid="${NMCLI_FIELDS[1]:-}"
+    signal="${NMCLI_FIELDS[2]:-}"
+    security="${NMCLI_FIELDS[3]:-}"
+
+    [[ -n "$ssid" ]] || continue
+
+    if [[ -z "${seen_ssid[$ssid]:-}" ]]; then
+        seen_ssid[$ssid]=1
+        ssid_order+=("$ssid")
+        signal_by_ssid[$ssid]="$signal"
+        security_by_ssid[$ssid]="$security"
+    fi
+
+    if [[ "$in_use" == '*' ]]; then
+        connected_ssid[$ssid]=1
+        signal_by_ssid[$ssid]="$signal"
+        security_by_ssid[$ssid]="$security"
+    fi
+done <<<"$wifi_list"
+
+declare -a menu=()
+declare -a actions=()
+declare -a menu_ssids=()
+declare -a menu_security=()
+
+for connected in 1 0; do
+    for ssid in "${ssid_order[@]}"; do
+        is_connected=0
+        [[ -n "${connected_ssid[$ssid]:-}" ]] && is_connected=1
+        [[ "$is_connected" -eq "$connected" ]] || continue
+
+        signal="${signal_by_ssid[$ssid]:-0}"
+        security="${security_by_ssid[$ssid]:-}"
+        [[ -n "$security" && "$security" != '--' ]] || security='Abierta'
+
+        if [[ "$is_connected" -eq 1 ]]; then
+            menu+=("● Conectada: $ssid · ${signal}% · $security")
+        else
+            menu+=("  $ssid · ${signal}% · $security")
+        fi
+        actions+=('network')
+        menu_ssids+=("$ssid")
+        menu_security+=("${security_by_ssid[$ssid]:-}")
+    done
+done
+
+menu+=('Actualizar redes')
+actions+=('refresh')
+menu_ssids+=('')
+menu_security+=('')
+
+menu+=('Desactivar Wi-Fi')
+actions+=('disable')
+menu_ssids+=('')
+menu_security+=('')
+
+selected="$(printf '%s\n' "${menu[@]}" | rofi -dmenu -i -p 'Wi-Fi' -format i -theme-str 'entry { placeholder: "Buscar redes..."; }')" || exit 0
+[[ "$selected" =~ ^[0-9]+$ ]] || exit 0
+((selected < ${#actions[@]})) || exit 0
+
+case "${actions[selected]}" in
+    refresh)
+        if ! device_path="$(nmcli -g GENERAL.DBUS-PATH device show "$WIFI_DEVICE" 2>&1)"; then
+            report_error "No se pudo obtener la ruta D-Bus de $WIFI_DEVICE: $device_path"
+            exit 1
+        fi
+        if [[ -z "$device_path" ]]; then
+            report_error "NetworkManager no informó una ruta D-Bus para $WIFI_DEVICE."
+            exit 1
+        fi
+        if ! last_scan="$(get_last_scan "$device_path")"; then
+            report_error "No se pudo consultar LastScan: $last_scan"
+            exit 1
+        fi
+        if ! output="$(nmcli device wifi rescan ifname "$WIFI_DEVICE" 2>&1)"; then
+            report_error "No se pudieron actualizar las redes: $output"
+            exit 1
+        fi
+
+        for ((attempt = 0; attempt < 100; attempt++)); do
+            sleep 0.2
+            if ! current_last_scan="$(get_last_scan "$device_path")"; then
+                report_error "No se pudo consultar LastScan: $current_last_scan"
+                exit 1
+            fi
+            if [[ "$current_last_scan" != "$last_scan" ]]; then
+                exec "$0"
+            fi
+        done
+
+        report_error 'La actualización de redes superó el tiempo de espera de 20 s.'
+        exit 1
+        ;;
+    disable)
+        if ! output="$(nmcli radio wifi off 2>&1)"; then
+            report_error "No se pudo desactivar Wi-Fi: $output"
+            exit 1
+        fi
+        ;;
+    network)
+        ssid="${menu_ssids[selected]}"
+        security="${menu_security[selected]}"
+
+        if profile="$(find_saved_profile "$ssid")"; then
+            connect_saved_profile "$profile"
+        else
+            status=$?
+            ((status == 1)) || exit "$status"
+
+            if [[ -z "$security" || "$security" == '--' ]]; then
+                connect_open_network "$ssid"
+            else
+                connect_new_protected_network "$ssid"
+            fi
+        fi
+        ;;
+esac

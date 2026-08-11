@@ -1,5 +1,5 @@
 {
   "id": "waybar-hdmi",
   "output": "HDMI-A-1",
-  "include": "../common.jsonc"
+  "include": "~/.config/waybar/common.jsonc"
 }

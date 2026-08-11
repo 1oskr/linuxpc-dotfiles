@@ -1,0 +1,159 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+require_command() {
+    command -v "$1" >/dev/null 2>&1 || {
+        printf 'Falta el comando requerido: %s\n' "$1" >&2
+        exit 1
+    }
+}
+
+report_error() {
+    local message="$1"
+
+    printf 'Bluetooth: %s\n' "$message" >&2
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send 'Bluetooth' "$message" >/dev/null 2>&1 || true
+    fi
+}
+
+run_bluetoothctl() {
+    local output
+
+    if ! output="$(bluetoothctl "$@" 2>&1)"; then
+        report_error "$output"
+        return 1
+    fi
+}
+
+scan_devices() {
+    local output
+
+    if ! output="$({
+        printf 'scan on\n'
+        sleep 10
+        printf 'scan off\n'
+        sleep 1
+        printf 'quit\n'
+    } | bluetoothctl 2>&1)"; then
+        report_error "No se pudo escanear dispositivos: $output"
+        return 1
+    fi
+}
+
+for command in bluetoothctl rofi sleep; do
+    require_command "$command"
+done
+
+if ! controller="$(bluetoothctl show 2>&1)"; then
+    report_error "No se pudo consultar el controlador: $controller"
+    exit 1
+fi
+
+powered="$(awk -F ': ' '/^[[:space:]]*Powered:/{print $2; exit}' <<<"$controller")"
+if [[ "$powered" != 'yes' && "$powered" != 'no' ]]; then
+    report_error 'El controlador no informó un estado Powered válido.'
+    exit 1
+fi
+
+if [[ "$powered" == 'no' ]]; then
+    selected="$(printf '%s\n' 'Activar Bluetooth' | rofi -dmenu -i -p 'Bluetooth' -format i -theme-str 'entry { placeholder: "Buscar dispositivo Bluetooth..."; }')" || exit 0
+    [[ "$selected" == '0' ]] || exit 0
+    run_bluetoothctl power on
+    exit 0
+fi
+
+if ! devices="$(bluetoothctl devices 2>&1)"; then
+    report_error "No se pudieron consultar los dispositivos: $devices"
+    exit 1
+fi
+
+declare -A seen_addresses=()
+declare -A paired_by_address=()
+declare -A connected_by_address=()
+declare -A name_by_address=()
+declare -a addresses=()
+
+while IFS= read -r line; do
+    [[ "$line" =~ ^Device[[:space:]]+([0-9A-F:]{17})[[:space:]]+(.+)$ ]] || continue
+
+    address="${BASH_REMATCH[1]}"
+    name="${BASH_REMATCH[2]}"
+    [[ -z "${seen_addresses[$address]:-}" ]] || continue
+    seen_addresses[$address]=1
+
+    if ! info="$(bluetoothctl info "$address" 2>&1)"; then
+        report_error "No se pudo consultar $address: $info"
+        exit 1
+    fi
+
+    paired="$(awk -F ': ' '/^[[:space:]]*Paired:/{print $2; exit}' <<<"$info")"
+    connected="$(awk -F ': ' '/^[[:space:]]*Connected:/{print $2; exit}' <<<"$info")"
+
+    addresses+=("$address")
+    name_by_address[$address]="$name"
+    paired_by_address[$address]="$paired"
+    connected_by_address[$address]="$connected"
+done <<<"$devices"
+
+declare -a menu=()
+declare -a actions=()
+declare -a menu_addresses=()
+
+for state in connected paired discovered; do
+    for address in "${addresses[@]}"; do
+        paired="${paired_by_address[$address]}"
+        connected="${connected_by_address[$address]}"
+
+        case "$state" in
+            connected)
+                [[ "$connected" == 'yes' ]] || continue
+                menu+=("● Conectado: ${name_by_address[$address]} · $address")
+                ;;
+            paired)
+                [[ "$connected" != 'yes' && "$paired" == 'yes' ]] || continue
+                menu+=("○ Emparejado: ${name_by_address[$address]} · $address")
+                ;;
+            discovered)
+                [[ "$paired" != 'yes' ]] || continue
+                menu+=("  Descubierto: ${name_by_address[$address]} · $address")
+                ;;
+        esac
+
+        actions+=("$state")
+        menu_addresses+=("$address")
+    done
+done
+
+menu+=('Escanear dispositivos')
+actions+=('scan')
+menu_addresses+=('')
+
+menu+=('Desactivar Bluetooth')
+actions+=('disable')
+menu_addresses+=('')
+
+selected="$(printf '%s\n' "${menu[@]}" | rofi -dmenu -i -p 'Bluetooth' -format i -theme-str 'entry { placeholder: "Buscar dispositivo Bluetooth..."; }')" || exit 0
+[[ "$selected" =~ ^[0-9]+$ ]] || exit 0
+((selected < ${#actions[@]})) || exit 0
+
+case "${actions[selected]}" in
+    connected)
+        run_bluetoothctl disconnect "${menu_addresses[selected]}"
+        ;;
+    paired)
+        run_bluetoothctl connect "${menu_addresses[selected]}"
+        ;;
+    discovered)
+        require_command kitty
+        kitty --title 'Bluetooth pairing' --hold bluetoothctl --agent KeyboardDisplay pair "${menu_addresses[selected]}"
+        ;;
+    scan)
+        scan_devices
+        exec "$0"
+        ;;
+    disable)
+        run_bluetoothctl power off
+        ;;
+esac

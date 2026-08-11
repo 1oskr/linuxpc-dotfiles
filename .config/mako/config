@@ -1,0 +1,16 @@
+# Default only; explicit application timeouts remain authoritative.
+default-timeout=5000
+ignore-timeout=0
+
+# Compact desktop styling aligned with Waybar and Rofi.
+font=JetBrainsMono Nerd Font 11
+background-color=#080808EE
+text-color=#FFFFFFFF
+width=360
+height=140
+outer-margin=12
+margin=8
+padding=10
+border-size=1
+border-color=#89B4FAFF
+border-radius=10

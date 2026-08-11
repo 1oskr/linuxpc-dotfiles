@@ -13,6 +13,7 @@
   ],
   "modules-right": [
     "network",
+    "bluetooth",
     "pulseaudio",
     "cpu",
     "custom/gpu",
@@ -36,7 +37,12 @@
   "network": {
     "format-wifi": "󰤨 {signalStrength}%",
     "format-ethernet": "󰈀",
-    "format-disconnected": "󰤮"
+    "format-disconnected": "󰤮",
+    "on-click": "~/.local/bin/wifi-selector"
+  },
+  "bluetooth": {
+    "format": "",
+    "on-click": "~/.local/bin/bluetooth-selector"
   },
   "pulseaudio": {
     "format": "󰕾 {volume}%"

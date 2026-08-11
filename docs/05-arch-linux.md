@@ -188,6 +188,12 @@ de Waybar y la salida física (`waybar-hdmi`/`HDMI-A-1`, `waybar-dp1`/`DP-1` y
 `~/.config/waybar/outputs/$monitor.jsonc`; no mantiene una tabla de salida a
 archivo.
 
+Cada adaptador incluye la presentación común mediante
+`~/.config/waybar/common.jsonc`. Esta arquitectura se validó en HDMI-A-1,
+DP-1 y DP-2. El módulo de red abre `wifi-selector` y el de Bluetooth abre
+`bluetooth-selector`; ambos selectores se validaron durante P1-12, incluido el
+escaneo y el encendido y apagado de Bluetooth.
+
 Waybar utiliza una instancia dinámica gestionada por `waybar-hover`.
 
 Comportamiento comprobado:
@@ -222,6 +228,29 @@ tail -n 80 /tmp/waybar-HDMI-A-1.log
 tail -n 80 /tmp/waybar-DP-1.log
 tail -n 80 /tmp/waybar-DP-2.log
 ```
+
+### Servicios esenciales del escritorio
+
+#### Portapapeles
+
+Los dos procesos `wl-paste` almacenan texto e imágenes en ClipHist. `SUPER +
+H` abre el historial mediante `cliphist-rofi`. `copysalida` permanece
+desactivado por defecto para no inundar el historial. El historial se limpia al
+iniciar y cerrar la sesión Hyprland, por lo que su contenido es estado efímero.
+
+#### Notificaciones
+
+Mako es el único daemon de notificaciones activo. Su timeout por defecto es de
+aproximadamente 5 s y respeta los timeouts explícitos enviados por las
+aplicaciones; su estilo también se verificó. Dunst permanece instalado, pero
+no se usa ni debe competir por el servicio de notificaciones.
+
+#### Bloqueo e inactividad
+
+`SUPER + L` ejecuta `loginctl lock-session`; Hyprlock se comprobó en HDMI-A-1,
+DP-1 y DP-2. Hypridle arranca directamente con Hyprland, bloquea la sesión a
+los 300 s y apaga DPMS a los 330 s. El apagado y restablecimiento de DPMS se
+validaron en los tres monitores. No hay suspensión automática configurada.
 
 ### Kitty
 
@@ -642,3 +671,8 @@ sunshine-bin-debug
 Moonlight no estaba instalado en Arch.
 
 SSH queda como único canal remoto mantenido.
+
+No existe display manager. El inicio gráfico actual conserva el flujo de
+inicio de sesión en TTY seguido de `start-hyprland`; esta decisión no bloquea
+P1-12 ni forma parte de su alcance obligatorio. El acceso remoto relevante
+para ese proyecto sigue siendo SSH, no un escritorio gráfico remoto.
