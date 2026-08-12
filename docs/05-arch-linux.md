@@ -109,8 +109,8 @@ Topología comprobada después de `hyprctl reload`:
 | Salida | Monitor | Modo | Posición | Escala |
 |---|---|---|---|---:|
 | `DP-1` | Samsung LC24RG50 | 1920x1080@143.98 | `0x0` | 1 |
-| `HDMI-A-1` | Samsung LS27DG30X | 1920x1080@180 | `1920x0` | 1 |
-| `DP-2` | Samsung S24F350 | 1920x1080@60 | `3840x0` | 1 |
+| `DP-2` | Samsung LS27DG30X | 1920x1080@180 | `1920x0` | 1 |
+| `HDMI-A-1` | Samsung S24F350 | 1920x1080@60 | `3840x0` | 1 |
 
 ### Modelo de workspaces y ventanas
 
@@ -378,7 +378,7 @@ El script permite aplicar el wallpaper al monitor central, izquierdo, derecho o 
 `linuxpc-wallpaper` y `wallpaper-selector` consultan `hyprctl monitors -j` y
 requieren exactamente tres monitores válidos. Ordenan sus posiciones `x`: el
 menor corresponde a Izquierdo, el intermedio a Central y el mayor a Derecho.
-La validación efectiva resolvió `DP-1`, `HDMI-A-1` y `DP-2`, respectivamente.
+La validación efectiva resolvió `DP-1`, `DP-2` y `HDMI-A-1`, respectivamente.
 `hyprpaper.conf` materializa la selección activa de imágenes y no es fuente
 canónica de la topología física.
 
