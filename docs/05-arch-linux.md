@@ -168,6 +168,15 @@ systemctl --user enable waybar-hover.service snappy-switcher.service
 Los enlaces creados en `*.target.wants/` por `enable` son estado generado y no
 se versionan.
 
+### Google Drive
+
+Google Drive está integrado y comprobado mediante `rclone`, con el remote
+`gdrive:` montado en `~/GoogleDrive` con `--vfs-cache-mode full`. El montaje lo
+gestiona `rclone-gdrive.service`, ligado a `hyprland-session.target`. Las
+credenciales permanecen en `~/.config/rclone/rclone.conf`, con permisos `600`,
+fuera de Git; el servicio no contiene secretos. El contenido se obtiene bajo
+demanda y no se sincroniza íntegramente al disco local.
+
 ### Waybar
 
 ```text
