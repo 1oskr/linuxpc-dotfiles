@@ -7,6 +7,7 @@ eval "$(starship init zsh)"
 alias ls="eza"
 alias ll="eza -lah"
 alias cat="bat"
+alias actualizar="yay -Syu"
 
 #eval "$(zoxide init zsh)"
 
@@ -66,6 +67,11 @@ _copy_last_output() {
         wl-copy
 }
 
+_kitty_set_dynamic_title() {
+    [[ -n "$KITTY_WINDOW_ID" ]] || return
+    print -rn -- $'\e]2;Kitty '"${PWD:t}"$'\a'
+}
+
 copysalida() {
     case "$1" in
         on)
@@ -92,15 +98,12 @@ copysalida() {
 
 add-zsh-hook -d preexec _remember_last_command 2>/dev/null
 add-zsh-hook -d precmd _copy_last_output 2>/dev/null
+add-zsh-hook -d precmd _kitty_set_dynamic_title 2>/dev/null
 
 add-zsh-hook preexec _remember_last_command
 add-zsh-hook precmd _copy_last_output
+add-zsh-hook precmd _kitty_set_dynamic_title
 
-
-
-ytm() {
-    youtube-music-desktop-app >/tmp/youtube-music.log 2>&1 &!
-}
 
 
 libreoffice() {

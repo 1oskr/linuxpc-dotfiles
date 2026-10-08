@@ -1,71 +1,98 @@
 * {
-    background: #1e1e2eee;
-    
-    background-alt: #313244;
-    foreground: #cdd6f4;
-    selected: #89b4fa;
-    border: #89b4fa;
-
-    font: "JetBrainsMono Nerd Font 11";
+    surface:          #f5f5f700;
+    surface-input:    #ffffff8c;
+    foreground:       #1d1d1f;
+    muted:            #6e6e73;
+    border-soft:      #ffffffb3;
+    selection:        #e5e5e7d9;
+    font: "Google Sans Flex 14";
 }
 
- window {
-    width: 700px;
-    border: 2px;
-    border-color: #89b4fa;
-    border-radius: 20px;
-    background-color: #1e1e2e;
-    padding: 20px;
+window {
+    transparency: "real";
+    width: 780px;
+    padding: 16px;
+
+    border: 1px;
+    border-color: @border-soft;
+    border-radius: 28px;
+
+    background-color: @surface;
+    children: [ mainbox ];
 }
 
 mainbox {
-    spacing: 14px;
+    orientation: vertical;
+    spacing: 10px;
     background-color: transparent;
+    children: [ content-panel ];
+}
+
+content-panel {
+    orientation: vertical;
+    spacing: 8px;
+    background-color: transparent;
+    children: [ inputbar, listview ];
 }
 
 inputbar {
-    padding: 14px;
-    border-radius: 12px;
-    background-color: #313244;
-    text-color: #cdd6f4;
-}
+    padding: 12px 14px;
 
-prompt {
-    enabled: false;
+    border: 1px;
+    border-color: @border-soft;
+    border-radius: 16px;
+
+    background-color: @surface-input;
+    text-color: @foreground;
+    children: [ entry ];
 }
 
 entry {
-    placeholder: "Buscar...";
+    placeholder: "Buscar aplicaciones...";
+    placeholder-color: @muted;
+    background-color: transparent;
     text-color: @foreground;
 }
 
 listview {
-    lines: 7;
+    lines: 6;
     columns: 1;
-    spacing: 6px;
+    spacing: 4px;
     scrollbar: false;
     background-color: transparent;
 }
 
 element {
-    padding: 8px;
-    spacing: 10px;
-    border-radius: 8px;
+    padding: 8px 10px;
+    spacing: 14px;
+
+    border: 0px;
+    border-radius: 16px;
+    background-color: transparent;
+    text-color: @foreground;
+    children: [ element-icon, element-text ];
 }
 
 element selected {
-    background-color: #2b2f42;
-    text-color: #cdd6f4;
-    border: 2px;
-    border-color: #89b4fa;
+    border: 0px;
+    border-radius: 16px;
+    background-color: @selection;
+    text-color: @foreground;
 }
 
+element selected element-text,
+element selected element-icon {
+    background-color: transparent;
+    text-color: @foreground;
+}
 
 element-icon {
-    size: 32px;
+    size: 52px;
+    background-color: transparent;
 }
 
 element-text {
     vertical-align: 0.5;
+    background-color: transparent;
     text-color: inherit;
 }

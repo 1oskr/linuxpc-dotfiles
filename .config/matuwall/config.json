@@ -1,6 +1,6 @@
 {
   "main": {
-    "wallpaper_dir": "~/Pictures/Wallpapers/Waywallen",
+    "wallpaper_dir": "~/Imágenes/Wallpapers",
     "thumbnail_size": 256,
     "thumbnail_shape": "landscape",
     "batch_size": 16,

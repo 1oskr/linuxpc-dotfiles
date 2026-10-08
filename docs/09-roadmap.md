@@ -332,14 +332,19 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 - **Estado:** Completado
 - **Objetivo:** definir el comportamiento funcional de navegación, colocación y reglas de aplicaciones.
-- **Resultado:** los workspaces permanecen globales y libres, sin reglas
-  especiales en `workspaces.lua`; `SUPER + 1..9` los enfoca y `SUPER + SHIFT +
-  1..9` mueve y sigue la ventana activa. La navegación y el movimiento
-  direccionales con `SUPER` y `SUPER + SHIFT`, respectivamente, se validaron
-  también entre monitores. Snappy Switcher se conserva como selector visual y
-  global complementario con `follow_monitor = true`, verificado igual a la copia
-  activa. No se añadieron reglas de colocación por aplicación ni atajos
-  redundantes para cruzar monitores.
+- **Resultado:** los workspaces principales `1`, `2` y `3` están asociados,
+  respectivamente, a `DP-1`, `DP-2` y `HDMI-A-1`; Hyprland enfoca el workspace
+  `2` al iniciar. `SUPER + 1..9` enfoca workspaces y `SUPER + SHIFT + 1..9`
+  mueve y sigue la ventana activa. La navegación y el movimiento direccionales
+  se mantienen con `SUPER` y `SUPER + SHIFT`. Las reglas actuales colocan VS
+  Code y Kitty en workspace `1`, ChatGPT en `2` y Firefox en `3`; se verificó
+  en runtime la colocación efectiva de las cuatro aplicaciones, incluido VS
+  Code con la clase `com.microsoft.VSCode`. Los grupos de ventanas se
+  verificaron con tres ventanas: crear, deshacer, navegar, reordenar, extraer,
+  bloquear y desbloquear funcionan; un grupo bloqueado impide reinsertar una
+  ventana extraída hasta desbloquearlo. Snappy
+  Switcher permanece como selector visual y global complementario.
+
 - **Prioridad:** P1
 - **Prerequisitos:** ciclo de sesión estable y flujos cotidianos identificados.
 - **Dependencias:** P1-09 y P1-10.
@@ -352,18 +357,17 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 
 - **Estado:** Completado
 - **Objetivo:** completar bloqueo, notificaciones, portapapeles y control básico de la sesión.
-- **Resultado:** el historial de portapapeles abre con `SUPER + H`, no recibe
-  copias de `copysalida` por defecto y se limpia al iniciar y cerrar Hyprland.
-  Waybar integra selectores de Wi-Fi y Bluetooth; se validaron Wi-Fi, escaneo
-  Bluetooth y el encendido y apagado de Bluetooth. Mako es el único daemon de
-  notificaciones activo, con timeout por defecto de aproximadamente 5 s,
-  respeto de timeouts explícitos y estilo verificado; Dunst permanece instalado
-  pero no se usa. `SUPER + L` bloquea con `loginctl lock-session`; Hyprlock,
-  Hypridle y DPMS se validaron en los tres monitores. Hypridle bloquea a los
-  300 s y apaga DPMS a los 330 s, sin configurar suspensión automática. SSH
-  continúa como único canal remoto mantenido; el inicio por TTY con
-  `start-hyprland`, sin display manager, queda fuera del alcance obligatorio de
-  este proyecto.
+- **Resultado:** el historial de portapapeles abre con `SUPER + ALT + SPACE`.
+  Los watchers de texto e imágenes usan `cliphist-store-meta`, que almacena en
+  ClipHist y registra tipo y timestamp en `~/.cache/cliphist/meta.tsv`;
+  `copysalida` permanece desactivado por defecto y el historial sigue siendo
+  efímero entre sesiones. Waybar mantiene los selectores de Wi-Fi y Bluetooth.
+  Mako continúa como único daemon de notificaciones. `SUPER + L` bloquea con
+  `loginctl lock-session`; Hyprlock, Hypridle y DPMS permanecen activos y
+  validados en los tres monitores. Hypridle bloquea a los 1200 s y apaga DPMS
+  a los 1230 s, sin suspensión automática. SSH continúa como canal remoto
+  mantenido y el inicio de sesión sigue basado en TTY + `start-hyprland`.
+
 - **Prioridad:** P1
 - **Prerequisitos:** ciclo de vida del escritorio definido.
 - **Dependencias:** P1-09 y P1-11.

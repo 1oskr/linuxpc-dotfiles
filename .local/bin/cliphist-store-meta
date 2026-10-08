@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+type="${1:-text}"
+
+cache_dir="$HOME/.cache/cliphist"
+meta_file="$cache_dir/meta.tsv"
+lock_file="$cache_dir/meta.lock"
+
+mkdir -p "$cache_dir"
+
+tmp="$(mktemp)"
+trap 'rm -f "$tmp"' EXIT
+
+cat > "$tmp"
+
+(
+    flock 9
+
+    cliphist store < "$tmp"
+
+    id="$(
+        cliphist list |
+        sed -n '1{s/\t.*//;p;}'
+    )"
+
+    [[ -n "$id" ]] || exit 0
+
+    timestamp="$(date '+%Y-%m-%d_%H-%M')"
+
+    # Elimina metadata anterior del mismo ID.
+    if [[ -f "$meta_file" ]]; then
+        awk -F '\t' -v id="$id" '$1 != id' "$meta_file" > "$meta_file.tmp"
+        mv "$meta_file.tmp" "$meta_file"
+    fi
+
+    printf '%s\t%s\t%s\n' \
+        "$id" \
+        "$type" \
+        "$timestamp" \
+        >> "$meta_file"
+
+) 9>"$lock_file"

@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+require_command() {
+    command -v "$1" >/dev/null 2>&1 || {
+        printf 'Falta el comando requerido: %s\n' "$1" >&2
+        exit 1
+    }
+}
+
+notify() {
+    command -v notify-send >/dev/null 2>&1 &&
+        notify-send "$1" >/dev/null 2>&1 || true
+}
+
+report_error() {
+    local message="$1"
+
+    printf 'Luz cálida: %s\n' "$message" >&2
+    notify "Luz cálida: $message"
+}
+
+for command in hyprctl pgrep rofi; do
+    require_command "$command"
+done
+
+if ! pgrep -x -u "$UID" hyprsunset >/dev/null; then
+    report_error 'hyprsunset no está ejecutándose.'
+    exit 1
+fi
+
+selected="$(
+    printf '%s\n' \
+        'Apagado' \
+        '3000 K' \
+        '3500 K' \
+        '4000 K' \
+        '4500 K' \
+        '5000 K' |
+    rofi -dmenu -i -p 'Luz cálida'
+)" || exit 0
+
+case "$selected" in
+    'Apagado')
+        command=(hyprctl hyprsunset identity)
+        message='Luz cálida desactivada'
+        ;;
+    '3000 K'|'3500 K'|'4000 K'|'4500 K'|'5000 K')
+        temperature="${selected% K}"
+        command=(hyprctl hyprsunset temperature "$temperature")
+        message="Luz cálida: $selected"
+        ;;
+    *)
+        exit 0
+        ;;
+esac
+
+if ! output="$("${command[@]}" 2>&1)"; then
+    report_error "No se pudo actualizar hyprsunset: $output"
+    exit 1
+fi
+
+notify "$message"

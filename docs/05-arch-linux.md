@@ -114,31 +114,47 @@ Topología comprobada después de `hyprctl reload`:
 
 ### Modelo de workspaces y ventanas
 
-**Implementado y probado en P1-11:** los workspaces son globales y libres;
-no están asignados a monitores y `modules/workspaces.lua` no introduce reglas
-especiales. `SUPER + 1..9` enfoca directamente el workspace indicado. `SUPER +
-SHIFT + 1..9` mueve la ventana activa al workspace indicado y la sigue.
+Los tres workspaces principales están asociados a la topología física:
+
+- workspace `1` → `DP-1`;
+- workspace `2` → `DP-2`;
+- workspace `3` → `HDMI-A-1`.
+
+`modules/workspaces.lua` declara estas reglas y, al iniciar Hyprland, enfoca el
+workspace `2`. El estado se verificó con `hyprctl workspacerules` y
+`hyprctl monitors`.
+
+`SUPER + 1..9` enfoca directamente el workspace indicado y `SUPER + SHIFT +
+1..9` mueve la ventana activa al workspace indicado y la sigue.
 
 La navegación direccional usa `SUPER + LEFT/RIGHT/UP/DOWN` para enfocar la
 ventana en esa dirección. `SUPER + SHIFT + LEFT/RIGHT/UP/DOWN` mueve o reordena
-la ventana activa direccionalmente. Ambas operaciones se verificaron también
-entre monitores cuando corresponde.
+la ventana activa direccionalmente.
+
+Las reglas de aplicaciones colocan actualmente:
+
+- VS Code (`com.microsoft.VSCode`) en workspace `1`;
+- Kitty en workspace `1`;
+- ChatGPT en workspace `2`;
+- Firefox en workspace `3`.
+
+Se comprobó en runtime la colocación efectiva de VS Code, Kitty, ChatGPT y
+Firefox, coincidiendo con los monitores asociados a esos workspaces. VS Code
+usó la clase real `com.microsoft.VSCode` después de cerrarlo y volver a abrirlo.
 
 `ALT + TAB` y `ALT + SHIFT + TAB` conservan Snappy Switcher como selector visual
-y global complementario. Su configuración versionada usa `follow_monitor =
-true`; después de actualizarla se comprobó con `cmp` que coincide con la copia
-activa.
+y global complementario.
 
-No se añadieron atajos `SUPER + CTRL + LEFT/RIGHT`: el movimiento direccional ya
-cruza monitores y esos atajos serían redundantes. Las reglas de aplicaciones no
-se ampliaron para este modelo; no hay colocación fija por aplicación ni por
-monitor.
+Los atajos de grupos de ventanas están cargados: `SUPER + F1` alterna el grupo,
+`SUPER + ALT + LEFT/RIGHT` cambia de pestaña, sus variantes con `SHIFT`
+reordenan la pestaña, `SUPER + ALT + O` extrae la ventana y `SUPER + ALT + L`
+alterna el bloqueo del grupo. Se verificó un grupo real de tres ventanas:
+`SUPER + F1` lo crea y deshace, `SUPER + ALT + LEFT/RIGHT` cambia de pestaña
+y las variantes con `SHIFT` reordenan. `SUPER + ALT + O` extrae una ventana y
+`SUPER + ALT + L` bloquea o desbloquea el grupo: bloqueado, impide reinsertar la
+ventana extraída; desbloqueado, permite insertarla de nuevo.
+`hl.dsp.group.next()` también funcionó directamente.
 
-**Pruebas realizadas:** `hyprctl reload` correcto; navegación y movimiento
-direccional, incluido el cruce entre monitores; y Snappy Switcher con
-`follow_monitor = true`.
-
-## Componentes del escritorio
 
 ### Ciclo de vida de la sesión Hyprland
 
@@ -249,10 +265,12 @@ tail -n 80 /tmp/waybar-DP-2.log
 
 #### Portapapeles
 
-Los dos procesos `wl-paste` almacenan texto e imágenes en ClipHist. `SUPER +
-H` abre el historial mediante `cliphist-rofi`. `copysalida` permanece
-desactivado por defecto para no inundar el historial. El historial se limpia al
-iniciar y cerrar la sesión Hyprland, por lo que su contenido es estado efímero.
+Los dos procesos `wl-paste` almacenan texto e imágenes en ClipHist mediante
+`cliphist-store-meta`, que además registra tipo y timestamp en
+`~/.cache/cliphist/meta.tsv`. `SUPER + ALT + SPACE` abre el historial mediante
+`cliphist-rofi`. `copysalida` permanece desactivado por defecto para no inundar
+el historial. El historial se limpia al iniciar y cerrar la sesión Hyprland,
+por lo que su contenido es estado efímero.
 
 #### Notificaciones
 
@@ -265,7 +283,7 @@ no se usa ni debe competir por el servicio de notificaciones.
 
 `SUPER + L` ejecuta `loginctl lock-session`; Hyprlock se comprobó en HDMI-A-1,
 DP-1 y DP-2. Hypridle arranca directamente con Hyprland, bloquea la sesión a
-los 300 s y apaga DPMS a los 330 s. El apagado y restablecimiento de DPMS se
+los 1200 s y apaga DPMS a los 1230 s. El apagado y restablecimiento de DPMS se
 validaron en los tres monitores. No hay suspensión automática configurada.
 
 ### Kitty
@@ -274,12 +292,23 @@ validaron en los tres monitores. No hay suspensión automática configurada.
 ~/.config/kitty/kitty.conf
 ```
 
+Kitty conserva su integración con la shell, excluyendo únicamente sus títulos
+automáticos mediante `shell_integration no-title`. En Zsh,
+`_kitty_set_dynamic_title` actualiza el título de las ventanas Kitty al nombre
+del directorio de trabajo actual. Se observó el título `Kitty linuxpc-dotfiles`
+en runtime.
+
 ### Rofi
 
 ```text
 ~/.config/rofi/config.rasi
 ~/.config/rofi/theme.rasi
 ```
+
+La versión instalada observada es `2.0.0-dirty`. El tema versionado se validó
+visualmente con `rofi -show drun`: buscador, lista, selección y layout
+funcionan correctamente, sin problemas observados. Esta verificación no
+convierte por sí sola el tema en un sistema visual consolidado.
 
 ### Cursores
 
@@ -311,10 +340,10 @@ GSettings activos; si `notify-send` está disponible, muestra una notificación.
 | Oreo Spark Blue | 32 |
 | Oreo Teal | 32 |
 
-Estado comprobado: Oreo Teal, tamaño 32, sincronizado en Hyprland, GTK activos
-y GSettings. Los `settings.ini` activos de GTK no están enlazados al
-repositorio y los versionados conservan otro estado visual; esta divergencia
-no se resuelve aquí y permanece diferida según los
+Estado comprobado: Bibata Modern Ice, tamaño 24, activo en la sesión de
+Hyprland y en GSettings. Los `settings.ini` activos de GTK no están enlazados
+al repositorio y los versionados pueden conservar otro estado visual; esta
+divergencia permanece diferida según los
 [límites de configuración](16-limites-configuracion.md).
 
 Las dependencias y los límites de reconstrucción de los temas se registran en
@@ -359,8 +388,17 @@ enlaces y Matuwall no podría cargar la configuración.
 Directorio de wallpapers:
 
 ```text
-~/Pictures/Wallpapers/Waywallen
+~/Imágenes/Wallpapers
 ```
+
+Matuwall, `wallpaper-selector` y la selección materializada en
+`hyprpaper.conf` usan esta misma colección. La ruta fue validada con Matuwall,
+que detectó 13 wallpapers disponibles.
+
+La selección actualmente materializada en `hyprpaper.conf` usa `black.jpg` en
+`HDMI-A-1` y `DP-2`, y `montanas-neon.jpg` en `DP-1`. Después de aplicar un
+wallpaper manualmente mediante Matuwall, su configuración y el estado runtime
+coincidieron en los monitores esperados, sin errores observados.
 
 Matuwall se ejecuta mediante `matuwall.service`, habilitado para
 `hyprland-session.target`; no se inicia directamente desde el autostart de
@@ -404,6 +442,9 @@ Selector anterior conservado como alternativa:
 ~/.local/bin/wallpaper-selector
 ```
 
+También se comprobó manualmente: abre Rofi, muestra la colección, permite
+seleccionar el monitor y aplica el fondo al monitor esperado sin errores.
+
 Matuwall utiliza temporalmente un parche local en:
 
 ```text
@@ -439,10 +480,17 @@ matuwall-linuxpc-patch restore
 > Una actualización de Matuwall puede sobrescribir el parche. Después de actualizar, ejecuta `matuwall-linuxpc-patch status` y, si corresponde, `matuwall-linuxpc-patch apply`.
 
 ### Hyprsunset
-
 ```text
 ~/.config/hypr/hyprsunset.conf
+~/.local/bin/hyprsunset-selector
 ```
+
+Hyprsunset arranca con la sesión de Hyprland. `SUPER + ALT + N` abre
+`hyprsunset-selector`, que permite desactivar la corrección de color o elegir
+temperaturas de 3000 K, 3500 K, 4000 K, 4500 K y 5000 K mediante Rofi. El
+selector comprueba que Hyprsunset esté ejecutándose y aplica el cambio mediante
+`hyprctl hyprsunset`. El selector, sus temperaturas y la reversión mediante
+`Apagado` se comprobaron visualmente.
 
 ### Snappy Switcher
 
@@ -501,7 +549,11 @@ Funciones y alias relevantes:
 ls -> eza
 ll -> eza -lah
 cat -> bat
+actualizar -> yay -Syu
 ```
+
+`actualizar` es un alias definido, no una sustitución de la revisión manual de
+actualizaciones ni de sus riesgos.
 
 Funciones personalizadas:
 
@@ -512,6 +564,9 @@ go dc
 go ff
 copysalida
 ```
+
+La función `ytm` fue retirada de forma intencional junto con las aplicaciones
+dedicadas de YouTube Music. Firefox es la vía mantenida para ese servicio.
 
 ## Scripts personales
 

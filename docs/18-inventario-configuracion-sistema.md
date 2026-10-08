@@ -105,9 +105,10 @@ esta representación canónica.
 
 ### Perfil físico y NVIDIA verificados en P1-10
 
-La topología efectiva de tres monitores fue validada después de recargar
-Hyprland: `DP-1` a `0x0`, `HDMI-A-1` a `1920x0` y `DP-2` a `3840x0`, todos con
-escala 1. Su representación prevista pertenece a
+La topología efectiva de tres monitores comprobada actualmente después de
+recargar Hyprland es `DP-1` a `0x0`, `DP-2` a `1920x0` y `HDMI-A-1` a `3840x0`,
+todos con escala 1. Sustituye la disposición anterior registrada durante
+P1-10. Su representación prevista pertenece a
 `.config/hypr/machines/linuxpc.lua`; la descripción de la arquitectura de
 escritorio está en [Arch Linux](05-arch-linux.md).
 

@@ -1,6 +1,6 @@
 ---abrir kitty
 hl.bind(
-	"SUPER + Q",
+	"SUPER + C",
 	hl.dsp.exec_cmd("kitty"),
 	{ description = "Abrir Kitty" }
 )
@@ -8,7 +8,7 @@ hl.bind(
 
 --cerrar ventana activa
 hl.bind(
-	"SUPER + C",
+    "ALT + Q",
 	hl.dsp.window.close(),
 	{ description = "Cerrar ventana"}
 )
@@ -18,6 +18,12 @@ hl.bind(
     "SUPER + L",
     hl.dsp.exec_cmd("loginctl lock-session"),
     { description = "Bloquear sesión" }
+)
+
+hl.bind(
+    "SUPER + ESCAPE",
+    hl.dsp.exec_cmd("~/.local/bin/powermenu"),
+    { description = "Abrir menú de apagado" }
 )
 
 
@@ -40,6 +46,20 @@ hl.bind(
 hl.bind(
     "SUPER + SHIFT + A",
     hl.dsp.exec_cmd("hyprshot -m output --clipboard-only")
+)
+
+-- Guardar captura de región
+hl.bind(
+    "SUPER + SHIFT + CTRL + S",
+    hl.dsp.exec_cmd("hyprshot -m region -o ~/Imágenes/Screenshots"),
+    { description = "Guardar captura de región" }
+)
+
+-- Guardar captura de ventana
+hl.bind(
+    "SUPER + SHIFT + CTRL + W",
+    hl.dsp.exec_cmd("hyprshot -m window -o ~/Imágenes/Screenshots"),
+    { description = "Guardar captura de ventana" }
 )
 
 
@@ -191,7 +211,7 @@ hl.bind(
 
 -- Historial del portapapeles
 hl.bind(
-    "SUPER + H",
+    "SUPER + ALT + SPACE",
     hl.dsp.exec_cmd("~/.local/bin/cliphist-rofi"),
     { description = "Abrir historial del portapapeles" }
 )
@@ -208,6 +228,56 @@ hl.bind(
 hl.bind(
     "SUPER + ALT + W",
     hl.dsp.exec_cmd("~/.local/bin/wallpaper-selector")
+)
+
+-- Selector de luz cálida
+hl.bind(
+    "SUPER + ALT + N",
+    hl.dsp.exec_cmd("~/.local/bin/hyprsunset-selector"),
+    { description = "Controlar luz cálida" }
+)
+
+-- Grupos de ventanas: pestañas manuales
+hl.bind(
+    "SUPER + F1",
+    hl.dsp.group.toggle(),
+    { description = "Crear o deshacer grupo" }
+)
+
+hl.bind(
+    "SUPER + ALT + RIGHT",
+    hl.dsp.group.next(),
+    { description = "Pestaña siguiente del grupo" }
+)
+
+hl.bind(
+    "SUPER + ALT + LEFT",
+    hl.dsp.group.prev(),
+    { description = "Pestaña anterior del grupo" }
+)
+
+hl.bind(
+    "SUPER + ALT + SHIFT + RIGHT",
+    hl.dsp.group.move_window(),
+    { description = "Mover pestaña hacia adelante" }
+)
+
+hl.bind(
+    "SUPER + ALT + SHIFT + LEFT",
+    hl.dsp.group.move_window({ forward = false }),
+    { description = "Mover pestaña hacia atrás" }
+)
+
+hl.bind(
+    "SUPER + ALT + O",
+    hl.dsp.window.move({ out_of_group = true }),
+    { description = "Sacar ventana del grupo" }
+)
+
+hl.bind(
+    "SUPER + ALT + L",
+    hl.dsp.group.lock_active({ action = "toggle" }),
+    { description = "Bloquear o desbloquear grupo activo" }
 )
 
 -- Foco direccional entre ventanas

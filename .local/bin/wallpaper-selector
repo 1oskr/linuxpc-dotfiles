@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-WALLPAPER_DIR="$HOME/Pictures/Wallpapers/Waywallen"
+WALLPAPER_DIR="$HOME/Imágenes/Wallpapers/"
 HYPRPAPER_CONFIG="$HOME/.config/hypr/hyprpaper.conf"
 
 if ! monitors_json="$(hyprctl monitors -j 2>/dev/null)"; then
