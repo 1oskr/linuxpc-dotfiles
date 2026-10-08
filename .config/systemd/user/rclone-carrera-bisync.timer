@@ -1,0 +1,12 @@
+[Unit]
+Description=Run Carrera Google Drive bisync periodically
+PartOf=hyprland-session.target
+
+[Timer]
+OnActiveSec=2min
+OnUnitActiveSec=15min
+Persistent=false
+Unit=rclone-carrera-bisync.service
+
+[Install]
+WantedBy=hyprland-session.target

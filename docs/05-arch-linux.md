@@ -174,8 +174,15 @@ Google Drive está integrado y comprobado mediante `rclone`, con el remote
 `gdrive:` montado en `~/GoogleDrive` con `--vfs-cache-mode full`. El montaje lo
 gestiona `rclone-gdrive.service`, ligado a `hyprland-session.target`. Las
 credenciales permanecen en `~/.config/rclone/rclone.conf`, con permisos `600`,
-fuera de Git; el servicio no contiene secretos. El contenido se obtiene bajo
+fuera de Git; los servicios no contienen secretos. El contenido se obtiene bajo
 demanda y no se sincroniza íntegramente al disco local.
+
+Como excepción, `/mnt/hdd/Carrera y Trabajo/Ing Civil Matemática` se mantiene
+sincronizado bidireccionalmente con `gdrive:Ing Civil Matemática` mediante
+`rclone-carrera-bisync.service`. `rclone-carrera-bisync.timer` lo ejecuta cada
+15 minutos durante la sesión Hyprland. El servicio comprueba que `/mnt/hdd`
+esté montado en lectura/escritura y aplica las protecciones de `rclone bisync`
+definidas en la unidad versionada.
 
 ### Waybar
 

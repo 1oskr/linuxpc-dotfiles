@@ -1,0 +1,10 @@
+[Unit]
+Description=Bidirectional sync Carrera y Trabajo with Google Drive
+PartOf=hyprland-session.target
+
+[Service]
+Type=oneshot
+ExecCondition=/usr/bin/findmnt -rn -M /mnt/hdd -O rw
+ExecStart=/usr/bin/rclone bisync "/mnt/hdd/Carrera y Trabajo/Ing Civil Matemática" "gdrive:Ing Civil Matemática" --checksum --check-access --create-empty-src-dirs --resilient --recover --max-lock 2m --max-delete 10
+KillSignal=SIGINT
+TimeoutStopSec=120

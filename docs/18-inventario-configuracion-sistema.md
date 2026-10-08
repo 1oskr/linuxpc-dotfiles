@@ -141,6 +141,9 @@ documentada.
 | `matuwall.service` | Usuario | Unidad versionada, habilitada para `hyprland-session.target` | P1-09 |
 | `snappy-switcher.service` | Usuario | Override versionado; habilitado para `graphical-session.target` | P1-09 |
 | `waybar-hover.service` | Usuario | Unidad versionada; habilitada para `graphical-session.target` | P1-09 |
+| `rclone-gdrive.service` | Usuario | Unidad versionada; monta `gdrive:` en `~/GoogleDrive` durante `hyprland-session.target` | Configuración actual |
+| `rclone-carrera-bisync.service` | Usuario | Unidad versionada; sincronización bidireccional entre `/mnt/hdd/Carrera y Trabajo/Ing Civil Matemática` y `gdrive:Ing Civil Matemática` | Configuración actual |
+| `rclone-carrera-bisync.timer` | Usuario | Unidad versionada; ejecuta `rclone-carrera-bisync.service` periódicamente durante `hyprland-session.target` | Configuración actual |
 | `xdg-desktop-portal-hyprland.service` | Usuario | Unidad estática proporcionada por el paquete, parte de `graphical-session.target` | P1-09 |
 | `wireplumber.service` y sockets PipeWire | Usuario | Proporcionados por paquetes | P1-07 |
 | `hyprpaper.service` | Usuario | Unidad de paquete existente y deshabilitada; Hyprland lo inicia directamente | P1-09 |
