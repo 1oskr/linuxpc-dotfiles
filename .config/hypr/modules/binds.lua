@@ -33,7 +33,7 @@ hl.bind(
 -- Seleccionar un área
 hl.bind(
     "SUPER + SHIFT + S",
-    hl.dsp.exec_cmd("hyprshot -m region --clipboard-only")
+    hl.dsp.exec_cmd("hyprshot -z -m region --clipboard-only")
 )
 
 -- Capturar una ventana
@@ -51,7 +51,7 @@ hl.bind(
 -- Guardar captura de región
 hl.bind(
     "SUPER + SHIFT + CTRL + S",
-    hl.dsp.exec_cmd("hyprshot -m region -o ~/Imágenes/Screenshots"),
+    hl.dsp.exec_cmd("hyprshot -z -m region -o ~/Imágenes/Screenshots"),
     { description = "Guardar captura de región" }
 )
 

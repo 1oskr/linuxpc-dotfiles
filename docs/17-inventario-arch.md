@@ -69,7 +69,7 @@ quedan clasificados una sola vez:
 
 `base`, `base-devel`, `bat`, `btop`, `btrfs-progs`, `cliphist`,
 `efibootmgr`, `eza`, `fastfetch`, `git`, `grub`, `grub-btrfs`, `hypridle`,
-`hyprland`, `hyprlock`, `hyprpaper`, `hyprshot`, `hyprsunset`, `kitty`,
+`hyprland`, `hyprlock`, `hyprpaper`, `hyprpicker`, `hyprshot`, `hyprsunset`, `kitty`,
 `linux`, `linux-firmware`, `lxsession`, `mako`, `matuwall`, `networkmanager`,
 `nvidia-open`, `nvidia-settings`,
 `nvidia-utils`, `openssh`, `orchis-theme`, `os-prober`,
@@ -148,7 +148,7 @@ modifica la razón registrada actualmente por Pacman.
 | `qt5-wayland`, `qt6-wayland`, `xdg-desktop-portal-hyprland` | Pacman | Entorno gráfico | Compatibilidad Wayland y portal del escritorio | Requerido | Aplicaciones gráficas y Hyprland | `pacman -Q` |
 | `orchis-theme`, `papirus-icon-theme`, `ttf-meslo-nerd` | Pacman | Entorno gráfico | Recursos referenciados por GTK, Kitty y el escritorio | Requerido | Dotfiles gráficos | `pacman -Q` e inspección de rutas |
 | `ttf-jetbrains-mono-nerd`, `mesa-utils` | Pacman | Entorno gráfico | Fuente alternativa y diagnóstico gráfico | Opcional aceptado | Escritorio | `pacman -Q` |
-| `hyprland`, `hyprcursor`, `hypridle`, `hyprlock`, `hyprpaper`, `hyprshot`, `hyprsunset`, `waybar`, `rofi`, `lxsession`, `mako` | Pacman | Hyprland y sesión | Compositor, bloqueo e inactividad, fondos, captura, barra, lanzador, notificaciones y agente PolicyKit usado | Requerido | `.config/hypr/`, `.config/mako/`, `.config/waybar/` y `cursor-selector` | `pacman -Q`, `command -v` y prueba funcional |
+| `hyprland`, `hyprcursor`, `hypridle`, `hyprlock`, `hyprpaper`, `hyprpicker`, `hyprshot`, `hyprsunset`, `waybar`, `rofi`, `lxsession`, `mako` | Pacman | Hyprland y sesión | Compositor, bloqueo e inactividad, fondos, captura y congelamiento de selección, barra, lanzador, notificaciones y agente PolicyKit usado | Requerido | `.config/hypr/`, `.config/mako/`, `.config/waybar/` y `cursor-selector` | `pacman -Q`, `command -v` y prueba funcional |
 | `cliphist`, `wl-clipboard`, `grim`, `slurp`, `satty`, `jq` | Pacman | Hyprland y sesión | Portapapeles, capturas y scripts activos | Requerido | Dotfiles y `.local/bin/` | `pacman -Q`, `command -v` y prueba funcional |
 | `matuwall`, `snappy-switcher` | AUR/Yay | Hyprland y sesión | Selector de wallpapers y selector de ventanas configurados | Requerido | Autostart, binds y systemd de usuario | `pacman -Q`, `command -v` |
 | `volantes-cursors-git`, `bibata-cursor-theme-bin` | AUR/Yay | Temas de cursor | Temas XCursor Volantes y Bibata ofrecidos por `cursor-selector` | Requerido | `/usr/share/icons` y `cursor-selector` | `pacman -Q` e inspección de rutas |

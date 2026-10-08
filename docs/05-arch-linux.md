@@ -272,6 +272,16 @@ Los dos procesos `wl-paste` almacenan texto e imágenes en ClipHist mediante
 el historial. El historial se limpia al iniciar y cerrar la sesión Hyprland,
 por lo que su contenido es estado efímero.
 
+#### Capturas
+
+Hyprshot gestiona las capturas. Las dos variantes de región usan `-z`:
+`SUPER + SHIFT + S` copia la región al portapapeles y
+`SUPER + SHIFT + CTRL + S` la guarda en `~/Imágenes/Screenshots`.
+`hyprpicker` es la dependencia que usa
+Hyprshot para congelar la pantalla al iniciar la selección. Se comprobó
+manualmente que `SUPER + SHIFT + S` congela la imagen durante la selección.
+Las capturas de ventana y output mantienen su comportamiento actual, sin `-z`.
+
 #### Notificaciones
 
 Mako es el único daemon de notificaciones activo. Su timeout por defecto es de
