@@ -149,7 +149,46 @@ Para abrir un archivo:
 flatpak run com.visualstudio.code /ruta/al/archivo
 ```
 
+## Konsole
+
+Konsole es la terminal principal prevista para Bazzite. Su apariencia fue
+validada visualmente por el usuario.
+
+El perfil utilizado es:
+
+```text
+~/.local/share/konsole/LinuxPC-Bazzite.profile
+```
+
+El esquema de color utilizado es:
+
+```text
+~/.local/share/konsole/LinuxPC-Bazzite-Catppuccin-Latte.colorscheme
+```
+
+El perfil predeterminado configurado en `~/.config/konsolerc` es:
+
+```text
+LinuxPC-Bazzite.profile
+```
+
+El perfil usa Google Sans Code a 11 pt, el esquema Catppuccin Latte, fondo
+`#eff1f5`, texto `#5c5f77`, opacidad `1.0`, margen de 6 px, barra de
+desplazamiento oculta, pestañas visibles solo cuando son necesarias, cursor
+I-beam y `/bin/bash` como shell.
+
+Prueba de ejecución:
+
+```bash
+konsole --profile LinuxPC-Bazzite.profile
+```
+
 ## Kitty
+
+Kitty sigue instalado localmente y funcional, pero su uso en Bazzite es
+temporal. Konsole es la terminal prevista a largo plazo. Kitty no se ha
+eliminado porque `~/.bashrc.d/copysalida.sh` todavía depende de él; la
+migración no está terminada.
 
 Kitty está instalado localmente mediante el instalador oficial en:
 
