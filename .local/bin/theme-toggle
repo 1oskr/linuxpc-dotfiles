@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ "$#" -ne 0 ]]; then
+    printf 'Uso: theme-toggle\n' >&2
+    exit 2
+fi
+
+state_file="${XDG_STATE_HOME:-$HOME/.local/state}/linuxpc/theme-mode"
+
+if [[ ! -f "$state_file" ]]; then
+    printf 'No existe el estado de tema: %s\n' "$state_file" >&2
+    exit 1
+fi
+
+if cmp -s "$state_file" <(printf 'light\n'); then
+    exec theme-set dark
+elif cmp -s "$state_file" <(printf 'dark\n'); then
+    exec theme-set light
+fi
+
+printf 'Estado de tema no válido: %s\n' "$state_file" >&2
+exit 1

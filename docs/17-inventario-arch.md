@@ -203,6 +203,7 @@ queda registrada en el inventario completado de P1-04.
 |---|---|---|---|---|
 | Codex standalone | Oscar | Instalación bajo `~/.codex/packages/standalone/current` y enlace en `~/.local/bin/codex` | `readlink ~/.local/bin/codex` y `codex --version` | Reinstalar Codex; el procedimiento declarativo permanece pendiente |
 | Parche local de Matuwall | Oscar | Destino del módulo Python descubierto por `.local/bin/matuwall-linuxpc-patch`; respaldo bajo `~/.local/share/linuxpc-backups/matuwall` | `matuwall-linuxpc-patch status` | `matuwall-linuxpc-patch restore`; automatización pendiente en P2-01 |
+| Fuente Google Sans Flex | Oscar | `~/.local/share/fonts/google-sans-flex/GoogleSansFlex[GRAD,ROND,opsz,slnt,wdth,wght].ttf`; usada por GTK 3/4 | `fc-match 'Google Sans Flex'`; `pacman -Qo <archivo>` no encuentra paquete propietario | Procedencia y procedimiento de reconstrucción todavía no documentados; brecha de reproducibilidad |
 | Temas Oreo XCursor y temas Hyprcursor convertidos | Oscar | `~/.local/share/icons`; cada tema Hyprcursor contiene `manifest.hl` | Inspección de las rutas y del manifest usados por `cursor-selector` | Pendiente: no hay fuentes ni procedimiento de reconstrucción verificados; su disponibilidad no está completamente reproducida |
 
 No se detectaron aplicaciones de usuario administradas por Pipx, npm, Cargo o

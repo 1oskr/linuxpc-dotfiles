@@ -128,6 +128,58 @@ Incluye:
 .local/bin/
 ```
 
+## Modo claro/oscuro
+
+El modo vigente se conserva como estado mutable fuera de Git en
+`${XDG_STATE_HOME:-$HOME/.local/state}/linuxpc/theme-mode`. Sus valores son
+`light` y `dark`; `theme-toggle` lee ese archivo y delega el cambio en
+`theme-set`.
+
+Para GTK, las fuentes declarativas son:
+
+```text
+.config/gtk-3.0/settings.common
+.config/gtk-3.0/themes/{light,dark}.settings
+.config/gtk-4.0/settings.common
+.config/gtk-4.0/themes/{light,dark}.settings
+```
+
+`theme-set` combina el archivo común con el fragmento elegido para generar los
+`settings.ini` activos. Los tres elementos GTK 4 (`gtk.css`, `gtk-dark.css` y
+`assets`) son enlaces simbólicos derivados hacia el tema Orchis instalado en
+`/usr/share/themes`; no se copian assets del tema al repositorio. Los
+`settings.ini` activos, los enlaces y `theme-mode` no se versionan.
+
+### Disponibilidad de los comandos
+
+Los scripts versionados aún no están instalados en `~/.local/bin`. Mientras
+no se creen los enlaces, se puede invocar `theme-set` directamente desde el
+checkout:
+
+```bash
+~/linuxpc-dotfiles/.local/bin/theme-set light
+~/linuxpc-dotfiles/.local/bin/theme-set dark
+```
+
+Para disponer de ambos comandos por nombre, desde el directorio raíz del
+checkout se pueden crear enlaces en `~/.local/bin`:
+
+```bash
+ln -s "$PWD/.local/bin/theme-set" "$HOME/.local/bin/theme-set"
+ln -s "$PWD/.local/bin/theme-toggle" "$HOME/.local/bin/theme-toggle"
+```
+
+La carpeta debe estar en `PATH` para invocarlos por nombre. `theme-toggle`
+busca `theme-set` mediante `PATH`, por lo que deben desplegarse ambos enlaces.
+El procedimiento no se ha aplicado todavía. Después del despliegue, los usos
+son `theme-set light`, `theme-set dark` y `theme-toggle`.
+
+La integración implementada cubre GTK 3, GTK 4 y las claves GSettings
+`org.gnome.desktop.interface color-scheme` y `gtk-theme`. El modo claro fue
+aplicado y comprobado en el sistema; el modo oscuro está declarado, pero aún
+no tiene prueba real ni visual. Los demás componentes de escritorio no forman
+parte todavía de este selector.
+
 ## Archivos que no deben subirse
 
 Las reglas completas de inclusión y exclusión están en

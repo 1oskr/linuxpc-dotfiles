@@ -1,0 +1,208 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ "$#" -ne 1 ]]; then
+    printf 'Uso: theme-set <light|dark>\n' >&2
+    exit 2
+fi
+
+mode="$1"
+
+case "$mode" in
+    light)
+        gtk_theme='Orchis-Light-Compact'
+        color_scheme='prefer-light'
+        ;;
+    dark)
+        gtk_theme='Orchis-Dark-Compact'
+        color_scheme='prefer-dark'
+        ;;
+    *)
+        printf 'Modo de tema no válido: %s\n' "$mode" >&2
+        exit 2
+        ;;
+esac
+
+script_path="$(realpath -- "${BASH_SOURCE[0]}")"
+repo_root="$(cd -- "$(dirname -- "$script_path")/../.." && pwd -P)"
+
+gtk3_source="$repo_root/.config/gtk-3.0"
+gtk4_source="$repo_root/.config/gtk-4.0"
+gtk3_common="$gtk3_source/settings.common"
+gtk4_common="$gtk4_source/settings.common"
+gtk3_mode="$gtk3_source/themes/$mode.settings"
+gtk4_mode="$gtk4_source/themes/$mode.settings"
+orchis_dir="/usr/share/themes/$gtk_theme/gtk-4.0"
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+gtk3_destination="$config_home/gtk-3.0"
+gtk4_destination="$config_home/gtk-4.0"
+gtk3_settings="$gtk3_destination/settings.ini"
+gtk4_settings="$gtk4_destination/settings.ini"
+
+state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/linuxpc"
+state_file="$state_dir/theme-mode"
+
+require_file() {
+    local file="$1"
+
+    [[ -f "$file" ]] || {
+        printf 'Falta el archivo requerido: %s\n' "$file" >&2
+        exit 1
+    }
+}
+
+require_directory() {
+    local directory="$1"
+
+    [[ -d "$directory" ]] || {
+        printf 'Falta el directorio requerido: %s\n' "$directory" >&2
+        exit 1
+    }
+}
+
+settings_match() {
+    local destination="$1"
+    local common="$2"
+    local theme="$3"
+
+    [[ -f "$destination" ]] && cmp -s "$destination" <(
+        printf '[Settings]\n'
+        cat "$common" "$theme"
+    )
+}
+
+materialize_settings() {
+    local destination="$1"
+    local common="$2"
+    local theme="$3"
+    local directory temporary
+
+    settings_match "$destination" "$common" "$theme" && return 0
+
+    directory="$(dirname -- "$destination")"
+    temporary="$(mktemp "$directory/.settings.ini.XXXXXX")"
+    trap 'rm -f "$temporary"' RETURN
+
+    {
+        printf '[Settings]\n'
+        cat "$common" "$theme"
+    } > "$temporary"
+    mv "$temporary" "$destination"
+    trap - RETURN
+}
+
+link_matches() {
+    local destination="$1"
+    local target="$2"
+
+    [[ -L "$destination" ]] && [[ "$(readlink -- "$destination")" == "$target" ]]
+}
+
+materialize_link() {
+    local destination="$1"
+    local target="$2"
+    local directory name temporary
+
+    link_matches "$destination" "$target" && return 0
+
+    directory="$(dirname -- "$destination")"
+    name="$(basename -- "$destination")"
+    temporary="$(mktemp "$directory/.${name}.XXXXXX")"
+    rm -f "$temporary"
+    ln -s "$target" "$temporary"
+    mv -T "$temporary" "$destination"
+}
+
+state_matches() {
+    [[ -f "$state_file" ]] && cmp -s "$state_file" <(printf '%s\n' "$mode")
+}
+
+write_state() {
+    local temporary
+
+    state_matches && return 0
+
+    mkdir -p "$state_dir"
+    temporary="$(mktemp "$state_dir/.theme-mode.XXXXXX")"
+    trap 'rm -f "$temporary"' RETURN
+    printf '%s\n' "$mode" > "$temporary"
+    mv "$temporary" "$state_file"
+    trap - RETURN
+}
+
+require_file "$gtk3_common"
+require_file "$gtk4_common"
+require_file "$gtk3_mode"
+require_file "$gtk4_mode"
+require_directory "$orchis_dir"
+require_file "$orchis_dir/gtk.css"
+require_file "$orchis_dir/gtk-dark.css"
+require_directory "$orchis_dir/assets"
+
+command -v gsettings >/dev/null 2>&1 || {
+    printf 'Falta el comando requerido: gsettings\n' >&2
+    exit 1
+}
+
+current_color_scheme="$(gsettings get org.gnome.desktop.interface color-scheme)" || {
+    printf 'No se pudo leer GSettings: color-scheme\n' >&2
+    exit 1
+}
+current_gtk_theme="$(gsettings get org.gnome.desktop.interface gtk-theme)" || {
+    printf 'No se pudo leer GSettings: gtk-theme\n' >&2
+    exit 1
+}
+
+if state_matches &&
+    settings_match "$gtk3_settings" "$gtk3_common" "$gtk3_mode" &&
+    settings_match "$gtk4_settings" "$gtk4_common" "$gtk4_mode" &&
+    link_matches "$gtk4_destination/gtk.css" "$orchis_dir/gtk.css" &&
+    link_matches "$gtk4_destination/gtk-dark.css" "$orchis_dir/gtk-dark.css" &&
+    link_matches "$gtk4_destination/assets" "$orchis_dir/assets" &&
+    [[ "$current_color_scheme" == "'$color_scheme'" ]] &&
+    [[ "$current_gtk_theme" == "'$gtk_theme'" ]]; then
+    printf 'Modo de tema ya aplicado: %s\n' "$mode"
+    exit 0
+fi
+
+mkdir -p "$gtk3_destination" "$gtk4_destination"
+[[ -w "$gtk3_destination" && -w "$gtk4_destination" ]] || {
+    printf 'No se pueden materializar los destinos GTK.\n' >&2
+    exit 1
+}
+
+for destination in "$gtk3_settings" "$gtk4_settings"; do
+    [[ ! -e "$destination" || -L "$destination" || -f "$destination" ]] || {
+        printf 'El destino GTK no se puede reemplazar de forma segura: %s\n' "$destination" >&2
+        exit 1
+    }
+done
+
+for destination in \
+    "$gtk4_destination/gtk.css" \
+    "$gtk4_destination/gtk-dark.css" \
+    "$gtk4_destination/assets"; do
+    [[ ! -e "$destination" || -L "$destination" ]] || {
+        printf 'El destino GTK no se puede reemplazar de forma segura: %s\n' "$destination" >&2
+        exit 1
+    }
+done
+
+materialize_settings "$gtk3_settings" "$gtk3_common" "$gtk3_mode"
+materialize_settings "$gtk4_settings" "$gtk4_common" "$gtk4_mode"
+materialize_link "$gtk4_destination/gtk.css" "$orchis_dir/gtk.css"
+materialize_link "$gtk4_destination/gtk-dark.css" "$orchis_dir/gtk-dark.css"
+materialize_link "$gtk4_destination/assets" "$orchis_dir/assets"
+
+if [[ "$current_color_scheme" != "'$color_scheme'" ]]; then
+    gsettings set org.gnome.desktop.interface color-scheme "$color_scheme"
+fi
+
+if [[ "$current_gtk_theme" != "'$gtk_theme'" ]]; then
+    gsettings set org.gnome.desktop.interface gtk-theme "$gtk_theme"
+fi
+
+write_state
+printf 'Modo de tema aplicado: %s\n' "$mode"

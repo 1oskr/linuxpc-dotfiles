@@ -198,7 +198,8 @@ Ambos documentos son complementarios:
 | `.config/fastfetch/` | Oscar | Presentación de información del sistema | Sistemas con Fastfetch | Configuración personal no sensible | La información mostrada puede depender del sistema efectivo | [P1-03](17-inventario-arch.md), completado; P1-13 |
 | `.config/satty/` | Oscar | Anotación de capturas | Arch Linux y Wayland | Configuración común y reproducible | Sus dependencias gráficas están registradas en el inventario de Arch | [P1-03](17-inventario-arch.md), completado |
 | `.config/snappy-switcher/` | Oscar | Selector de ventanas | Arch Linux y Hyprland | Configuración personal no sensible | La copia activa fue verificada igual al repositorio en P1-11; su override depende de systemd de usuario | P1-09 y P1-11 completados; P2-03 |
-| `.config/gtk-3.0/` y `.config/gtk-4.0/` | Oscar | Preferencias y tema GTK | Arch Linux | Configuración personal no sensible | Los enlaces GTK 4 son absolutos y dependen de un tema instalado en el sistema | [P1-03](17-inventario-arch.md), completado; P1-04 y P2-01 |
+| `.config/gtk-3.0/` y `.config/gtk-4.0/` | Oscar | Preferencias y tema GTK | Arch Linux | Configuración personal no sensible | Los `settings.ini` activos y enlaces GTK 4 se materializan desde fuentes versionadas; los enlaces requieren Orchis instalado | [P1-03](17-inventario-arch.md), completado; P1-04 y P2-01 |
+| `~/.local/state/linuxpc/theme-mode` | Oscar | Modo seleccionado por `theme-set` | Arch Linux | Estado generado o efímero | Estado mutable fuera de Git; determina el modo que los componentes integrados deben materializar | P2-01 |
 | `docs/` | Oscar | Conocimiento autorizado del proyecto | Todas | Documentación | Puede contener identificadores personales o del sistema solo cuando sean necesarios y aceptados conscientemente | P1-08 y P1-18 |
 | `drafts/` | Oscar | Trabajo no consolidado | Según cada borrador | Borradores y referencias | Falta definir el ciclo de consolidación o retiro de su contenido | P1-17 |
 | `.gitignore` | Oscar | Exclusión preventiva del repositorio | Todas | Configuración común y reproducible | No sustituye la revisión previa ni autoriza a guardar secretos en archivos ignorados | P1-19 y P2-03 |
@@ -245,6 +246,13 @@ siendo estado generado. Su ubicación no lo convierte en estado previsto ni
 autoriza su versionado. Cuando una aplicación necesite un archivo activo
 derivado de datos mantenibles, debe conservarse la entrada declarativa y
 documentarse o generarse el resultado.
+
+Para el selector light/dark, `~/.local/state/linuxpc/theme-mode` conserva el
+modo actual fuera de Git. Los archivos GTK activos
+(`~/.config/gtk-3.0/settings.ini`, `~/.config/gtk-4.0/settings.ini` y los
+enlaces `gtk.css`, `gtk-dark.css` y `assets`) son derivados regenerables de
+las fuentes comunes y los fragmentos versionados bajo `.config/gtk-3.0/` y
+`.config/gtk-4.0/`.
 
 En systemd, una unidad u override mantenible puede estar versionado. La
 habilitación efectiva, los enlaces creados por `systemctl` y el estado activo

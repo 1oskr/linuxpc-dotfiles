@@ -359,6 +359,30 @@ divergencia permanece diferida según los
 Las dependencias y los límites de reconstrucción de los temas se registran en
 el [inventario declarativo de Arch Linux](17-inventario-arch.md).
 
+### Modo claro/oscuro
+
+El núcleo de `theme-set` y `theme-toggle` está implementado. El estado actual
+se guarda fuera del repositorio en
+`${XDG_STATE_HOME:-$HOME/.local/state}/linuxpc/theme-mode`, con `light` o
+`dark` como valores válidos. `theme-set` materializa GTK 3 y GTK 4 desde sus
+fuentes comunes y fragmentos de modo, y establece en GSettings
+`color-scheme` y `gtk-theme`. Papirus-Dark, Google Sans Flex y Bibata Modern
+Ice tamaño 24 permanecen comunes en los ajustes GTK.
+
+La primera aplicación real se ejecutó directamente desde el repositorio con
+`~/linuxpc-dotfiles/.local/bin/theme-set light`. El estado resultante es
+`light`, Orchis-Light-Compact y `prefer-light`; se comprobó también la
+apariencia clara en Thunar. El modo `dark` solo se validó con pruebas aisladas:
+su aplicación real y revisión visual siguen pendientes.
+
+La integración actual se limita a GTK 3, GTK 4 y las dos claves GSettings
+indicadas. Kitty, Rofi, Mako, Waybar, Hyprland, Firefox y VS Code todavía no
+están controlados por estos comandos. `xsettingsd` no participa.
+
+Los ejecutables aún no están desplegados en `~/.local/bin`; por ahora se
+invocan desde el repositorio. El procedimiento de despliegue está en
+[Dotfiles y Git](07-dotfiles-git.md).
+
 ### Wallpapers
 
 Motor de fondos:
