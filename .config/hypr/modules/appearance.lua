@@ -1,3 +1,30 @@
+local function read_theme_mode()
+    local home = os.getenv("HOME")
+    local state_home = os.getenv("XDG_STATE_HOME")
+
+    if not home then
+        return "light"
+    end
+
+    local state_root = state_home or (home .. "/.local/state")
+    local file = io.open(state_root .. "/linuxpc/theme-mode", "r")
+
+    if not file then
+        return "light"
+    end
+
+    local mode = file:read("*a")
+    file:close()
+
+    if mode == "dark" or mode == "dark\n" then
+        return "dark"
+    end
+
+    return "light"
+end
+
+local theme = require("themes." .. read_theme_mode())
+
 hl.config({
     general = {
         border_size = 0,
@@ -76,12 +103,12 @@ hl.config({
             gradient_round_only_edges = true,
             gaps_in = 0,
             gaps_out = 0,
-            text_color = "rgba(4C4F69FF)",
-            text_color_inactive = "rgba(9CA0B0FF)",
+            text_color = theme.text_color,
+            text_color_inactive = theme.text_color_inactive,
 
             col = {
-                active = "rgba(EFF1F5FF)",
-                inactive = "rgba(DCE0E8FF)",
+                active = theme.col.active,
+                inactive = theme.col.inactive,
             },
         },
     },

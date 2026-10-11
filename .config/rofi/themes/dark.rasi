@@ -1,0 +1,117 @@
+* {
+    surface:              #1e1e1ebf;
+    surface-input:        #282828cc;
+    foreground:           #ffffff;
+    muted:                #ffffffaa;
+    selected-foreground:  #ffffff;
+
+    border-soft:          #ffffff26;
+    selection:            #ffffff1f;
+
+    font: "Google Sans Flex 14";
+}
+
+window {
+    transparency: "real";
+
+    width: 780px;
+    padding: 16px;
+
+    border: 1px;
+    border-color: @border-soft;
+    border-radius: 28px;
+
+    background-color: @surface;
+
+    children: [ mainbox ];
+}
+
+mainbox {
+    orientation: vertical;
+    spacing: 10px;
+    background-color: transparent;
+
+    children: [ content-panel ];
+}
+
+content-panel {
+    orientation: vertical;
+    spacing: 8px;
+    background-color: transparent;
+
+    children: [ inputbar, listview ];
+}
+
+inputbar {
+    padding: 12px 14px;
+
+    background-color: @surface-input;
+    text-color: @foreground;
+
+    border: 1px;
+    border-color: @border-soft;
+    border-radius: 16px;
+
+    children: [ entry ];
+}
+
+entry {
+    background-color: transparent;
+
+    placeholder: "Buscar aplicaciones...";
+    placeholder-color: @muted;
+
+    text-color: @foreground;
+}
+
+listview {
+    lines: 6;
+    columns: 1;
+    spacing: 4px;
+
+    scrollbar: false;
+    background-color: transparent;
+}
+
+element {
+    padding: 8px 10px;
+    spacing: 14px;
+
+    border: 0px;
+    border-radius: 16px;
+
+    background-color: transparent;
+    text-color: @foreground;
+
+    children: [ element-icon, element-text ];
+}
+
+element selected {
+    background-color: @selection;
+
+    border: 0px;
+    border-radius: 16px;
+
+    text-color: @selected-foreground;
+}
+
+element selected.element-text {
+    background-color: transparent;
+    text-color: @selected-foreground;
+}
+
+element selected.element-icon {
+    background-color: transparent;
+    text-color: @selected-foreground;
+}
+
+element-icon {
+    size: 52px;
+    background-color: transparent;
+}
+
+element-text {
+    background-color: transparent;
+    vertical-align: 0.5;
+    text-color: inherit;
+}

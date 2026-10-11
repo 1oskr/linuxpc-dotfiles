@@ -1,8 +1,14 @@
 ---abrir kitty
 hl.bind(
-	"SUPER + C",
+	"SUPER + RETURN",
 	hl.dsp.exec_cmd("kitty"),
 	{ description = "Abrir Kitty" }
+)
+
+hl.bind(
+	"SUPER + C",
+	hl.dsp.exec_cmd("hyprpicker -a"),
+	{ description = "Seleccionar color" }
 )
 
 
@@ -235,6 +241,12 @@ hl.bind(
     "SUPER + ALT + N",
     hl.dsp.exec_cmd("~/.local/bin/hyprsunset-selector"),
     { description = "Controlar luz cálida" }
+)
+
+hl.bind(
+    "SUPER + ALT + T",
+    hl.dsp.exec_cmd("$HOME/.local/bin/theme-selector"),
+    { description = "Seleccionar tema" }
 )
 
 -- Grupos de ventanas: pestañas manuales

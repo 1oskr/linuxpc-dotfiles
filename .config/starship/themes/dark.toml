@@ -9,19 +9,18 @@ format = "[1oskrr]($style)"
 
 [hostname]
 ssh_only = false
-style = "bold #FF6B6B"
+style = "bold #ff3300"
 format = "[@$hostname]($style) "
 
 [directory]
-style = "bold #8a68f9"
+style = "bold #9168f9"
 format = "[$path]($style) "
 
 [cmd_duration]
 min_time = 1000
-style = "bold #ffb726"
+style = "bold #a6e39e"
 format = "[took $duration]($style)"
 
 [character]
-success_symbol = "[<+++>](bold #0095ff)"
-error_symbol = "[<zzz>](bold #ff007b)"
-
+success_symbol = "[+>>](bold #002fff)"
+error_symbol = "[<<-](bold #ff0040)"

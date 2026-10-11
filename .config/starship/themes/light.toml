@@ -1,0 +1,26 @@
+add_newline = false
+
+format = "$username$hostname$directory$cmd_duration\n$character"
+
+[username]
+show_always = true
+style_user = "bold #1e66f5"
+format = "[oscar]($style)"
+
+[hostname]
+ssh_only = false
+style = "bold #d20f39"
+format = "[@$hostname]($style) "
+
+[directory]
+style = "bold #fe640b"
+format = "[$path]($style) "
+
+[cmd_duration]
+min_time = 1000
+style = "bold #40a02b"
+format = "[took $duration]($style)"
+
+[character]
+success_symbol = "[+>](bold #00f2ff)"
+error_symbol = "[<-](bold #ff007b)"

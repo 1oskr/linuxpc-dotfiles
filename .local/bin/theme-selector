@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+state_file="${XDG_STATE_HOME:-$HOME/.local/state}/linuxpc/theme-mode"
+real_script="$(readlink -f -- "${BASH_SOURCE[0]}")"
+script_dir="$(dirname -- "$real_script")"
+theme_set="$script_dir/theme-set"
+
+[[ -x "$theme_set" ]] || {
+    printf 'Falta el ejecutable requerido: %s\n' "$theme_set" >&2
+    exit 1
+}
+
+current_mode=''
+if [[ -f "$state_file" ]]; then
+    IFS= read -r current_mode < "$state_file" || true
+fi
+
+case "$current_mode" in
+    light)
+        options=(
+            '☀  Claro'
+            '☾  Oscuro'
+        )
+        ;;
+    dark)
+        options=(
+            '☾  Oscuro'
+            '☀  Claro'
+        )
+        ;;
+    *)
+        options=(
+            '☀  Claro'
+            '☾  Oscuro'
+        )
+        ;;
+esac
+
+selected="$(printf '%s\n' "${options[@]}" | rofi -dmenu -i -p 'Tema')" || exit 0
+
+case "$selected" in
+    '☀  Claro')
+        exec "$theme_set" light
+        ;;
+    '☾  Oscuro')
+        exec "$theme_set" dark
+        ;;
+    *)
+        exit 0
+        ;;
+esac

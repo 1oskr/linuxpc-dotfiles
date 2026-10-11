@@ -185,15 +185,16 @@ Ambos documentos son complementarios:
 
 | Familia | Propietario | Alcance | Plataforma | Categoría principal | Excepciones o mezcla actual | Proyecto posterior |
 |---|---|---|---|---|---|---|
-| `.config/hypr/` | Oscar | Escritorio declarativo y perfil físico | Arch Linux y Hyprland | Configuración común y reproducible | `machines/linuxpc.lua` contiene exclusivamente la topología física; `hyprpaper.conf` es selección activa personal/generada, no topología canónica | P1-09; P1-10 y P1-11 completados |
-| `.config/waybar/` | Oscar | Barra del escritorio | Arch Linux y Hyprland | Configuración común y reproducible | `common.jsonc` concentra presentación común; `outputs/` contiene los adaptadores físicos de LinuxPC. La integración NVIDIA queda como consumo específico del equipo | P1-10 completado; P2-03 |
-| `.config/kitty/` | Oscar | Terminal gráfico | Arch Linux; portabilidad por verificar | Configuración personal no sensible | La relación entre copia activa y repositorio debe verificarse de forma repetible | P1-13 y P2-03 |
-| `.config/rofi/` | Oscar | Lanzador, menús y temas | Arch Linux y Wayland | Configuración personal no sensible | La copia activa diverge del repositorio y contiene recursos y respaldos locales | P1-13 y P2-03 |
+| `.config/hypr/` | Oscar | Escritorio declarativo y perfil físico | Arch Linux y Hyprland | Configuración común y reproducible | `machines/linuxpc.lua` contiene exclusivamente la topología física; los archivos versionados `themes/{light,dark}.lua` contienen solo los cuatro colores del groupbar; `appearance.lua` lee el estado persistente y `theme-set` aplica el cambio live fuera de Git; `hyprpaper.conf` es selección activa personal/generada, no topología canónica | P1-09; P1-10 y P1-11 completados |
+| `.config/waybar/` | Oscar | Barra del escritorio | Arch Linux y Hyprland | Configuración común y reproducible | `common.jsonc` concentra presentación común; `outputs/` contiene los adaptadores físicos de LinuxPC. `style.css` conserva deliberadamente un estilo negro fijo y Waybar queda fuera de `theme-set`; `waybar-hover` mantiene su ciclo de vida actual | P1-10 completado; P2-03 |
+| `.config/kitty/` | Oscar | Terminal gráfico | Arch Linux; portabilidad por verificar | Configuración personal no sensible | La copia activa `~/.config/kitty/kitty.conf` está enlazada al repositorio; `themes/active.conf` es estado derivado fuera de Git; los perfiles light/dark son fuentes versionadas | P1-13 y P2-03 |
+| `.config/rofi/` | Oscar | Lanzador, menús y temas | Arch Linux y Wayland | Configuración personal no sensible | `config.rasi` activo está enlazado al repositorio; `theme.rasi` activo es estado derivado generado por `theme-set`; la antigua fuente `.config/rofi/theme.rasi` fue retirada del árbol de trabajo y los temas light/dark son fuentes versionadas | P1-13 y P2-03 |
+| `.config/mako/` | Oscar | Notificaciones y temas | Arch Linux y Wayland | Configuración personal no sensible | `config` activo está enlazado al repositorio; `themes/active.conf` es estado derivado y solo contiene colores dependientes del modo; los perfiles light/dark son fuentes versionadas | P1-13 y P2-03 |
 | `.config/matuwall/` | Oscar | Selector y preferencias de wallpapers | Arch Linux y LinuxPC | Configuración específica de LinuxPC | El directorio activo enlaza al repositorio y la aplicación genera un respaldo dentro de él; la selección activa pertenece a `hyprpaper.conf` como estado personal/generado | P2-01 |
 | `.config/systemd/` | Oscar | Overrides declarativos de servicios de usuario | Arch Linux | Configuración específica de LinuxPC | La habilitación y los enlaces efectivos pertenecen al sistema, no al repositorio | P1-04 y P1-09 |
 | `.local/bin/` | Oscar | Utilidades mantenibles del usuario | Principalmente Arch Linux y Wayland | Configuración personal no sensible | Los scripts de wallpaper derivan roles desde la geometría efectiva y `waybar-hover` deriva el adaptador desde la salida; `waybar-gpu` es un consumidor específico de LinuxPC para NVIDIA. `powermenu` diverge de su copia activa | [P1-03](17-inventario-arch.md), completado; P1-10 completado, P1-13 y P2-03 |
 | `.zshrc` | Oscar | Shell interactivo | Arch Linux; partes potencialmente portables | Configuración personal no sensible | Mezcla inicialización portable con aplicaciones y mecanismos propios de Arch, Wayland y Kitty | P1-13 |
-| `.config/starship.toml` | Oscar | Prompt del shell | Sistemas con Starship | Configuración personal no sensible | La presentación es personal; el módulo hostname obtiene la identidad efectiva en tiempo de ejecución | P1-10 completado y P1-13 |
+| `.config/starship/` | Oscar | Prompt del shell | Sistemas con Starship | Configuración personal no sensible | `themes/{light,dark}.toml` contiene las fuentes versionadas; `~/.config/starship/active.toml` es el runtime derivado usado por Zsh y el módulo hostname obtiene la identidad efectiva en tiempo de ejecución | P1-10 completado y P1-13 |
 | `.config/btop/` | Oscar | Monitorización y temas | Sistemas con Btop | Configuración personal no sensible | La configuración activa genera respaldos locales y existe una referencia sin política completa | P1-13 y P2-03 |
 | `.config/fastfetch/` | Oscar | Presentación de información del sistema | Sistemas con Fastfetch | Configuración personal no sensible | La información mostrada puede depender del sistema efectivo | [P1-03](17-inventario-arch.md), completado; P1-13 |
 | `.config/satty/` | Oscar | Anotación de capturas | Arch Linux y Wayland | Configuración común y reproducible | Sus dependencias gráficas están registradas en el inventario de Arch | [P1-03](17-inventario-arch.md), completado |
@@ -254,6 +255,14 @@ enlaces `gtk.css`, `gtk-dark.css` y `assets`) son derivados regenerables de
 las fuentes comunes y los fragmentos versionados bajo `.config/gtk-3.0/` y
 `.config/gtk-4.0/`.
 
+La arquitectura, organización y materialización de los perfiles light/dark de
+Kitty, Rofi, Mako y Hyprland están descritas en
+[Dotfiles y Git](07-dotfiles-git.md). Este documento conserva su clasificación
+como configuración o estado derivado según corresponda.
+
+Waybar no tiene un archivo activo derivado para el selector global. Su
+`style.css` versionado mantiene siempre el estilo negro actual; no se crean
+temas light/dark y `waybar-hover` conserva su ciclo de vida independiente.
 En systemd, una unidad u override mantenible puede estar versionado. La
 habilitación efectiva, los enlaces creados por `systemctl` y el estado activo
 pertenecen al sistema.

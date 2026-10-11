@@ -33,6 +33,22 @@ gtk3_common="$gtk3_source/settings.common"
 gtk4_common="$gtk4_source/settings.common"
 gtk3_mode="$gtk3_source/themes/$mode.settings"
 gtk4_mode="$gtk4_source/themes/$mode.settings"
+kitty_source="$repo_root/.config/kitty"
+kitty_light="$kitty_source/themes/light.conf"
+kitty_dark="$kitty_source/themes/dark.conf"
+kitty_mode="$kitty_source/themes/$mode.conf"
+rofi_source="$repo_root/.config/rofi"
+rofi_mode="$rofi_source/themes/$mode.rasi"
+mako_source="$repo_root/.config/mako"
+mako_mode="$mako_source/themes/$mode.conf"
+starship_source="$repo_root/.config/starship"
+starship_light="$starship_source/themes/light.toml"
+starship_dark="$starship_source/themes/dark.toml"
+starship_mode="$starship_source/themes/$mode.toml"
+hyprland_source="$repo_root/.config/hypr/themes"
+hyprland_light="$hyprland_source/light.lua"
+hyprland_dark="$hyprland_source/dark.lua"
+hyprland_mode="$hyprland_source/$mode.lua"
 orchis_dir="/usr/share/themes/$gtk_theme/gtk-4.0"
 
 config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
@@ -40,9 +56,20 @@ gtk3_destination="$config_home/gtk-3.0"
 gtk4_destination="$config_home/gtk-4.0"
 gtk3_settings="$gtk3_destination/settings.ini"
 gtk4_settings="$gtk4_destination/settings.ini"
+kitty_destination="$config_home/kitty"
+kitty_themes_destination="$kitty_destination/themes"
+kitty_active="$kitty_themes_destination/active.conf"
+rofi_destination="$config_home/rofi"
+rofi_active="$rofi_destination/theme.rasi"
+mako_destination="$config_home/mako"
+mako_themes_destination="$mako_destination/themes"
+mako_active="$mako_themes_destination/active.conf"
+starship_destination="$config_home/starship"
+starship_active="$starship_destination/active.toml"
 
 state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/linuxpc"
 state_file="$state_dir/theme-mode"
+hyprland_live_applied=0
 
 require_file() {
     local file="$1"
@@ -93,6 +120,219 @@ materialize_settings() {
     trap - RETURN
 }
 
+kitty_active_matches() {
+    [[ -f "$kitty_active" ]] && cmp -s "$kitty_active" "$kitty_mode"
+}
+
+materialize_kitty_theme() {
+    local directory temporary
+
+    kitty_active_matches && return 0
+
+    directory="$(dirname -- "$kitty_active")"
+    temporary="$(mktemp "$directory/.active.conf.XXXXXX")"
+    trap 'rm -f "$temporary"' RETURN
+    cp -- "$kitty_mode" "$temporary"
+    mv -- "$temporary" "$kitty_active"
+    trap - RETURN
+}
+
+rofi_theme_matches() {
+    [[ -f "$rofi_active" ]] && cmp -s "$rofi_active" "$rofi_mode"
+}
+
+validate_rofi_theme() {
+    local theme="$1"
+    local diagnostics
+
+    if ! diagnostics="$(rofi -dump-theme -theme "$theme" 2>&1 >/dev/null)"; then
+        printf 'Rofi no pudo validar el tema: %s\n' "$theme" >&2
+        [[ -z "$diagnostics" ]] || printf '%s\n' "$diagnostics" >&2
+        return 1
+    fi
+
+    if [[ -n "$diagnostics" ]]; then
+        printf 'Rofi emitió diagnósticos al validar el tema: %s\n' "$theme" >&2
+        printf '%s\n' "$diagnostics" >&2
+        return 1
+    fi
+}
+
+materialize_rofi_theme() {
+    local directory temporary
+
+    rofi_theme_matches && return 0
+
+    directory="$(dirname -- "$rofi_active")"
+    temporary="$(mktemp "$directory/.theme.rasi.XXXXXX")"
+    trap 'rm -f "$temporary"' RETURN
+    cp -- "$rofi_mode" "$temporary"
+    validate_rofi_theme "$temporary"
+    mv -- "$temporary" "$rofi_active"
+    trap - RETURN
+}
+
+mako_active_matches() {
+    [[ -f "$mako_active" ]] && cmp -s "$mako_active" "$mako_mode"
+}
+
+validate_mako_theme() {
+    local theme="$1"
+    local line key value count=0
+    local background_seen=0 text_seen=0 border_seen=0
+
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        [[ -z "$line" ]] && continue
+        [[ "$line" == *=* ]] || {
+            printf 'Fragmento Mako inválido: %s\n' "$theme" >&2
+            return 1
+        }
+
+        key="${line%%=*}"
+        value="${line#*=}"
+        case "$key" in
+            background-color)
+                background_seen=1
+                ;;
+            text-color)
+                text_seen=1
+                ;;
+            border-color)
+                border_seen=1
+                ;;
+            *)
+                printf 'Opción Mako no permitida en el fragmento: %s\n' "$line" >&2
+                return 1
+                ;;
+        esac
+
+        [[ "$value" =~ ^#[[:xdigit:]]{8}$ ]] || {
+            printf 'Color Mako inválido en: %s\n' "$line" >&2
+            return 1
+        }
+        count=$((count + 1))
+    done < "$theme"
+
+    [[ "$count" -eq 3 && "$background_seen" -eq 1 && "$text_seen" -eq 1 && "$border_seen" -eq 1 ]] || {
+        printf 'El fragmento Mako debe contener exactamente los tres colores requeridos: %s\n' "$theme" >&2
+        return 1
+    }
+}
+
+read_hyprland_theme_values() {
+    local theme="$1"
+    local text_color text_color_inactive active inactive
+
+    text_color="$(sed -n 's/^[[:space:]]*text_color[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$theme")"
+    text_color_inactive="$(sed -n 's/^[[:space:]]*text_color_inactive[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$theme")"
+    active="$(sed -n '/^[[:space:]]*col[[:space:]]*=[[:space:]]*{/,$ { s/^[[:space:]]*active[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p; }' "$theme")"
+    inactive="$(sed -n '/^[[:space:]]*col[[:space:]]*=[[:space:]]*{/,$ { s/^[[:space:]]*inactive[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p; }' "$theme")"
+
+    for value in "$text_color" "$text_color_inactive" "$active" "$inactive"; do
+        [[ "$value" =~ ^rgba\([[:xdigit:]]{8}\)$ ]] || {
+            printf 'Tema Hyprland inválido: %s\n' "$theme" >&2
+            return 1
+        }
+    done
+
+    printf '%s\n' "$text_color" "$text_color_inactive" "$active" "$inactive"
+}
+
+hyprland_instances_available() {
+    local instances
+
+    command -v hyprctl >/dev/null 2>&1 || return 1
+    instances="$(hyprctl instances 2>/dev/null)" || return 1
+    [[ -n "$instances" && "$instances" != "[]" ]]
+}
+
+hyprland_eval_theme() {
+    local theme="$1"
+    local values output
+    local text_color text_color_inactive active inactive
+
+    values="$(read_hyprland_theme_values "$theme")"
+    mapfile -t values_array <<< "$values"
+    text_color="${values_array[0]}"
+    text_color_inactive="${values_array[1]}"
+    active="${values_array[2]}"
+    inactive="${values_array[3]}"
+
+    output="$(hyprctl eval "hl.config({ group = { groupbar = { text_color = \"$text_color\", text_color_inactive = \"$text_color_inactive\", col = { active = \"$active\", inactive = \"$inactive\" } } } })" 2>&1)" || {
+        printf 'Hyprland rechazó la aplicación live del tema: %s\n%s\n' "$theme" "$output" >&2
+        return 1
+    }
+
+    [[ "${output//$'\r'/}" == "ok" ]] || {
+        printf 'Respuesta inesperada de Hyprland al aplicar el tema: %s\n%s\n' "$theme" "$output" >&2
+        return 1
+    }
+}
+
+apply_hyprland_theme_if_available() {
+    hyprland_instances_available || return 0
+
+    hyprland_eval_theme "$hyprland_mode"
+    hyprland_live_applied=1
+}
+
+rollback_hyprland_theme() {
+    local previous_mode="$1"
+
+    hyprland_instances_available || return 0
+    hyprland_eval_theme "$hyprland_source/$previous_mode.lua"
+}
+
+materialize_mako_theme() {
+    local directory temporary
+
+    mako_active_matches && return 0
+
+    directory="$(dirname -- "$mako_active")"
+    temporary="$(mktemp "$directory/.active.conf.XXXXXX")"
+    trap 'rm -f "$temporary"' RETURN
+    cp -- "$mako_mode" "$temporary"
+    mv -- "$temporary" "$mako_active"
+    trap - RETURN
+}
+
+starship_active_matches() {
+    [[ -f "$starship_active" ]] && cmp -s "$starship_active" "$starship_mode"
+}
+
+validate_starship_theme() {
+    local theme="$1"
+    local diagnostics
+
+    if ! diagnostics="$(STARSHIP_CONFIG="$theme" starship print-config 2>&1 >/dev/null)"; then
+        printf 'Starship no pudo validar el tema: %s\n' "$theme" >&2
+        [[ -z "$diagnostics" ]] || printf '%s\n' "$diagnostics" >&2
+        return 1
+    fi
+}
+
+materialize_starship_theme() {
+    local directory temporary
+
+    starship_active_matches && return 0
+
+    directory="$(dirname -- "$starship_active")"
+    temporary="$(mktemp "$directory/.active.toml.XXXXXX")"
+    trap 'rm -f "$temporary"' RETURN
+    cp -- "$starship_mode" "$temporary"
+    mv -- "$temporary" "$starship_active"
+    trap - RETURN
+}
+
+mako_reload_if_running() {
+    pgrep -x mako >/dev/null 2>&1 || return 0
+
+    if ! makoctl reload; then
+        printf 'Mako está activo, pero makoctl reload falló.\n' >&2
+        return 1
+    fi
+}
+
 link_matches() {
     local destination="$1"
     local target="$2"
@@ -124,11 +364,11 @@ write_state() {
 
     state_matches && return 0
 
-    mkdir -p "$state_dir"
-    temporary="$(mktemp "$state_dir/.theme-mode.XXXXXX")"
+    mkdir -p "$state_dir" || return 1
+    temporary="$(mktemp "$state_dir/.theme-mode.XXXXXX")" || return 1
     trap 'rm -f "$temporary"' RETURN
-    printf '%s\n' "$mode" > "$temporary"
-    mv "$temporary" "$state_file"
+    printf '%s\n' "$mode" > "$temporary" || return 1
+    mv "$temporary" "$state_file" || return 1
     trap - RETURN
 }
 
@@ -136,6 +376,22 @@ require_file "$gtk3_common"
 require_file "$gtk4_common"
 require_file "$gtk3_mode"
 require_file "$gtk4_mode"
+require_file "$kitty_light"
+require_file "$kitty_dark"
+require_file "$kitty_mode"
+require_file "$rofi_mode"
+require_file "$mako_mode"
+validate_mako_theme "$mako_mode"
+require_file "$starship_light"
+require_file "$starship_dark"
+validate_starship_theme "$starship_light"
+validate_starship_theme "$starship_dark"
+require_file "$starship_mode"
+require_file "$hyprland_light"
+read_hyprland_theme_values "$hyprland_light" >/dev/null
+require_file "$hyprland_dark"
+read_hyprland_theme_values "$hyprland_dark" >/dev/null
+require_file "$hyprland_mode"
 require_directory "$orchis_dir"
 require_file "$orchis_dir/gtk.css"
 require_file "$orchis_dir/gtk-dark.css"
@@ -145,6 +401,18 @@ command -v gsettings >/dev/null 2>&1 || {
     printf 'Falta el comando requerido: gsettings\n' >&2
     exit 1
 }
+
+command -v rofi >/dev/null 2>&1 || {
+    printf 'Falta el comando requerido: rofi\n' >&2
+    exit 1
+}
+
+if pgrep -x mako >/dev/null 2>&1; then
+    command -v makoctl >/dev/null 2>&1 || {
+        printf 'Falta el comando requerido: makoctl\n' >&2
+        exit 1
+    }
+fi
 
 current_color_scheme="$(gsettings get org.gnome.desktop.interface color-scheme)" || {
     printf 'No se pudo leer GSettings: color-scheme\n' >&2
@@ -158,17 +426,23 @@ current_gtk_theme="$(gsettings get org.gnome.desktop.interface gtk-theme)" || {
 if state_matches &&
     settings_match "$gtk3_settings" "$gtk3_common" "$gtk3_mode" &&
     settings_match "$gtk4_settings" "$gtk4_common" "$gtk4_mode" &&
+    kitty_active_matches &&
+    rofi_theme_matches &&
+    mako_active_matches &&
+    starship_active_matches &&
     link_matches "$gtk4_destination/gtk.css" "$orchis_dir/gtk.css" &&
     link_matches "$gtk4_destination/gtk-dark.css" "$orchis_dir/gtk-dark.css" &&
     link_matches "$gtk4_destination/assets" "$orchis_dir/assets" &&
     [[ "$current_color_scheme" == "'$color_scheme'" ]] &&
     [[ "$current_gtk_theme" == "'$gtk_theme'" ]]; then
+    apply_hyprland_theme_if_available
+    mako_reload_if_running
     printf 'Modo de tema ya aplicado: %s\n' "$mode"
     exit 0
 fi
 
-mkdir -p "$gtk3_destination" "$gtk4_destination"
-[[ -w "$gtk3_destination" && -w "$gtk4_destination" ]] || {
+mkdir -p "$gtk3_destination" "$gtk4_destination" "$kitty_themes_destination" "$rofi_destination" "$mako_themes_destination" "$starship_destination"
+[[ -w "$gtk3_destination" && -w "$gtk4_destination" && -w "$kitty_themes_destination" && -w "$rofi_destination" && -w "$mako_themes_destination" && -w "$starship_destination" ]] || {
     printf 'No se pueden materializar los destinos GTK.\n' >&2
     exit 1
 }
@@ -190,6 +464,30 @@ for destination in \
     }
 done
 
+[[ ! -e "$kitty_active" || -L "$kitty_active" || -f "$kitty_active" ]] || {
+    printf 'El destino Kitty no se puede reemplazar de forma segura: %s\n' "$kitty_active" >&2
+    exit 1
+}
+
+[[ ! -e "$rofi_active" || -L "$rofi_active" || -f "$rofi_active" ]] || {
+    printf 'El destino Rofi no se puede reemplazar de forma segura: %s\n' "$rofi_active" >&2
+    exit 1
+}
+
+[[ ! -e "$mako_active" || -L "$mako_active" || -f "$mako_active" ]] || {
+    printf 'El destino Mako no se puede reemplazar de forma segura: %s\n' "$mako_active" >&2
+    exit 1
+}
+
+[[ ! -e "$starship_active" || -L "$starship_active" || -f "$starship_active" ]] || {
+    printf 'El destino Starship no se puede reemplazar de forma segura: %s\n' "$starship_active" >&2
+    exit 1
+}
+
+materialize_kitty_theme
+materialize_rofi_theme
+materialize_mako_theme
+materialize_starship_theme
 materialize_settings "$gtk3_settings" "$gtk3_common" "$gtk3_mode"
 materialize_settings "$gtk4_settings" "$gtk4_common" "$gtk4_mode"
 materialize_link "$gtk4_destination/gtk.css" "$orchis_dir/gtk.css"
@@ -204,5 +502,16 @@ if [[ "$current_gtk_theme" != "'$gtk_theme'" ]]; then
     gsettings set org.gnome.desktop.interface gtk-theme "$gtk_theme"
 fi
 
-write_state
+apply_hyprland_theme_if_available
+mako_reload_if_running
+if ! write_state; then
+    if (( hyprland_live_applied )); then
+        if ! rollback_hyprland_theme "$(cat "$state_file" 2>/dev/null || printf 'light\n')"; then
+            printf 'Falló la escritura de theme-mode y también falló el rollback live de Hyprland.\n' >&2
+        else
+            printf 'Falló la escritura de theme-mode; se restauró el modo anterior en Hyprland.\n' >&2
+        fi
+    fi
+    exit 1
+fi
 printf 'Modo de tema aplicado: %s\n' "$mode"

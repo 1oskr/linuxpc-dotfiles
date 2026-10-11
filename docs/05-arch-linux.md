@@ -131,6 +131,16 @@ La navegación direccional usa `SUPER + LEFT/RIGHT/UP/DOWN` para enfocar la
 ventana en esa dirección. `SUPER + SHIFT + LEFT/RIGHT/UP/DOWN` mueve o reordena
 la ventana activa direccionalmente.
 
+Atajos añadidos o modificados en `modules/binds.lua`:
+
+- `SUPER + RETURN` abre Kitty.
+- `SUPER + C` ejecuta `hyprpicker -a` y copia al portapapeles el color
+  seleccionado.
+- `SUPER + ALT + T` abre `theme-selector` para elegir el modo visual.
+
+La configuración se verificó con `hyprland --verify-config`, con resultado
+correcto.
+
 Las reglas de aplicaciones colocan actualmente:
 
 - VS Code (`com.microsoft.VSCode`) en workspace `1`;
@@ -228,6 +238,12 @@ escaneo y el encendido y apagado de Bluetooth.
 
 Waybar utiliza una instancia dinámica gestionada por `waybar-hover`.
 
+Waybar queda deliberadamente fuera del selector global `theme-set`. Su
+`style.css` conserva siempre el estilo negro actual, similar a una barra de
+menú de macOS; no existen ni se crearán variantes light/dark de Waybar. Esta
+es una decisión visual intencional, no una integración pendiente. El ciclo de
+vida de `waybar-hover` permanece sin cambios.
+
 Comportamiento comprobado:
 
 - aparece al tocar el borde superior;
@@ -306,7 +322,10 @@ Kitty conserva su integración con la shell, excluyendo únicamente sus títulos
 automáticos mediante `shell_integration no-title`. En Zsh,
 `_kitty_set_dynamic_title` actualiza el título de las ventanas Kitty al nombre
 del directorio de trabajo actual. Se observó el título `Kitty linuxpc-dotfiles`
-en runtime.
+en runtime. La configuración común incluye
+`.config/kitty/themes/active.conf`; `theme-set` materializa allí, fuera de Git,
+uno de los perfiles versionados `themes/light.conf` o `themes/dark.conf`.
+El perfil light usa la paleta oficial Catppuccin Latte.
 
 ### Rofi
 
@@ -315,10 +334,15 @@ en runtime.
 ~/.config/rofi/theme.rasi
 ```
 
-La versión instalada observada es `2.0.0-dirty`. El tema versionado se validó
+La versión instalada observada es `2.0.0-dirty`. El tema activo se validó
 visualmente con `rofi -show drun`: buscador, lista, selección y layout
-funcionan correctamente, sin problemas observados. Esta verificación no
-convierte por sí sola el tema en un sistema visual consolidado.
+funcionan correctamente, sin problemas observados. La estructura nueva
+`.config/rofi/themes/{light,dark}.rasi` contiene las fuentes declarativas
+versionadas. `theme-set` materializa
+`~/.config/rofi/theme.rasi` fuera del repositorio y `config.rasi` lo referencia
+mediante `@theme "theme"`. La antigua fuente versionada
+`.config/rofi/theme.rasi` fue retirada del árbol de trabajo; la eliminación y
+los perfiles declarativos forman parte de la consolidación Git.
 
 ### Cursores
 
@@ -369,18 +393,33 @@ fuentes comunes y fragmentos de modo, y establece en GSettings
 `color-scheme` y `gtk-theme`. Papirus-Dark, Google Sans Flex y Bibata Modern
 Ice tamaño 24 permanecen comunes en los ajustes GTK.
 
-La primera aplicación real se ejecutó directamente desde el repositorio con
-`~/linuxpc-dotfiles/.local/bin/theme-set light`. El estado resultante es
-`light`, Orchis-Light-Compact y `prefer-light`; se comprobó también la
-apariencia clara en Thunar. El modo `dark` solo se validó con pruebas aisladas:
-su aplicación real y revisión visual siguen pendientes.
+La integración actual cubre GTK 3, GTK 4, las dos claves GSettings indicadas,
+Kitty, Starship, Rofi, Mako y los cuatro colores del groupbar de Hyprland.
+`theme-set` valida ambos perfiles de Starship y el tema seleccionado de Rofi,
+Mako y Hyprland antes de materializar los archivos runtime. Después aplica
+GSettings, intenta aplicar
+el groupbar mediante una única evaluación `hyprctl eval`/`hl.config` cuando hay
+una instancia accesible, recarga Mako si está activo y escribe
+`theme-mode` al final del flujo.
 
-La integración actual se limita a GTK 3, GTK 4 y las dos claves GSettings
-indicadas. Kitty, Rofi, Mako, Waybar, Hyprland, Firefox y VS Code todavía no
-están controlados por estos comandos. `xsettingsd` no participa.
+Se comprobaron cambios de modo en GTK (Nemo y Thunar), Kitty, Starship, Rofi,
+Mako y Hyprland. La groupbar de Hyprland se validó visualmente en ambos modos.
+Las tablas versionadas de Hyprland contienen
+exactamente estos valores:
 
-Los ejecutables aún no están desplegados en `~/.local/bin`; por ahora se
-invocan desde el repositorio. El procedimiento de despliegue está en
+| Modo | Texto activo | Texto inactivo | Fondo activo | Fondo inactivo |
+|---|---|---|---|---|
+| light | `rgba(4C4F69FF)` | `rgba(9CA0B0FF)` | `rgba(EFF1F5FF)` | `rgba(DCE0E8FF)` |
+| dark | `rgba(E3E3E3FF)` | `rgba(B8B8B8FF)` | `rgba(424242FF)` | `rgba(303030FF)` |
+
+Waybar queda fuera deliberadamente del selector global y conserva su estilo
+negro en ambos modos. Firefox puede adaptarse al tema del sistema, pero no hay
+evidencia de que `theme-set` lo configure directamente. VS Code tampoco forma
+parte del selector. `xsettingsd` no participa.
+
+`theme-selector` está enlazado actualmente en `~/.local/bin`; `theme-set` y
+`theme-toggle` aún no tienen enlace instalado y pueden invocarse directamente
+desde el repositorio. El procedimiento de despliegue está en
 [Dotfiles y Git](07-dotfiles-git.md).
 
 ### Wallpapers
@@ -535,8 +574,17 @@ selector comprueba que Hyprsunset esté ejecutándose y aplica el cambio mediant
 ### Starship
 
 ```text
-~/.config/starship.toml
+~/.config/starship/active.toml
 ```
+
+Las fuentes declarativas son los perfiles versionados
+`.config/starship/themes/{light,dark}.toml`. `.zshrc` configura
+`STARSHIP_CONFIG` para que Starship lea
+efectivamente `~/.config/starship/active.toml`, que `theme-set` materializa
+fuera de Git. La configuración antigua `.config/starship.toml` y su enlace
+`~/.config/starship.toml` fueron retirados. Después de `theme-set`, el perfil
+seleccionado se refleja en el siguiente prompt; este flujo no requiere
+`exec zsh`.
 
 El módulo `hostname` usa `format = "[@$hostname]($style) "`; conserva el
 estilo personal y obtiene el hostname del sistema en tiempo de ejecución. Con

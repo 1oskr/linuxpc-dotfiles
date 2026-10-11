@@ -86,6 +86,11 @@ Incluye:
 .config/waybar/
 ```
 
+Waybar mantiene deliberadamente un único estilo negro en `style.css`, similar
+a una barra de menú de macOS. No forma parte de `theme-set` y no debe
+separarse en temas light/dark. `waybar-hover` conserva su ciclo de vida y su
+gestión dinámica sin depender del selector global.
+
 ### Kitty
 
 ```text
@@ -113,8 +118,15 @@ Incluye:
 ### Starship
 
 ```text
-.config/starship.toml
+.config/starship/themes/{light,dark}.toml  # fuentes declarativas versionadas
 ```
+
+`.config/starship/themes/{light,dark}.toml` contiene las fuentes declarativas
+versionadas. `theme-set` materializa
+atómicamente `~/.config/starship/active.toml` fuera de Git; `.zshrc` establece
+`STARSHIP_CONFIG` para que Starship lea efectivamente ese archivo derivado.
+La configuración antigua `.config/starship.toml` y su enlace
+`~/.config/starship.toml` fueron retirados.
 
 ### Zsh
 
@@ -150,35 +162,78 @@ Para GTK, las fuentes declarativas son:
 `/usr/share/themes`; no se copian assets del tema al repositorio. Los
 `settings.ini` activos, los enlaces y `theme-mode` no se versionan.
 
+Kitty conserva la configuración común en `.config/kitty/kitty.conf` y las
+paletas versionadas en `.config/kitty/themes/{light,dark}.conf`. El archivo común incluye `themes/active.conf`;
+este fragmento se materializa atómicamente fuera del repositorio por
+`theme-set` y no se versiona. La copia activa
+`~/.config/kitty/kitty.conf` está enlazada al archivo del repositorio.
+
+Rofi conserva dos temas completos e independientes en
+`.config/rofi/themes/{light,dark}.rasi`, versionados como fuentes
+declarativas. La
+estructura anterior incluía `.config/rofi/theme.rasi`, que fue retirada del
+árbol de trabajo. El config común usa `@theme "theme"`; `theme-set`
+materializa atómicamente `~/.config/rofi/theme.rasi` fuera de Git. La
+eliminación de la fuente antigua y el seguimiento de los perfiles nuevos forman
+parte de esta consolidación Git.
+La copia activa `~/.config/rofi/config.rasi` está enlazada al repositorio.
+
+Mako conserva la geometría, fuente y comportamiento comunes en
+`.config/mako/config`, e incluye `~/.config/mako/themes/active.conf`. Sus
+fragmentos versionados `.config/mako/themes/{light,dark}.conf` contienen
+únicamente los tres colores dependientes del modo. `theme-set` materializa atómicamente
+`~/.config/mako/themes/active.conf` fuera de Git y recarga Mako si el daemon
+está activo. La copia activa `~/.config/mako/config` está enlazada al
+repositorio.
+
+Hyprland conserva la apariencia común en `modules/appearance.lua` y los cuatro
+colores dependientes del modo del groupbar en los archivos versionados
+`.config/hypr/themes/{light,dark}.lua`.
+`appearance.lua` lee únicamente el estado persistente `theme-mode`, con
+fallback seguro a `light`. Durante una sesión Hyprland accesible, `theme-set`
+aplica esos colores mediante una única llamada `hyprctl eval`/`hl.config`; no
+se usa `theme-mode.pending` ni se reescriben archivos versionados. Si no hay
+socket accesible, el modo se confirma para que el siguiente inicio lo lea
+desde el archivo persistente.
+
 ### Disponibilidad de los comandos
 
-Los scripts versionados aún no están instalados en `~/.local/bin`. Mientras
-no se creen los enlaces, se puede invocar `theme-set` directamente desde el
-checkout:
+Los enlaces de `theme-set` y `theme-toggle` aún no están creados en
+`~/.local/bin`; `theme-selector` sí está enlazado actualmente al checkout.
+Mientras no se creen los primeros enlaces, se puede invocar `theme-set`
+directamente desde el checkout:
 
 ```bash
 ~/linuxpc-dotfiles/.local/bin/theme-set light
 ~/linuxpc-dotfiles/.local/bin/theme-set dark
 ```
 
-Para disponer de ambos comandos por nombre, desde el directorio raíz del
-checkout se pueden crear enlaces en `~/.local/bin`:
+Para disponer de `theme-set` y `theme-toggle` por nombre, desde el directorio
+raíz del checkout se pueden crear enlaces en `~/.local/bin`:
 
 ```bash
 ln -s "$PWD/.local/bin/theme-set" "$HOME/.local/bin/theme-set"
 ln -s "$PWD/.local/bin/theme-toggle" "$HOME/.local/bin/theme-toggle"
+ln -s "$PWD/.local/bin/theme-selector" "$HOME/.local/bin/theme-selector"
 ```
 
 La carpeta debe estar en `PATH` para invocarlos por nombre. `theme-toggle`
 busca `theme-set` mediante `PATH`, por lo que deben desplegarse ambos enlaces.
-El procedimiento no se ha aplicado todavía. Después del despliegue, los usos
-son `theme-set light`, `theme-set dark` y `theme-toggle`.
+`theme-selector` se invoca desde el atajo de Hyprland y delega en `theme-set`
+desde el checkout enlazado. El procedimiento no se ha aplicado todavía.
+Después del despliegue, los usos son `theme-set light`, `theme-set dark`,
+`theme-toggle` y `theme-selector`.
 
-La integración implementada cubre GTK 3, GTK 4 y las claves GSettings
-`org.gnome.desktop.interface color-scheme` y `gtk-theme`. El modo claro fue
-aplicado y comprobado en el sistema; el modo oscuro está declarado, pero aún
-no tiene prueba real ni visual. Los demás componentes de escritorio no forman
-parte todavía de este selector.
+La integración implementada cubre GTK 3, GTK 4, las claves GSettings
+`org.gnome.desktop.interface color-scheme` y `gtk-theme`, Kitty, Rofi, Mako,
+Starship y los colores del groupbar de Hyprland.
+Los temas light y dark de Rofi son diseños completos deliberadamente
+distintos; ambos modos fueron aplicados y validados visualmente. Mako conserva
+la geometría y el comportamiento comunes y separa solo sus colores por modo;
+se comprobaron los cambios de modo. Hyprland separa los cuatro colores del
+groupbar por modo y su presentación se validó visualmente en light y dark.
+Waybar queda fuera deliberadamente: mantiene siempre su estilo negro y no forma
+parte de `theme-set`. Firefox y VS Code tampoco forman parte de este selector.
 
 ## Archivos que no deben subirse
 

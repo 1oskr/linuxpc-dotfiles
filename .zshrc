@@ -1,7 +1,7 @@
 # Created by newuser for 5.9.2
 # Modified by Oskr c:
 
-
+export STARSHIP_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/starship/active.toml"
 eval "$(starship init zsh)"
 
 alias ls="eza"
