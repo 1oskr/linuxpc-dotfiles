@@ -360,8 +360,10 @@ Esta base no implica que los proyectos siguientes estén completados. Cada proye
 - **Resultado:** el historial de portapapeles abre con `SUPER + ALT + SPACE`.
   Los watchers de texto e imágenes usan `cliphist-store-meta`, que almacena en
   ClipHist y registra tipo y timestamp en `~/.cache/cliphist/meta.tsv`;
-  `copysalida` permanece desactivado por defecto y el historial sigue siendo
-  efímero entre sesiones. Waybar mantiene los selectores de Wi-Fi y Bluetooth.
+  la política documentada mantiene `copysalida` desactivado por defecto. El
+  contenido e historial del portapapeles siguen siendo estados de ejecución que
+  pueden limpiarse entre sesiones. Waybar mantiene los selectores de Wi-Fi y
+  Bluetooth.
   Mako continúa como único daemon de notificaciones. `SUPER + L` bloquea con
   `loginctl lock-session`; Hyprlock, Hypridle y DPMS permanecen activos y
   validados en los tres monitores. Hypridle bloquea a los 1200 s y apaga DPMS

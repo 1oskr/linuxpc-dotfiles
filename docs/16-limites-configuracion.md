@@ -193,7 +193,7 @@ Ambos documentos son complementarios:
 | `.config/matuwall/` | Oscar | Selector y preferencias de wallpapers | Arch Linux y LinuxPC | Configuración específica de LinuxPC | El directorio activo enlaza al repositorio y la aplicación genera un respaldo dentro de él; la selección activa pertenece a `hyprpaper.conf` como estado personal/generado | P2-01 |
 | `.config/systemd/` | Oscar | Overrides declarativos de servicios de usuario | Arch Linux | Configuración específica de LinuxPC | La habilitación y los enlaces efectivos pertenecen al sistema, no al repositorio | P1-04 y P1-09 |
 | `.local/bin/` | Oscar | Utilidades mantenibles del usuario | Principalmente Arch Linux y Wayland | Configuración personal no sensible | Los scripts de wallpaper derivan roles desde la geometría efectiva y `waybar-hover` deriva el adaptador desde la salida; `waybar-gpu` es un consumidor específico de LinuxPC para NVIDIA. `powermenu` diverge de su copia activa | [P1-03](17-inventario-arch.md), completado; P1-10 completado, P1-13 y P2-03 |
-| `.zshrc` | Oscar | Shell interactivo | Arch Linux; partes potencialmente portables | Configuración personal no sensible | Mezcla inicialización portable con aplicaciones y mecanismos propios de Arch, Wayland y Kitty | P1-13 |
+| `.zshrc` | Oscar | Shell interactivo | Arch Linux; partes potencialmente portables | Configuración personal no sensible | Mezcla inicialización portable con Starship, `copysalida`, aplicaciones y mecanismos propios de Arch, Wayland y Kitty | P1-13 |
 | `.config/starship/` | Oscar | Prompt del shell | Sistemas con Starship | Configuración personal no sensible | `themes/{light,dark}.toml` contiene las fuentes versionadas; `~/.config/starship/active.toml` es el runtime derivado usado por Zsh y el módulo hostname obtiene la identidad efectiva en tiempo de ejecución | P1-10 completado y P1-13 |
 | `.config/btop/` | Oscar | Monitorización y temas | Sistemas con Btop | Configuración personal no sensible | La configuración activa genera respaldos locales y existe una referencia sin política completa | P1-13 y P2-03 |
 | `.config/fastfetch/` | Oscar | Presentación de información del sistema | Sistemas con Fastfetch | Configuración personal no sensible | La información mostrada puede depender del sistema efectivo | [P1-03](17-inventario-arch.md), completado; P1-13 |
@@ -263,6 +263,16 @@ como configuración o estado derivado según corresponda.
 Waybar no tiene un archivo activo derivado para el selector global. Su
 `style.css` versionado mantiene siempre el estilo negro actual; no se crean
 temas light/dark y `waybar-hover` conserva su ciclo de vida independiente.
+
+El estado de activación de `copysalida` se representa mediante el archivo local
+persistente y no versionado `~/.cache/copysalida-enabled`. Su existencia
+activa la función, persiste entre shells y sesiones, y `copysalida off` lo
+elimina; en el estado comprobado, el archivo existe. El estado de ejecución de
+los hooks `_ksi_preexec`, `_ksi_precmd` y `_copy_last_output` pertenece a la
+instancia activa de Zsh. El contenido e historial del portapapeles son estados
+de ejecución separados que pueden limpiarse entre sesiones. Ninguno de estos
+estados pertenece al selector light/dark.
+
 En systemd, una unidad u override mantenible puede estar versionado. La
 habilitación efectiva, los enlaces creados por `systemctl` y el estado activo
 pertenecen al sistema.

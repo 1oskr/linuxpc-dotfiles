@@ -55,6 +55,9 @@ _remember_last_command() {
 _copy_last_output() {
     [[ -f "$COPY_OUTPUT_STATE" ]] || return
     [[ -n "$KITTY_WINDOW_ID" ]] || return
+    (( $+functions[_ksi_preexec] && $+functions[_ksi_precmd] )) || return
+    (( ${preexec_functions[(Ie)_ksi_preexec]:-0} > 0 &&
+        ${precmd_functions[(Ie)_ksi_precmd]:-0} > 0 )) || return
 
     # No sobrescribir el portapapeles cuando el comando lo administra directamente.
     case "$COPY_OUTPUT_LAST_COMMAND" in
@@ -103,6 +106,23 @@ add-zsh-hook -d precmd _kitty_set_dynamic_title 2>/dev/null
 add-zsh-hook preexec _remember_last_command
 add-zsh-hook precmd _copy_last_output
 add-zsh-hook precmd _kitty_set_dynamic_title
+
+_ensure_copy_last_output_order() {
+    if (( ! $+functions[_ksi_preexec] || ! $+functions[_ksi_precmd] ||
+        ${preexec_functions[(Ie)_ksi_preexec]:-0} == 0 ||
+        ${precmd_functions[(Ie)_ksi_precmd]:-0} == 0 )); then
+        add-zsh-hook -d precmd _ensure_copy_last_output_order 2>/dev/null
+        return
+    fi
+
+    add-zsh-hook -d precmd _copy_last_output 2>/dev/null
+    add-zsh-hook precmd _copy_last_output
+    add-zsh-hook -d precmd _ensure_copy_last_output_order 2>/dev/null
+}
+
+if [[ -n "$KITTY_WINDOW_ID" ]]; then
+    add-zsh-hook precmd _ensure_copy_last_output_order
+fi
 
 
 

@@ -647,6 +647,52 @@ go ff
 copysalida
 ```
 
+### copysalida
+
+`copysalida` copia automáticamente la salida del último comando desde Kitty al
+portapapeles mediante `kitten @ get-text --extent=last_cmd_output | wl-copy`.
+Depende de Zsh, de la shell integration efectiva de Kitty y de `wl-copy`.
+
+La activación global se controla mediante el archivo local persistente y no
+versionado `~/.cache/copysalida-enabled`: si existe, la función queda activa;
+si no existe, no copia. En el estado comprobado, el archivo existe. Su
+existencia persiste entre shells y sesiones, y `copysalida off` lo elimina.
+El estado de ejecución de `_ksi_preexec`, `_ksi_precmd` y `_copy_last_output`
+pertenece a la instancia activa de Zsh; la implementación exige que los dos
+primeros hooks existan y estén registrados en sus arrays efectivos. El
+contenido e historial del portapapeles son estados de ejecución separados y
+pueden limpiarse entre sesiones. Cuando la integración falta, se abstiene de
+consultar Kitty y no modifica el portapapeles.
+
+Kitty debe ejecutar `_ksi_precmd` antes de `_copy_last_output`, porque ese hook
+emite los marcadores que delimitan `last_cmd_output`. `_ensure_copy_last_output_order()`
+detecta la integración durante el primer ciclo de prompt de una Kitty nueva,
+mueve `_copy_last_output` después de `_ksi_precmd` mediante `add-zsh-hook` y se
+elimina a sí mismo. Conserva los hooks de Starship y
+`_kitty_set_dynamic_title`, y no se registra fuera de Kitty.
+
+La integración automática de Kitty no se vuelve a cargar después de `exec zsh`.
+En ese caso desaparecen los hooks `_ksi_*` y `copysalida` queda protegida por la
+guarda anterior. La verificación manual realizada el 10 de octubre de 2026
+confirmó el orden esperado, copió exactamente `COPYSALIDA_FINAL_TEST` y no
+modificó el portapapeles después de `exec zsh` con
+`COPYSALIDA_GUARD_TEST`.
+
+Para verificarlo en una Kitty nueva:
+
+Ejecuta cada comando individualmente y espera a que reaparezca el prompt antes
+de ejecutar el siguiente.
+
+```zsh
+print -l -- $precmd_functions
+copysalida on
+printf 'COPYSALIDA_FINAL_TEST\n'
+```
+
+El orden debe mostrar `_ksi_precmd` antes de `_copy_last_output` y el
+portapapeles debe contener únicamente la línea de prueba. Después de `exec zsh`,
+una nueva salida debe dejar el portapapeles sin cambios.
+
 La función `ytm` fue retirada de forma intencional junto con las aplicaciones
 dedicadas de YouTube Music. Firefox es la vía mantenida para ese servicio.
 
