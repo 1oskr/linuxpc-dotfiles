@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ "$#" -ne 0 ]]; then
+    printf 'Uso: audio-output-toggle\n' >&2
+    exit 2
+fi
+
+sink='alsa_output.pci-0000_0b_00.6.analog-stereo'
+
+active_port="$(
+    pactl list sinks |
+        awk -v sink="$sink" '
+            $1 == "Name:" && $2 == sink { in_sink = 1; next }
+            in_sink && $1 == "Active" && $2 == "Port:" { print $3; exit }
+            in_sink && $1 == "Sink" { exit }
+        '
+)"
+
+case "$active_port" in
+    analog-output-headphones)
+        exec pactl set-sink-port "$sink" analog-output-lineout
+        ;;
+    analog-output-lineout)
+        exec pactl set-sink-port "$sink" analog-output-headphones
+        ;;
+    *)
+        printf 'Puerto de salida inesperado: %s\n' "${active_port:-desconocido}" >&2
+        exit 1
+        ;;
+esac

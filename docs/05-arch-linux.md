@@ -141,6 +141,39 @@ Atajos añadidos o modificados en `modules/binds.lua`:
 La configuración se verificó con `hyprland --verify-config`, con resultado
 correcto.
 
+### Control de salida de audio
+
+La utilidad específica del hardware LinuxPC
+`.local/bin/audio-output-toggle` alterna la salida analógica mediante `pactl`.
+Se ejecuta con `SUPER + F12`, definido en `modules/binds.lua`, y está enlazada
+actualmente desde `~/.local/bin/audio-output-toggle` hacia el script del
+repositorio. Su despliegue desde la raíz del checkout requiere:
+
+```bash
+ln -s "$PWD/.local/bin/audio-output-toggle" "$HOME/.local/bin/audio-output-toggle"
+```
+
+El script depende de `pactl` y de la compatibilidad PulseAudio de
+PipeWire/WirePlumber. Opera únicamente sobre el sink predeterminado comprobado
+del equipo:
+
+```text
+alsa_output.pci-0000_0b_00.6.analog-stereo
+```
+
+Sus únicos puertos admitidos son `analog-output-lineout` y
+`analog-output-headphones`. No es un selector general de dispositivos: existe
+un sink HDMI independiente y no forma parte de este cambio. Si el sink o el
+puerto esperado no están disponibles, el script termina con error; no muestra
+notificaciones al usuario.
+
+Está implementado y se probaron ambas direcciones: `SUPER + F12` cambió de
+`analog-output-lineout` a `analog-output-headphones`, y `pactl` confirmó los
+auriculares como puerto activo; después cambió nuevamente a
+`analog-output-lineout`, también confirmado por `pactl`. El sink HDMI permaneció
+independiente. La utilidad se mantiene como unidad independiente y específica
+del hardware LinuxPC.
+
 Las reglas de aplicaciones colocan actualmente:
 
 - VS Code (`com.microsoft.VSCode`) en workspace `1`;

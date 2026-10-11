@@ -135,6 +135,12 @@ hl.bind(
     { description = "Silenciar audio" }
 )
 
+hl.bind(
+"SUPER + F12",
+hl.dsp.exec_cmd("~/.local/bin/audio-output-toggle"),
+{ description = "Alternar audífonos y parlantes" }
+)
+
 -- Mover ventanas con SUPER + clic izquierdo
 hl.bind(
     "SUPER + mouse:272",
