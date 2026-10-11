@@ -160,10 +160,22 @@ El perfil utilizado es:
 ~/.local/share/konsole/LinuxPC-Bazzite.profile
 ```
 
+La copia reproducible del perfil se versiona en:
+
+```text
+.local/share/konsole/LinuxPC-Bazzite.profile
+```
+
 El esquema de color utilizado es:
 
 ```text
 ~/.local/share/konsole/LinuxPC-Bazzite-Catppuccin-Latte.colorscheme
+```
+
+La copia reproducible del esquema se versiona en:
+
+```text
+.local/share/konsole/LinuxPC-Bazzite-Catppuccin-Latte.colorscheme
 ```
 
 El perfil predeterminado configurado en `~/.config/konsolerc` es:
@@ -172,10 +184,46 @@ El perfil predeterminado configurado en `~/.config/konsolerc` es:
 LinuxPC-Bazzite.profile
 ```
 
+`~/.config/konsolerc` no se versiona completo porque también contiene estado y
+preferencias globales de KDE. En una reconstrucción, después de instalar los
+dos archivos versionados en `~/.local/share/konsole/`, se establece únicamente
+la selección del perfil:
+
+```bash
+kwriteconfig6 \
+  --file "$HOME/.config/konsolerc" \
+  --group "Desktop Entry" \
+  --key DefaultProfile \
+  LinuxPC-Bazzite.profile
+```
+
 El perfil usa Google Sans Code a 11 pt, el esquema Catppuccin Latte, fondo
 `#eff1f5`, texto `#5c5f77`, opacidad `1.0`, margen de 6 px, barra de
 desplazamiento oculta, pestañas visibles solo cuando son necesarias, cursor
 I-beam y `/bin/bash` como shell.
+
+La visibilidad de pestañas se mantiene como ajuste local de KDE mediante
+`TabBarVisibility=1` en `~/.config/konsolerc`; no forma parte del perfil
+versionado mientras no exista una representación estable y comprobada dentro
+de este.
+
+La fuente Google Sans Code debe estar instalada en el sistema para reproducir
+la apariencia validada.
+
+La instalación y selección pueden verificarse con:
+
+```bash
+cp ~/linuxpc-dotfiles/.local/share/konsole/LinuxPC-Bazzite.profile \
+  ~/.local/share/konsole/
+cp ~/linuxpc-dotfiles/.local/share/konsole/LinuxPC-Bazzite-Catppuccin-Latte.colorscheme \
+  ~/.local/share/konsole/
+kwriteconfig6 \
+  --file "$HOME/.config/konsolerc" \
+  --group "Desktop Entry" \
+  --key DefaultProfile \
+  LinuxPC-Bazzite.profile
+konsole --profile LinuxPC-Bazzite.profile
+```
 
 Prueba de ejecución:
 
@@ -185,67 +233,21 @@ konsole --profile LinuxPC-Bazzite.profile
 
 ## Kitty
 
-Kitty sigue instalado localmente y funcional, pero su uso en Bazzite es
-temporal. Konsole es la terminal prevista a largo plazo. Kitty no se ha
-eliminado porque `~/.bashrc.d/copysalida.sh` todavía depende de él; la
-migración no está terminada.
+Konsole es la terminal principal de Bazzite. `copysalida` fue retirado del
+Bash de Bazzite y no se reemplazará por una captura automática en Konsole; la
+copia manual de la última salida es suficiente.
 
-Kitty está instalado localmente mediante el instalador oficial en:
+Kitty fue eliminado localmente de Bazzite. No quedan instalados su aplicación,
+binarios, lanzadores ni caché de usuario.
 
-```text
-~/.local/kitty.app
-```
-
-Sus binarios están enlazados en:
-
-```text
-~/.local/bin/kitty
-~/.local/bin/kitten
-```
-
-La configuración reutiliza el archivo del repositorio:
+La configuración versionada de Kitty se conserva intacta porque Arch Linux la
+sigue utilizando:
 
 ```text
 ~/linuxpc-dotfiles/.config/kitty/kitty.conf
 ```
 
-El enlace activo es:
-
-```text
-~/.config/kitty/kitty.conf
-```
-
-La configuración habilita `allow_remote_control yes`. Los lanzadores
-`kitty.desktop` y `kitty-open.desktop` están copiados en:
-
-```text
-~/.local/share/applications/
-```
-
-La función Bash `copysalida` está configurada en:
-
-```text
-~/.bashrc.d/copysalida.sh
-```
-
-Comandos disponibles:
-
-```bash
-copysalida on
-copysalida off
-copysalida status
-```
-
-El funcionamiento se verificó después de reiniciar Kitty.
-
-Verificaciones útiles:
-
-```bash
-readlink -f ~/.config/kitty/kitty.conf
-command -v kitty kitten
-grep -n 'allow_remote_control' ~/.config/kitty/kitty.conf
-copysalida status
-```
+La configuración habilita `allow_remote_control yes` para ese flujo de Arch.
 
 ## Stremio con VPN aislada
 
